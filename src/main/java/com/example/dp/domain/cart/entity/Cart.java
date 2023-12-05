@@ -12,7 +12,7 @@ import java.awt.*;
 
 @Getter
 @Entity
-@Table(name="cart")
+@Table(name="TB_CART")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends TimeEntity {
     @Id
@@ -31,9 +31,10 @@ public class Cart extends TimeEntity {
     private Long menuCount;
 
     @Builder
-    private Cart(User user, Menu menu) {
+    private Cart(User user, Menu menu, Long menuCount) {
         this.user = user;
         this.menu = menu;
+        this.menuCount = menuCount;
     }
 
 
