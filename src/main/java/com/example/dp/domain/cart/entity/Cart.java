@@ -1,4 +1,4 @@
-package com.example.dp.domain.cart;
+package com.example.dp.domain.cart.entity;
 
 
 import com.example.dp.domain.model.TimeEntity;
