@@ -1,11 +1,11 @@
-package com.example.dp.domain.menu.service.impl;
+package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
-import com.example.dp.domain.menu.service.MenuService;
+import com.example.dp.domain.admin.service.AdminMenuService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class MenuServiceImpl implements MenuService {
+public class AdminMenuServiceImpl implements AdminMenuService {
 
     private final MenuRepository menuRepository;
 

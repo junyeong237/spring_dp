@@ -1,8 +1,8 @@
-package com.example.dp.domain.menu.controller;
+package com.example.dp.domain.admin.controller;
 
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
-import com.example.dp.domain.menu.service.MenuService;
+import com.example.dp.domain.admin.service.AdminMenuService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class MenuController {
+public class AdminMenuController {
 
-    private final MenuService menuService;
+    private final AdminMenuService adminMenuService;
 
     @PostMapping("/admin/menus")
     public ResponseEntity<MenuDetailResponseDto> createMenu(
         @RequestBody MenuRequestDto menuRequestDto) {
-        MenuDetailResponseDto responseDto = menuService.createMenu(menuRequestDto);
+        MenuDetailResponseDto responseDto = adminMenuService.createMenu(menuRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -33,25 +33,25 @@ public class MenuController {
     public ResponseEntity<MenuDetailResponseDto> updateMenu(
         @PathVariable Long menuId,
         @RequestBody MenuRequestDto menuRequestDto) {
-        MenuDetailResponseDto responseDto = menuService.updateMenu(menuId, menuRequestDto);
+        MenuDetailResponseDto responseDto = adminMenuService.updateMenu(menuId, menuRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/admin/menus/{menuId}")
     public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
-        menuService.deleteMenu(menuId);
+        adminMenuService.deleteMenu(menuId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/admin/menus/{menuId}")
     public ResponseEntity<MenuDetailResponseDto> getAdminMenu(@PathVariable Long menuId) {
-        MenuDetailResponseDto responseDto = menuService.getAdminMenu(menuId);
+        MenuDetailResponseDto responseDto = adminMenuService.getAdminMenu(menuId);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/admin/menus")
     public ResponseEntity<List<MenuDetailResponseDto>> getAdminMenus() {
-        List<MenuDetailResponseDto> responseDto = menuService.getAdminMenus();
+        List<MenuDetailResponseDto> responseDto = adminMenuService.getAdminMenus();
         return ResponseEntity.ok(responseDto);
     }
 }

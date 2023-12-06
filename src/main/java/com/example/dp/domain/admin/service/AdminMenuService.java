@@ -1,10 +1,10 @@
-package com.example.dp.domain.menu.service;
+package com.example.dp.domain.admin.service;
 
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import java.util.List;
 
-public interface MenuService {
+public interface AdminMenuService {
 
     MenuDetailResponseDto createMenu(MenuRequestDto menuRequestDto);
 
