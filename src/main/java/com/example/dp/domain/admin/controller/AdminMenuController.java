@@ -1,10 +1,11 @@
 package com.example.dp.domain.admin.controller;
 
+import com.example.dp.domain.admin.service.AdminMenuService;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
-import com.example.dp.domain.admin.service.AdminMenuService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class AdminMenuController {
     public ResponseEntity<MenuDetailResponseDto> createMenu(
         @RequestBody MenuRequestDto menuRequestDto) {
         MenuDetailResponseDto responseDto = adminMenuService.createMenu(menuRequestDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PatchMapping("/menus/{menuId}")
