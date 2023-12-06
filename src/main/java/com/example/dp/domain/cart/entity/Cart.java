@@ -1,7 +1,8 @@
 package com.example.dp.domain.cart.entity;
 
-
+import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.model.TimeEntity;
+import com.example.dp.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import java.awt.*;
 
 @Getter
 @Entity
-@Table(name="TB_CART")
+@Table(name = "cart")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends TimeEntity {
     @Id
@@ -20,7 +21,7 @@ public class Cart extends TimeEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,11 +37,6 @@ public class Cart extends TimeEntity {
         this.menu = menu;
         this.menuCount = menuCount;
     }
-
-
-
-
-
 
 
 }

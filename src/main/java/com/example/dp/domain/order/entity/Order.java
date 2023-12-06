@@ -1,7 +1,6 @@
 package com.example.dp.domain.order.entity;
 
 
-import com.example.dp.domain.menu.entity.MenuCategory;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -10,13 +9,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
-@Table(name="TB_ORDER")
+@Table(name = "TB_ORDER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends TimeEntity {
 
@@ -38,7 +36,7 @@ public class Order extends TimeEntity {
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
     @Builder
-    private Order(User user, OrderStateEnum state){
+    private Order(User user, OrderStateEnum state) {
         this.user = user;
         this.state = state;
     }
