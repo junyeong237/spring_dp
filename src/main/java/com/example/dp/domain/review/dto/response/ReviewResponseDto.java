@@ -1,6 +1,5 @@
 package com.example.dp.domain.review.dto.response;
 
-import com.example.dp.domain.review.entity.Review;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +7,10 @@ import lombok.Getter;
 @Getter
 public class ReviewResponseDto {
 
-    private Long id;
-    private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private final Long id;
+    private final String content;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
     @Builder
     private ReviewResponseDto(final Long id, final String content, final LocalDateTime createdAt,

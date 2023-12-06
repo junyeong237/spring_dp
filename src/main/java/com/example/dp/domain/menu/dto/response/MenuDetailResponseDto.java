@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public class MenuDetailResponseDto {
 
-    private String name;
-    private String description;
-    private Integer price;
-    private Integer quantity;
-    private Boolean status;
+    private final String name;
+    private final String description;
+    private final Integer price;
+    private final Integer quantity;
+    private final Boolean status;
 
     public MenuDetailResponseDto(Menu menu) {
         this.name = menu.getName();
