@@ -7,7 +7,7 @@ public interface MenuService {
 
     MenuDetailResponseDto createMenu(MenuRequestDto menuRequestDto);
 
-    MenuDetailResponseDto updateMenu(Long menuId, MenuDetailResponseDto menuDetailResponseDto);
+    MenuDetailResponseDto updateMenu(Long menuId, MenuRequestDto menuRequestDto);
 
     void deleteMenu(Long menuId);
 

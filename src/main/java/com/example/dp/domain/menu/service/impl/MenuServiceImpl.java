@@ -1,12 +1,14 @@
 package com.example.dp.domain.menu.service.impl;
 
-import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
+import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
+import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +29,13 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Transactional
     public MenuDetailResponseDto updateMenu(final Long menuId,
-        final MenuDetailResponseDto menuDetailResponseDto) {
-        //TODO: admin 메뉴 수정
+        final MenuRequestDto menuRequestDto) {
+        Menu menu = menuRepository.findById(menuId)
+            .orElseThrow(NotFoundMenuException::new);
+
+        menu.update(menuRequestDto);
         return null;
     }
 

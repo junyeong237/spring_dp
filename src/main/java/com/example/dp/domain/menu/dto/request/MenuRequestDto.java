@@ -11,4 +11,5 @@ public class MenuRequestDto {
     private String description;
     private Integer price;
     private Integer quantity;
+    private Boolean status;
 }
