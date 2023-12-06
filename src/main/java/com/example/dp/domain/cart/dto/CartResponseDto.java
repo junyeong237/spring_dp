@@ -13,7 +13,6 @@ public class CartResponseDto {
     private Long userId;
     private Long menuId;
     private Long menuCounts;
-
     private LocalDateTime createdAt;
 
     public CartResponseDto(Cart cart) {
@@ -21,6 +20,7 @@ public class CartResponseDto {
         this.userId = cart.getUser().getId();
         this.menuId = cart.getMenu().getId();
         this.menuCounts = cart.getMenuCount();
+        this.createdAt = cart.getCreatedAt();
     }
 
 
