@@ -13,7 +13,7 @@ import java.awt.*;
 
 @Getter
 @Entity
-@Table(name="order")
+@Table(name="TB_ORDER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends TimeEntity {
 
