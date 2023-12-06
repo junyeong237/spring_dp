@@ -21,7 +21,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final OrderRepository orderRepository;
 
     @Override
-    @Transactional
     public ReviewResponseDto createReview(final Long orderId,
         final ReviewRequestDto reviewRequestDto, final User user) {
 
