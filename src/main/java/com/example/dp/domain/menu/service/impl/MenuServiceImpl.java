@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
 
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
 
     @Override
     public MenuDetailResponseDto createMenu(final MenuRequestDto menuRequestDto) {
@@ -23,6 +23,7 @@ public class MenuServiceImpl implements MenuService {
             .description(menuRequestDto.getDescription())
             .price(menuRequestDto.getPrice())
             .quantity(menuRequestDto.getQuantity())
+            .status(menuRequestDto.getStatus())
             .build();
         menu = menuRepository.save(menu);
         return new MenuDetailResponseDto(menu);

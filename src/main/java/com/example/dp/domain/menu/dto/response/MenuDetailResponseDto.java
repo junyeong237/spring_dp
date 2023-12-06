@@ -16,7 +16,7 @@ public class MenuDetailResponseDto {
         this.name = menu.getName();
         this.description = menu.getDescription();
         this.price = menu.getPrice();
-        this.quantity = menu.getPrice();
-        this.status = false;
+        this.quantity = menu.getQuantity();
+        this.status = menu.getStatus();
     }
 }
