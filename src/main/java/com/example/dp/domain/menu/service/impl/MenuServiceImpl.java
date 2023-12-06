@@ -41,7 +41,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void deleteMenu(final Long menuId) {
-
+        Menu menu = findMenu(menuId);
+        menuRepository.delete(menu);
     }
 
     @Override

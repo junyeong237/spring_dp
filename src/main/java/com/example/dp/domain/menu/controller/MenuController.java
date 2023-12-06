@@ -4,6 +4,7 @@ import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,5 +29,10 @@ public class MenuController {
         @PathVariable Long menuId,
         @RequestBody MenuRequestDto menuRequestDto) {
         return menuService.updateMenu(menuId, menuRequestDto);
+    }
+
+    @DeleteMapping("/admin/menus/{menuId}")
+    public void deleteMenu(@PathVariable Long menuId){
+        menuService.deleteMenu(menuId);
     }
 }
