@@ -22,6 +22,17 @@ repositories {
 }
 
 dependencies {
+	// JWT
+	compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+	// JSON
+	implementation 'org.json:json:20230227'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	//jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
