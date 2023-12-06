@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public class MenuSimpleResponseDto {
 
-    private String name;
-    private String description;
-    private Integer price;
+    private final String name;
+    private final String description;
+    private final Integer price;
 
     public MenuSimpleResponseDto(Menu menu) {
         this.name = menu.getName();

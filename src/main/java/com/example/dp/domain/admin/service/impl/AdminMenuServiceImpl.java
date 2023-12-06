@@ -1,11 +1,11 @@
 package com.example.dp.domain.admin.service.impl;
 
+import com.example.dp.domain.admin.service.AdminMenuService;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
-import com.example.dp.domain.admin.service.AdminMenuService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
     @Override
     public List<MenuDetailResponseDto> getAdminMenus() {
-        List<Menu> menus = menuRepository.findAllOrderByCreatedAt();
+        List<Menu> menus = menuRepository.findByOrderByCreatedAt();
         return menus.stream().map(MenuDetailResponseDto::new).toList();
     }
 

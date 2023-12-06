@@ -3,7 +3,16 @@ package com.example.dp.domain.cart.entity;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +48,7 @@ public class Cart extends TimeEntity {
         this.menuCount = menuCount;
     }
 
-    public void addCount(Integer count){
+    public void addCount(Integer count) {
         this.menuCount += count;
     }
 

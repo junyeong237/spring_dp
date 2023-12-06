@@ -1,7 +1,7 @@
 package com.example.dp.domain.admin.service;
 
-import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
+import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import java.util.List;
 
 public interface AdminMenuService {
