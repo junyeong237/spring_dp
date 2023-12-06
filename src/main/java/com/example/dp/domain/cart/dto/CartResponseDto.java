@@ -2,6 +2,7 @@ package com.example.dp.domain.cart.dto;
 
 
 import com.example.dp.domain.cart.entity.Cart;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class CartResponseDto {
     private Long menuCounts;
     private LocalDateTime createdAt;
 
+    @Builder
     public CartResponseDto(Cart cart) {
         this.id = cart.getId();
         this.userId = cart.getUser().getId();
