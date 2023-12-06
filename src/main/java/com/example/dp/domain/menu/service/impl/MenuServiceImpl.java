@@ -47,8 +47,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuDetailResponseDto getAdminMenu(final Long menuId) {
-        //TODO: admin 메뉴 단건 조회
-        return null;
+        Menu menu = findMenu(menuId);
+        return new MenuDetailResponseDto(menu);
     }
 
     @Override
