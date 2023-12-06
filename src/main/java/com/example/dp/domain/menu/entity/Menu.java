@@ -1,5 +1,7 @@
 package com.example.dp.domain.menu.entity;
 
+import com.example.dp.domain.menucategory.entity.MenuCategory;
+import com.example.dp.domain.model.TimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "TB_MENU")
-public class Menu {
+public class Menu extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +42,10 @@ public class Menu {
     private Boolean status;
 
     @OneToMany(mappedBy = "category")
-    private List<MenuCategory> menuCategoryList = new ArrayList<>();
+    private final List<MenuCategory> menuCategoryList = new ArrayList<>();
 
     @Builder
-    private Menu(String name, String description, Integer price, Integer quantity){
+    private Menu(String name, String description, Integer price, Integer quantity) {
         this.name = name;
         this.description = description;
         this.price = price;

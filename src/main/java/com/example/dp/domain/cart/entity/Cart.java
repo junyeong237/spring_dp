@@ -9,13 +9,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
-
 @Getter
 @Entity
-@Table(name = "cart")
+@Table(name = "TB_CART")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends TimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
