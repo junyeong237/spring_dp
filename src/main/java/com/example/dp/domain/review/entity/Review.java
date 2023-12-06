@@ -34,8 +34,9 @@ public class Review extends TimeEntity {
     private String content;
 
     @Builder
-    public Review(final Order order, final String content) {
+    private Review(final Order order, final String content) {
         this.order = order;
         this.content = content;
     }
+
 }
