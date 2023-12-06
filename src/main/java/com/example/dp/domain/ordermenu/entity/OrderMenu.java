@@ -1,42 +1,34 @@
-package com.example.dp.domain.review.entity;
+package com.example.dp.domain.ordermenu.entity;
 
-import com.example.dp.domain.model.TimeEntity;
+import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.order.entity.Order;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "TB_REVIEW")
+@Table(name = "TB_ORDER_MENU")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Review extends TimeEntity {
+public class OrderMenu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(nullable = false)
-    private String content;
-
-    @Builder
-    private Review(final Order order, final String content) {
-        this.order = order;
-        this.content = content;
-    }
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 }

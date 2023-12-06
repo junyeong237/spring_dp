@@ -1,7 +1,7 @@
 package com.example.dp.domain.user.service;
 
 import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.dto.request.UserSignUpRequest;
+import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public void signup(UserSignUpRequest request) {
+    public void signup(UserSignupRequestDto request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("이미 존재하는 유저이름 입니다.");
         }
