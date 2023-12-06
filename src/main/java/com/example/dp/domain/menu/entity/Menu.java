@@ -43,7 +43,7 @@ public class Menu {
     private List<MenuCategory> menuCategoryList = new ArrayList<>();
 
     @Builder
-    public Menu(String name, String description, Integer price, Integer quantity){
+    private Menu(String name, String description, Integer price, Integer quantity){
         this.name = name;
         this.description = description;
         this.price = price;
