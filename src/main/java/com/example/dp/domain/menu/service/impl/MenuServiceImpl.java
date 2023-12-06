@@ -31,18 +31,17 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public MenuDetailResponseDto updateMenu(final Long menuId,
+    public MenuDetailResponseDto updateMenu(
+        final Long menuId,
         final MenuRequestDto menuRequestDto) {
-        Menu menu = menuRepository.findById(menuId)
-            .orElseThrow(NotFoundMenuException::new);
-
+        Menu menu = findMenu(menuId);
         menu.update(menuRequestDto);
-        return null;
+        return new MenuDetailResponseDto(menu);
     }
 
     @Override
     public void deleteMenu(final Long menuId) {
-        //TODO: admin 메뉴 삭제
+
     }
 
     @Override
@@ -55,6 +54,11 @@ public class MenuServiceImpl implements MenuService {
     public MenuDetailResponseDto getAdminMenus() {
         //TODO: admin 메뉴 전체 조회
         return null;
+    }
+
+    public Menu findMenu(Long menuId) {
+        return menuRepository.findById(menuId)
+            .orElseThrow(NotFoundMenuException::new);
     }
 
 }
