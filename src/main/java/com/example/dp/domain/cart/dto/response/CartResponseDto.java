@@ -1,4 +1,4 @@
-package com.example.dp.domain.cart.dto;
+package com.example.dp.domain.cart.dto.response;
 
 
 import com.example.dp.domain.cart.entity.Cart;
@@ -13,7 +13,7 @@ public class CartResponseDto {
     private Long id;
     private Long userId;
     private Long menuId;
-    private Long menuCounts;
+    private Integer menuCounts;
     private LocalDateTime createdAt;
 
     @Builder
