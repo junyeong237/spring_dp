@@ -6,6 +6,7 @@ import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menu.service.MenuService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +53,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuDetailResponseDto getAdminMenus() {
-        //TODO: admin 메뉴 전체 조회
-        return null;
+    public List<MenuDetailResponseDto> getAdminMenus() {
+        List<Menu> menus = menuRepository.findAllOrderByCreatedAt();
+        return menus.stream().map(MenuDetailResponseDto::new).toList();
     }
 
     public Menu findMenu(Long menuId) {

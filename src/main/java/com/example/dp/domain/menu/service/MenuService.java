@@ -2,6 +2,7 @@ package com.example.dp.domain.menu.service;
 
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
+import java.util.List;
 
 public interface MenuService {
 
@@ -13,5 +14,5 @@ public interface MenuService {
 
     MenuDetailResponseDto getAdminMenu(Long menuId);
 
-    MenuDetailResponseDto getAdminMenus();
+    List<MenuDetailResponseDto> getAdminMenus();
 }

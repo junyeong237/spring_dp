@@ -3,6 +3,7 @@ package com.example.dp.domain.menu.controller;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.service.MenuService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,9 +23,10 @@ public class MenuController {
     private final MenuService menuService;
 
     @PostMapping("/admin/menus")
-    public ResponseEntity<MenuDetailResponseDto> createMenu(@RequestBody MenuRequestDto menuRequestDto) {
-         MenuDetailResponseDto responseDto = menuService.createMenu(menuRequestDto);
-         return ResponseEntity.ok(responseDto);
+    public ResponseEntity<MenuDetailResponseDto> createMenu(
+        @RequestBody MenuRequestDto menuRequestDto) {
+        MenuDetailResponseDto responseDto = menuService.createMenu(menuRequestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping("/admin/menus/{menuId}")
@@ -36,7 +38,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/admin/menus/{menuId}")
-    public ResponseEntity<?> deleteMenu(@PathVariable Long menuId){
+    public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);
         return ResponseEntity.ok().build();
     }
@@ -44,6 +46,12 @@ public class MenuController {
     @GetMapping("/admin/menus/{menuId}")
     public ResponseEntity<MenuDetailResponseDto> getAdminMenu(@PathVariable Long menuId) {
         MenuDetailResponseDto responseDto = menuService.getAdminMenu(menuId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/admin/menus")
+    public ResponseEntity<List<MenuDetailResponseDto>> getAdminMenus() {
+        List<MenuDetailResponseDto> responseDto = menuService.getAdminMenus();
         return ResponseEntity.ok(responseDto);
     }
 }

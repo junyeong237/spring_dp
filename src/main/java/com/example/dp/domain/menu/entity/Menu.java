@@ -42,7 +42,7 @@ public class Menu extends TimeEntity {
     @Column(nullable = false)
     private Boolean status;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "menu")
     private final List<MenuCategory> menuCategoryList = new ArrayList<>();
 
     @Builder
