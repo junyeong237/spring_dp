@@ -1,4 +1,4 @@
-package com.example.dp.domain.menu.entity;
+package com.example.dp.domain.category.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +25,7 @@ public class Category {
     private String type;
 
     @Builder
-    private Category(String type){
+    private Category(String type) {
         this.type = type;
     }
 }
