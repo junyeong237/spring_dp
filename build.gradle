@@ -58,13 +58,11 @@ dependencies {
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	// https://mvnrepository.com/artifact/com.h2database/h2
 	testImplementation 'com.h2database:h2:2.2.224'
-	// https://mvnrepository.com/artifact/org.assertj/assertj-core
 	testImplementation 'org.assertj:assertj-core:3.24.2'
-	// https://mvnrepository.com/artifact/com.navercorp.fixturemonkey/fixture-monkey-starter
-	implementation 'com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.4'
+	testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.4'
 	testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-jakarta-validation:1.0.4'
+	testImplementation 'it.ozimov:embedded-redis:0.7.3'
 }
 
 tasks.named('test') {
