@@ -1,15 +1,18 @@
 package com.example.dp.domain.order.entity;
 
-
+import com.example.dp.domain.menu.entity.Menu;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.awt.*;
 
 @Entity
 @Getter
 @Table(name = "TB_ORDER_MENU")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderMenu {
 
     @Id
@@ -29,4 +32,5 @@ public class OrderMenu {
         this.order =  order;
         this.menu = menu;
     }
+
 }
