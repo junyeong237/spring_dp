@@ -1,7 +1,7 @@
 package com.example.dp.domain.cart.controller;
 
 
-import com.example.dp.domain.cart.dto.CartResponseDto;
+import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartController {
 
-    private final CartService cartService;
+    //private final CartService cartService;
 
     @GetMapping
     public List<CartResponseDto> getCart() {
