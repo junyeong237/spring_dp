@@ -2,6 +2,7 @@ package com.example.dp.domain.order.entity;
 
 
 import com.example.dp.domain.model.TimeEntity;
+import com.example.dp.domain.ordermenu.entity.OrderMenu;
 import com.example.dp.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,14 +30,14 @@ public class Order extends TimeEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private OrderStateEnum state;
+    private OrderState state;
 
 
     @OneToMany(mappedBy = "order")
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
     @Builder
-    private Order(User user, OrderStateEnum state) {
+    private Order(User user, OrderState state) {
         this.user = user;
         this.state = state;
     }
