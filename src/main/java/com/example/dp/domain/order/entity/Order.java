@@ -1,6 +1,7 @@
 package com.example.dp.domain.order.entity;
 
 
+import com.example.dp.domain.menu.entity.MenuCategory;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -10,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -29,6 +32,10 @@ public class Order extends TimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStateEnum state;
+
+
+    @OneToMany(mappedBy = "menu")
+    private List<OrderMenu> orderMenuList = new ArrayList<>();
 
     @Builder
     private Order(User user, OrderStateEnum state){
