@@ -34,7 +34,7 @@ public class Order extends TimeEntity {
     private OrderStateEnum state;
 
 
-    @OneToMany(mappedBy = "menu")
+    @OneToMany(mappedBy = "order")
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
     @Builder
