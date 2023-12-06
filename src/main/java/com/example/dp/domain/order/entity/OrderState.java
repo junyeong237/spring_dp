@@ -4,7 +4,7 @@ package com.example.dp.domain.order.entity;
 import lombok.Getter;
 
 @Getter
-public enum OrderStateEnum {
+public enum OrderState {
 
     PENDING("주문 보류중"),
     CREATED("주문 진행중"),
@@ -13,7 +13,7 @@ public enum OrderStateEnum {
 
     private final String description;
 
-    OrderStateEnum(String description) {
+    OrderState(String description) {
         this.description = description;
     }
 }
