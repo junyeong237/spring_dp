@@ -28,8 +28,8 @@ public class OrderMenu {
     private Menu menu;
 
     @Builder
-    private OrderMenu(Order order, Menu menu){
-        this.order =  order;
+    private OrderMenu(Order order, Menu menu) {
+        this.order = order;
         this.menu = menu;
     }
 
