@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminMenuController {
 
     private final AdminMenuService adminMenuService;
 
-    @PostMapping("/admin/menus")
+    @PostMapping("/menus")
     public ResponseEntity<MenuDetailResponseDto> createMenu(
         @RequestBody MenuRequestDto menuRequestDto) {
         MenuDetailResponseDto responseDto = adminMenuService.createMenu(menuRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @PatchMapping("/admin/menus/{menuId}")
+    @PatchMapping("/menus/{menuId}")
     public ResponseEntity<MenuDetailResponseDto> updateMenu(
         @PathVariable Long menuId,
         @RequestBody MenuRequestDto menuRequestDto) {
@@ -37,19 +37,19 @@ public class AdminMenuController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/admin/menus/{menuId}")
+    @DeleteMapping("/menus/{menuId}")
     public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
         adminMenuService.deleteMenu(menuId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/admin/menus/{menuId}")
+    @GetMapping("/menus/{menuId}")
     public ResponseEntity<MenuDetailResponseDto> getAdminMenu(@PathVariable Long menuId) {
         MenuDetailResponseDto responseDto = adminMenuService.getAdminMenu(menuId);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/admin/menus")
+    @GetMapping("/menus")
     public ResponseEntity<List<MenuDetailResponseDto>> getAdminMenus() {
         List<MenuDetailResponseDto> responseDto = adminMenuService.getAdminMenus();
         return ResponseEntity.ok(responseDto);
