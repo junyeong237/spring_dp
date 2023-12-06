@@ -3,6 +3,7 @@ package com.example.dp.domain.review.controller;
 import com.example.dp.domain.review.dto.request.ReviewRequestDto;
 import com.example.dp.domain.review.dto.response.ReviewResponseDto;
 import com.example.dp.domain.review.service.ReviewService;
+import com.example.dp.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
