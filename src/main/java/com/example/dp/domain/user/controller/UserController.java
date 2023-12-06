@@ -1,6 +1,5 @@
 package com.example.dp.domain.user.controller;
 
-import com.example.dp.domain.user.dto.request.UserSignUpRequest;
 import com.example.dp.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+<<<<<<<Updated upstream
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody @Valid UserSignUpRequest request) {
-        userService.signup(request);
-        return ResponseEntity.noContent().build();
-        //TODO: 공통 응답 메세지 추가
+
+    public ResponseEntity<Void> signup(@RequestBody @Valid UserSignupRequest request) {
+=======
+
+        @PostMapping("/signup")
+        public ResponseEntity<Void> signup (@RequestBody @Valid UserSignupRequestDto request){
+>>>>>>>Stashed changes
+            userService.signup(request);
+            return ResponseEntity.noContent().build();
+            //TODO: 공통 응답 메세지 추가
+        }
     }
-}
