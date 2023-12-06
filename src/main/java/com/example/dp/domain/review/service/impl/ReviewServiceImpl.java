@@ -11,7 +11,6 @@ import com.example.dp.domain.review.validator.ReviewValidator;
 import com.example.dp.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
