@@ -13,27 +13,31 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
+@Service
+@Transactional(readOnly = true)
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final OrderRepository orderRepository;
+
+    private static String NOT_FOUND_ORDER = "해당 주문을 찾을 수 없습니다.";
+    private static String NOT_FOUND_REVIEW = "해당 리뷰를 찾을 수 없습니다.";
 
     @Override
     public ReviewResponseDto createReview(
         final Long orderId,
         final ReviewRequestDto reviewRequestDto,
         final User user) {
-        Order findOrder = orderRepository.findById(orderId)
-            .orElseThrow(() -> new RuntimeException("해당 주문을 찾을 수 없습니다."));
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException(NOT_FOUND_ORDER));
 
-        ReviewValidator.validOrderBy(findOrder, user);
-        ReviewValidator.validExistReview(reviewRepository.existsByOrder(findOrder));
+        ReviewValidator.validOrderBy(order, user);
+        ReviewValidator.validExistReview(reviewRepository.existsByOrder(order));
 
         Review review = Review.builder()
             .content(reviewRequestDto.getContent())
-            .order(findOrder)
+            .order(order)
             .build();
 
         review = reviewRepository.save(review);
@@ -53,7 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
         final ReviewRequestDto reviewRequestDto,
         final User user) {
         Review review = reviewRepository.findById(reviewId)
-            .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
+            .orElseThrow(() -> new RuntimeException(NOT_FOUND_REVIEW));
 
         ReviewValidator.validOrderBy(review.getOrder(), user);
 
@@ -65,5 +69,15 @@ public class ReviewServiceImpl implements ReviewService {
             .createdAt(review.getCreatedAt())
             .modifiedAt(review.getModifiedAt())
             .build();
+    }
+
+    @Override
+    public void deleteReview(final Long reviewId, final User user) {
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(() -> new RuntimeException(NOT_FOUND_REVIEW));
+
+        ReviewValidator.validOrderBy(review.getOrder(), user);
+
+        reviewRepository.delete(review);
     }
 }
