@@ -10,4 +10,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByType(String categoryType);
 
     List<Category> findByTypeIn(List<String> list);
+
+    boolean existsByType(String type);
 }
