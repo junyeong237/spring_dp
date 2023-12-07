@@ -51,5 +51,16 @@ public class Order extends TimeEntity {
         this.state = state;
     }
 
+    public void addOrderMenuList(OrderMenu orderMenu) {
+        this.orderMenuList.add(orderMenu);
+        orderMenu.setOrder(this);
+    }
+
+    public void updateState(OrderState state){
+        this.state = state;
+    }
+
+
+
 
 }
