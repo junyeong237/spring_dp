@@ -39,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
         final Long categoryId,
         final CategoryRequestDto requestDto) {
         Category category = findCategory(categoryId);
-        category.update(requestDto);
+        category.update(requestDto.getType());
         return new CategoryResponseDto(category);
     }
 

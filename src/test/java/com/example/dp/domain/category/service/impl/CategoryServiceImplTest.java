@@ -14,6 +14,7 @@ import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -105,16 +106,17 @@ class CategoryServiceImplTest {
             assertThat(responseDto2.getType()).isEqualTo("수정 테스트");
         }
 
-//        @DisplayName("카테고리 수정 실패 : 없는 카테고리")
-//        @Test
-//        void 카테고리_수정_실패() {
-//            // Given x
-//
-//            // When - Then
-//            assertThatThrownBy(() -> categoryService.updateCategory(
-//                2214125125151L, new CategoryRequestDto("수정 테스트")))
-//                .isInstanceOf(NotFoundCategoryException.class);
-//        }
+        @DisplayName("카테고리 수정 실패 : 없는 카테고리")
+        @Test
+        @Disabled
+        void 카테고리_수정_실패() {
+            // Given x
+
+            // When - Then
+            assertThatThrownBy(() -> categoryService.updateCategory(
+                2214125125151L, new CategoryRequestDto("수정 테스트")))
+                .isInstanceOf(NotFoundCategoryException.class);
+        }
     }
 
     @DisplayName("카테고리 삭제 테스트")
@@ -138,14 +140,15 @@ class CategoryServiceImplTest {
             assertThat(categoryRepository.existsById(responseDto.getId())).isEqualTo(false);
         }
 
-//        @DisplayName("카테고리 삭제 실패 : 없는 카테고리")
-//        @Test
-//        void 카테고리_삭제_실패() {
-//            // Given x
-//
-//            // When - Then
-//            assertThatThrownBy(() -> categoryService.deleteCategory(1023241251L))
-//                .isInstanceOf(NotFoundCategoryException.class);
-//        }
+        @DisplayName("카테고리 삭제 실패 : 없는 카테고리")
+        @Test
+        @Disabled
+        void 카테고리_삭제_실패() {
+            // Given x
+
+            // When - Then
+            assertThatThrownBy(() -> categoryService.deleteCategory(1023241251L))
+                .isInstanceOf(NotFoundCategoryException.class);
+        }
     }
 }

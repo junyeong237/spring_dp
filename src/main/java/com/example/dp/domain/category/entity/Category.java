@@ -30,7 +30,7 @@ public class Category {
         this.type = type;
     }
 
-    public void update(final CategoryRequestDto requestDto) {
-        this.type = requestDto.getType();
+    public void update(final String type) {
+        this.type = type;
     }
 }

@@ -54,12 +54,12 @@ public class Menu extends TimeEntity {
         this.status = status;
     }
 
-    public void update(final MenuRequestDto menuRequestDto) {
-        this.name = menuRequestDto.getName();
-        this.description = menuRequestDto.getDescription();
-        this.price = menuRequestDto.getPrice();
-        this.quantity = menuRequestDto.getQuantity();
-        this.status = menuRequestDto.getStatus();
+    public void update(final String name, final String description, final Integer price, final Integer quantity, final boolean status) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.status = status;
     }
 
     public void addMenuCategory(MenuCategory menuCategory) {
