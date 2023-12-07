@@ -9,7 +9,7 @@ import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.repository.MenuRepository;
-import com.example.dp.domain.order.dto.OrderResponseDto;
+import com.example.dp.domain.order.dto.response.OrderResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
 import com.example.dp.domain.order.repository.OrderRepository;
@@ -47,7 +47,6 @@ public class OrderIntegrationTest {
     MenuRepository menuRepository;
     @Autowired
     CartServiceImpl cartService;
-
     @Autowired
     OrderServiceImpl orderService;
 
@@ -55,7 +54,7 @@ public class OrderIntegrationTest {
     private Menu menu1;
     private Menu menu2;
 
-    @BeforeAll
+    //@BeforeAll
     void setup() {
         user = User.builder()
             .username("홍길동")
@@ -85,7 +84,7 @@ public class OrderIntegrationTest {
     @org.junit.jupiter.api.Order(1)
     @DisplayName("주문하기")
     void 장바구니_생성후_주문하기() {
-
+        setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
