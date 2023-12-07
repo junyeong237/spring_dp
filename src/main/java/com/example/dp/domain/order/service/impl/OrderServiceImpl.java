@@ -1,10 +1,10 @@
 package com.example.dp.domain.order.service.impl;
 
-import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.entity.Cart;
 import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
 import com.example.dp.domain.order.dto.OrderResponseDto;
+import com.example.dp.domain.order.dto.response.OrderSimpleResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
 import com.example.dp.domain.order.repository.OrderRepository;
@@ -77,6 +77,17 @@ public class OrderServiceImpl implements OrderService {
         if(order.getState().equals(OrderState.PENDING)){
             order.updateState(OrderState.CANCELLED);
         }
+    }
+
+    @Override
+    public List<OrderSimpleResponseDto> getOrder(final User user) {
+        List<Order> orderList = orderRepository.findByUser(user);
+
+        return orderList.stream()
+            .map(OrderSimpleResponseDto::new)
+            .toList();
+
+
     }
 
 

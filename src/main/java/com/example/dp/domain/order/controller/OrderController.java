@@ -2,13 +2,16 @@ package com.example.dp.domain.order.controller;
 
 
 import com.example.dp.domain.order.dto.OrderResponseDto;
+import com.example.dp.domain.order.dto.response.OrderSimpleResponseDto;
 import com.example.dp.domain.order.service.impl.OrderServiceImpl;
 import com.example.dp.global.security.UserDetailsImpl;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +24,7 @@ public class OrderController {
 
     private final OrderServiceImpl orderService;
 
-    @PostMapping()
+    @PostMapping("")
     public ResponseEntity<OrderResponseDto> createOrders(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
     ){
@@ -41,5 +44,17 @@ public class OrderController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
+
+    @GetMapping("")
+
+    public ResponseEntity<List<OrderSimpleResponseDto>> getOrder(
+        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
+    )
+    {
+        List<OrderSimpleResponseDto> orderResponseDtoList = orderService.getOrder(userDetailsImpl.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDtoList);
+    }
+
 
 }
