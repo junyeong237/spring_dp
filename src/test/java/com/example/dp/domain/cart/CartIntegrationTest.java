@@ -10,8 +10,6 @@ import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.repository.MenuRepository;
-import com.example.dp.domain.order.repository.OrderRepository;
-import com.example.dp.domain.ordermenu.repository.OrderMenuRepository;
 import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
@@ -34,11 +32,7 @@ public class CartIntegrationTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    OrderRepository orderRepository;
-    @Autowired
     CartRepository cartRepository;
-    @Autowired
-    OrderMenuRepository orderMenuRepository;
     @Autowired
     MenuRepository menuRepository;
     @Autowired
