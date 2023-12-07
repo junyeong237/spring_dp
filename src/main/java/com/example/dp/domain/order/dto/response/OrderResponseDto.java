@@ -12,14 +12,18 @@ public class OrderResponseDto {
 
     private final Long id;
     private final OrderState state;
-    private final User user;
-    private final List<OrderMenu> orderMenuList;
+    private final String userName;
+    private final List<String> orderMenuNameList;
 
 
     public OrderResponseDto(Order order, User user) {
         this.id = order.getId();
         this.state = order.getState();
-        this.user = user;
-        this.orderMenuList = order.getOrderMenuList();
+        this.userName = user.getUsername();
+        this.orderMenuNameList = order.getOrderMenuList()
+            .stream().map(orderMenu -> {
+                return orderMenu.getMenu().getName();
+            })
+            .toList();
     }
 }
