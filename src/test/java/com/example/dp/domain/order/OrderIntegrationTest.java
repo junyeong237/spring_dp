@@ -106,6 +106,7 @@ public class OrderIntegrationTest {
     void 주문취소() {
 
         Order order = orderRepository.findById(1L).orElse(null);
+        assertNotNull(order);
         orderService.deleteOrder(user,order.getId());
 
         List<Order> orderList = orderRepository.findByUserAndState(user,OrderState.CANCELLED);
