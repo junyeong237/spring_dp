@@ -1,6 +1,5 @@
 package com.example.dp.domain.menu.dto.request;
 
-import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;

@@ -75,7 +75,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         final Long menuId,
         final MenuRequestDto menuRequestDto) {
         Menu menu = findMenu(menuId);
-        menu.update(menuRequestDto);
+        menu.update(menuRequestDto.getName(),
+            menuRequestDto.getDescription(), menuRequestDto.getPrice(),
+            menuRequestDto.getQuantity(), menuRequestDto.getStatus());
         return new MenuDetailResponseDto(menu);
     }
 
