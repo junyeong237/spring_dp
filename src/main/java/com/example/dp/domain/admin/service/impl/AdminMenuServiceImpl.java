@@ -6,12 +6,15 @@ import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
+import com.example.dp.domain.menu.exception.ExistsMenuNameException;
+import com.example.dp.domain.menu.exception.MenuErrorCode;
 import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     public MenuDetailResponseDto createMenu(final MenuRequestDto requestDto) {
 
+        if (menuRepository.existsByName(requestDto.getName())){
+            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+        }
         //메뉴를 생성합니다.
         Menu menu = Menu.builder()
             .name(requestDto.getName())
@@ -93,7 +99,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
     public Menu findMenu(Long menuId) {
         return menuRepository.findById(menuId)
-            .orElseThrow(NotFoundMenuException::new);
+            .orElseThrow(()-> new NotFoundMenuException(MenuErrorCode.NOT_FOUND_MENU));
     }
 
 }
