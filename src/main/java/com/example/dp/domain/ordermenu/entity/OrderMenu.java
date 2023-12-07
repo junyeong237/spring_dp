@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,15 @@ public class OrderMenu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     private Menu menu;
+
+    @Builder
+    public OrderMenu(Order order, Menu menu) {
+        this.order = order;
+        this.menu = menu;
+    }
+
+    public void setOrder(Order order){
+        this.order = order;
+    }
+
 }
