@@ -42,7 +42,6 @@ public class CartIntegrationTest {
     private Menu menu1;
     private Menu menu2;
 
-    @BeforeAll
     void setup() {
         user = User.builder()
             .username("홍길동")
@@ -72,7 +71,7 @@ public class CartIntegrationTest {
     @Order(1)
     @DisplayName("장바구니 생성")
     void 주문자_장바구니_생성() {
-
+        setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);

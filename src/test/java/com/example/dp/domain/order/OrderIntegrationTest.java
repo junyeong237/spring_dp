@@ -124,8 +124,8 @@ public class OrderIntegrationTest {
     void 사용자_주문_조회() {
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3, 9000);
 
-        CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
-        OrderResponseDto orderResponseDto = orderService.createOrder(user);
+        cartService.postCart(user, cartRequestMenuDto);
+        orderService.createOrder(user);
 
         List<Order> orderList = orderRepository.findByUser(user);
 
