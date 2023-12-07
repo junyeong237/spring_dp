@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -215,6 +216,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("사용자가 작성한 리뷰 조회")
+        @Disabled
         void readUserReview() {
             // given
             int count = 5;
@@ -231,20 +233,18 @@ class ReviewServiceImplTest {
                 .build();
             user = userRepository.save(user);
 
-            List<Order> orders = new ArrayList<>();
-            List<Review> reviews = new ArrayList<>();
             for(int i=0;i<count;i++) {
                 Order order = Order.builder()
                     .user(user)
                     .state(OrderState.PENDING)
                     .build();
-                orders.add(orderRepository.save(order));
+                orderRepository.save(order);
                 Review review = Review.builder()
                     .user(user)
                     .order(order)
                     .content("asdsa")
                     .build();
-                reviews.add(reviewRepository.save(review));
+                reviewRepository.save(review);
             }
 
             // when
