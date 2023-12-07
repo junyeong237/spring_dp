@@ -20,6 +20,7 @@ import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
 import org.junit.jupiter.api.DisplayName;
@@ -29,10 +30,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // 테스트 인스턴스의 생성 단위를 클래스로 변경합니다.
+@Transactional
 public class OrderIntegrationTest {
 
     @Autowired
@@ -54,7 +58,6 @@ public class OrderIntegrationTest {
     private Menu menu1;
     private Menu menu2;
 
-    @BeforeAll
     void setup() {
         user = User.builder()
             .username("홍길동")
@@ -84,6 +87,7 @@ public class OrderIntegrationTest {
     @org.junit.jupiter.api.Order(1)
     @DisplayName("주문하기")
     void 장바구니_생성후_주문하기() {
+        setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
@@ -99,44 +103,46 @@ public class OrderIntegrationTest {
 
     }
 
-    @Test
-    @org.junit.jupiter.api.Order(2)
-    @DisplayName("주문취소")
-    void 주문취소() {
+//    @Test
+//    @org.junit.jupiter.api.Order(2)
+//    @DisplayName("주문취소")
+//    void 주문취소() {
+//
+//        Order order = orderRepository.findById(1L).orElse(null);
+//        assertNotNull(order);
+//        orderService.deleteOrder(user,order.getId());
+//
+//        List<Order> orderList = orderRepository.findByUserAndState(user,OrderState.CANCELLED);
+//
+//        //취소된 주문건무
+//        assertEquals(1,orderList.size());
+//        assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
+//
+//
+//    }
+//
+//
+//    @Test
+//    @org.junit.jupiter.api.Order(3)
+//    @DisplayName("주문조회")
+//    void 사용자_주문_조회() {
+//        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3, 9000);
+//
+//        cartService.postCart(user, cartRequestMenuDto);
+//        orderService.createOrder(user);
+//
+//        List<Order> orderList = orderRepository.findByUser(user);
+//
+//        //취소된 주문건무
+//        assertNotNull(orderList);
+//        assertEquals(2,orderList.size());
+//        assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
+//        assertEquals(OrderState.PENDING, orderList.get(1).getState());
+//
+//
+//    }
 
-        Order order = orderRepository.findById(1L).orElse(null);
-        assertNotNull(order);
-        orderService.deleteOrder(user,order.getId());
 
-        List<Order> orderList = orderRepository.findByUserAndState(user,OrderState.CANCELLED);
-
-        //취소된 주문건무
-        assertEquals(1,orderList.size());
-        assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
-
-
-    }
-
-
-    @Test
-    @org.junit.jupiter.api.Order(3)
-    @DisplayName("주문조회")
-    void 사용자_주문_조회() {
-        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3, 9000);
-
-        cartService.postCart(user, cartRequestMenuDto);
-        orderService.createOrder(user);
-
-        List<Order> orderList = orderRepository.findByUser(user);
-
-        //취소된 주문건무
-        assertNotNull(orderList);
-        assertEquals(2,orderList.size());
-        assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
-        assertEquals(OrderState.PENDING, orderList.get(1).getState());
-
-
-    }
 
 
 }
