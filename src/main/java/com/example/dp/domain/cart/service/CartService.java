@@ -1,5 +1,6 @@
 package com.example.dp.domain.cart.service;
 
+import com.example.dp.domain.cart.dto.request.CartDeleteRequestMenuDto;
 import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
 import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.user.entity.User;
@@ -11,7 +12,7 @@ public interface CartService {
 
     CartResponseDto postCart(User user, CartRequestMenuDto cartRequestMenuDto);
 
-    void deleteCartMenu(User user, CartRequestMenuDto cartRequestMenuDto);
+    void deleteCartMenu(User user, CartDeleteRequestMenuDto deleteMenu);
 
     void deleteCart(User user);
 

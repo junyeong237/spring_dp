@@ -4,7 +4,7 @@ import static com.example.dp.global.jwt.JwtUtil.ACCESS_TOKEN_HEADER;
 import static com.example.dp.global.jwt.JwtUtil.BEARER_PREFIX;
 import static com.example.dp.global.jwt.JwtUtil.REFRESH_TOKEN_HEADER;
 
-import com.example.dp.domain.redis.RedisUtil;
+import com.example.dp.global.redis.RedisUtil;
 import com.example.dp.global.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -35,6 +35,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = jwtUtil.getTokenFromHeader(req, ACCESS_TOKEN_HEADER);
+
+        if (StringUtils.hasText(accessToken) && redisUtil.containBlackList(accessToken)) {
+            accessToken = null;
+        }
 
         if (StringUtils.hasText(accessToken) && !jwtUtil.validateToken(accessToken)) {
             String refreshToken = jwtUtil.getTokenFromHeader(req, REFRESH_TOKEN_HEADER);

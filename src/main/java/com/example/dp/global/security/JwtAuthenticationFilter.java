@@ -1,6 +1,6 @@
 package com.example.dp.global.security;
 
-import com.example.dp.domain.redis.RedisUtil;
+import com.example.dp.global.redis.RedisUtil;
 import com.example.dp.domain.user.dto.request.UserLoginRequestDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.global.jwt.JwtUtil;
@@ -21,10 +21,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
+    public final Integer REFRESH_TOKEN_TIME = 60 * 24 * 14;
+
     public JwtAuthenticationFilter(JwtUtil jwtUtil, RedisUtil redisUtil) {
         this.jwtUtil = jwtUtil;
         this.redisUtil = redisUtil;
-        setFilterProcessesUrl("/api/users/login");
+        setFilterProcessesUrl("/api/auth/login");
     }
 
     @Override
@@ -33,6 +35,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             UserLoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
                 UserLoginRequestDto.class);
+
             return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
                     requestDto.getUsername(),
@@ -61,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         refreshToken = refreshToken.split(" ")[1].trim();
 
-        redisUtil.set(refreshToken, user.getId(), 60 * 24 * 14);
+        redisUtil.set(refreshToken, user.getId(), REFRESH_TOKEN_TIME);
 
     }
 

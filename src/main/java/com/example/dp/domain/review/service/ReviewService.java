@@ -8,4 +8,7 @@ public interface ReviewService {
 
     ReviewResponseDto createReview(Long orderId, ReviewRequestDto reviewRequestDto, User user);
 
+    ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto reviewRequestDto, User user);
+
+    void deleteReview(Long reviewId, User user);
 }

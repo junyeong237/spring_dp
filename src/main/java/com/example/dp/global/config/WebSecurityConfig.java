@@ -1,6 +1,7 @@
 package com.example.dp.global.config;
 
-import com.example.dp.domain.redis.RedisUtil;
+import com.example.dp.global.redis.RedisUtil;
+import com.example.dp.domain.user.service.impl.UserLogoutImpl;
 import com.example.dp.global.jwt.JwtUtil;
 import com.example.dp.global.security.JwtAuthenticationFilter;
 import com.example.dp.global.security.JwtAuthorizationFilter;
@@ -13,8 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,6 +30,7 @@ public class WebSecurityConfig {
     private final RedisUtil redisUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final UserLogoutImpl userLogout;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,7 +57,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf((csrf) -> csrf.disable());
 
         http.sessionManagement((sessionManagement) ->
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -70,6 +72,13 @@ public class WebSecurityConfig {
         );
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.logout(logoutConfig -> {
+            logoutConfig
+                .logoutUrl("/api/auth/logout")
+                .addLogoutHandler(userLogout)
+                .logoutSuccessHandler(
+                    (request, response, authentication) -> SecurityContextHolder.clearContext());
+        });
 
         return http.build();
     }
