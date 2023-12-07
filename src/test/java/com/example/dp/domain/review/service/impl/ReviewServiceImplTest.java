@@ -55,11 +55,7 @@ class ReviewServiceImplTest {
         void 주문자_리뷰_생성() {
             // given
             User user = createAndSaveUser();
-            user = userRepository.save(user);
-
             Order order = createAndSaveOrder(user);
-            order = orderRepository.save(order);
-
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when
@@ -79,17 +75,12 @@ class ReviewServiceImplTest {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
-            user = userRepository.save(user);
-
             Order order = createAndSaveOrder(user);
-            order = orderRepository.save(order);
-
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
-            Order finalOrder = order;
             assertThatThrownBy(
-                () -> reviewService.createReview(finalOrder.getId(), requestDto, anotherUser))
+                () -> reviewService.createReview(order.getId(), requestDto, anotherUser))
                 .isInstanceOf(RuntimeException.class);
         }
 
@@ -98,21 +89,13 @@ class ReviewServiceImplTest {
         void 리뷰_중복_생성() {
             // given
             User user = createAndSaveUser();
-            user = userRepository.save(user);
-
             Order order = createAndSaveOrder(user);
-            order = orderRepository.save(order);
-
-            Review review = createAndSaveReview(order);
-            reviewRepository.save(review);
-
+            createAndSaveReview(order);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
-            Order finalOrder = order;
-            User finalUser = user;
             assertThatThrownBy(
-                () -> reviewService.createReview(finalOrder.getId(), requestDto, finalUser))
+                () -> reviewService.createReview(order.getId(), requestDto, user))
                 .isInstanceOf(RuntimeException.class);
         }
     }
@@ -126,14 +109,8 @@ class ReviewServiceImplTest {
         void 주문자_리뷰_수정() {
             // given
             User user = createAndSaveUser();
-            user = userRepository.save(user);
-
             Order order = createAndSaveOrder(user);
-            order = orderRepository.save(order);
-
             Review review = createAndSaveReview(order);
-            review = reviewRepository.save(review);
-
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when
@@ -153,20 +130,14 @@ class ReviewServiceImplTest {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
-            user = userRepository.save(user);
-
             Order order = createAndSaveOrder(user);
-            order = orderRepository.save(order);
-
             Review review = createAndSaveReview(order);
-            review = reviewRepository.save(review);
 
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
-            Review finalReview = review;
             assertThatThrownBy(
-                () -> reviewService.updateReview(finalReview.getId(), requestDto, anotherUser))
+                () -> reviewService.updateReview(review.getId(), requestDto, anotherUser))
                 .isInstanceOf(RuntimeException.class);
         }
 
@@ -175,19 +146,13 @@ class ReviewServiceImplTest {
         void 없는_리뷰_수정() {
             // given
             User user = createAndSaveUser();
-            user = userRepository.save(user);
-
             Order order = createAndSaveOrder(user);
-            order = orderRepository.save(order);
-
             long noExistReviewId = 1;
-
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
-            User finalUser = user;
             assertThatThrownBy(
-                () -> reviewService.updateReview(noExistReviewId, requestDto, finalUser))
+                () -> reviewService.updateReview(noExistReviewId, requestDto, user))
                 .isInstanceOf(RuntimeException.class);
         }
     }
