@@ -42,20 +42,9 @@ public class CartServiceImpl implements CartService {
     public CartResponseDto postCart(User user, CartRequestMenuDto cartRequestMenuDto) {
         Menu menu = findMenuByname(cartRequestMenuDto.getName());
         List<Cart> cartList = cartRepository.findByUser(user);
-        //Optional<Cart> cart1 = cartRepository.findByUserAndMenu(user, menu);
-        if (cartList.isEmpty()) {// 사용자가 장바구니를 가지고 있지 않다면 새로 장바구니 생성
-            Cart newCart = Cart.builder()
-                .menu(menu)
-                .user(user)
-                .menuCount(cartRequestMenuDto.getMenuCounts())
-                .build();
-            cartList.add(newCart);
-            cartRepository.saveAll(cartList);
-            return new CartResponseDto(newCart);
-        }
 
         Optional<Cart> cartMenu = cartRepository.findByUserAndMenu(user, menu);
-        if (cartMenu.isEmpty()) { // 사용자가 장바구니를 가지고 있지만 해당메뉴에 대한 장바구니가 없다면
+        if (cartMenu.isEmpty()) { // 사용자가 해당메뉴에 대한 장바구니가 없다면
             Cart newCart = Cart.builder()
                 .user(user)
                 .menu(menu)
