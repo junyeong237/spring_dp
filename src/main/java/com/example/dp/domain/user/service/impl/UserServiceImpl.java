@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
         }
 
         String encryptionPassword = passwordEncoder.encode(request.getPassword());
-        System.out.println(passwordEncoder.getClass());
+
         User user = User.builder()
             .username(request.getUsername())
             .email(request.getEmail())
