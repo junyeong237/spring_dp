@@ -52,11 +52,9 @@ public class ReviewServiceImpl implements ReviewService {
         final Long reviewId,
         final ReviewRequestDto reviewRequestDto,
         final User user) {
-        // 리뷰가 존재하는지
         Review review = reviewRepository.findById(reviewId)
             .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
 
-        // 작성자(주문자)랑 일치하는지
         ReviewValidator.validOrderBy(review.getOrder(), user);
 
         review.updateContent(reviewRequestDto.getContent());
