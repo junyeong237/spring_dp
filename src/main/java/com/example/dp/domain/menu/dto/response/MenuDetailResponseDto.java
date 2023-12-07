@@ -23,7 +23,7 @@ public class MenuDetailResponseDto {
         this.quantity = menu.getQuantity();
         this.status = menu.getStatus();
         this.categoryNameList = menu.getMenuCategoryList().stream()
-            .map(menuCategory -> menuCategory.getMenu().getName())
+            .map(menuCategory -> menuCategory.getCategory().getType())
             .toList();
     }
 }
