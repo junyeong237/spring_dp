@@ -26,47 +26,38 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartController {
 
     private final CartServiceImpl cartService;
-
     @GetMapping
     public ResponseEntity<List<CartResponseDto>> getCart(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
     ) {
-
         List<CartResponseDto> cartList = cartService.getCart(userDetailsImpl.getUser());
         return ResponseEntity.ok(cartList);
-
-
     }
 
     @PostMapping("/menus")
     public ResponseEntity<CartResponseDto> postCart(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
         @RequestBody CartRequestMenuDto cartRequestMenuDto
-    ){
+    ) {
         CartResponseDto cartResponseDto = cartService.postCart(userDetailsImpl.getUser(),
             cartRequestMenuDto);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(cartResponseDto);
-
     }
 
     @DeleteMapping("/menus")
-    public ResponseEntity<?> deleteCartMenu(
+    public ResponseEntity<Void> deleteCartMenu(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
         @RequestBody CartDeleteRequestMenuDto cartDeleteRequestMenuDto
-    ){
-        cartService.deleteCartMenu(userDetailsImpl.getUser(),cartDeleteRequestMenuDto);
-
+    ) {
+        cartService.deleteCartMenu(userDetailsImpl.getUser(), cartDeleteRequestMenuDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
-
     }
 
     @DeleteMapping("/menus/clear")
-    public ResponseEntity<?> deleteUserCartAll(
+    public ResponseEntity<Void> deleteUserCartAll(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
-    ){
+    ) {
         cartService.deleteCart(userDetailsImpl.getUser());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
-
 }
