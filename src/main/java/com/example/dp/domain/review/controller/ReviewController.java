@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +25,18 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDto> createReview(
         @PathVariable Long orderId,
         @RequestBody ReviewRequestDto reviewRequestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
-    ) {
+        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         ReviewResponseDto responseDto = reviewService.createReview(orderId, reviewRequestDto,
+            userDetailsImpl.getUser());
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> updateReview(
+        @PathVariable Long reviewId,
+        @RequestBody ReviewRequestDto reviewRequestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        ReviewResponseDto responseDto = reviewService.updateReview(reviewId, reviewRequestDto,
             userDetailsImpl.getUser());
         return ResponseEntity.ok(responseDto);
     }

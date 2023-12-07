@@ -39,4 +39,7 @@ public class Review extends TimeEntity {
         this.content = content;
     }
 
+    public void updateContent(final String content) {
+        this.content = content;
+    }
 }
