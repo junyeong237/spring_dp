@@ -54,7 +54,7 @@ public class OrderIntegrationTest {
     private Menu menu1;
     private Menu menu2;
 
-    //@BeforeAll
+    @BeforeAll
     void setup() {
         user = User.builder()
             .username("홍길동")
@@ -84,7 +84,6 @@ public class OrderIntegrationTest {
     @org.junit.jupiter.api.Order(1)
     @DisplayName("주문하기")
     void 장바구니_생성후_주문하기() {
-        setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
