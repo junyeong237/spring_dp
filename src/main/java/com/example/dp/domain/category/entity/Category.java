@@ -1,5 +1,6 @@
 package com.example.dp.domain.category.entity;
 
+import com.example.dp.domain.category.dto.request.CategoryRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,5 +28,9 @@ public class Category {
     @Builder
     private Category(String type) {
         this.type = type;
+    }
+
+    public void update(final CategoryRequestDto requestDto) {
+        this.type = requestDto.getType();
     }
 }

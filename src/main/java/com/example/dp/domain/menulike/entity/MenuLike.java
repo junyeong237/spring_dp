@@ -1,4 +1,4 @@
-package com.example.dp.domain.like.entity;
+package com.example.dp.domain.menulike.entity;
 
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.model.TimeEntity;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "TB_LIKE")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like extends TimeEntity {
+public class MenuLike extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

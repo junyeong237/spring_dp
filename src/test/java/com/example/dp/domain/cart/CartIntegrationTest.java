@@ -3,16 +3,22 @@ package com.example.dp.domain.cart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.example.dp.domain.admin.service.impl.AdminMenuServiceImpl;
 import com.example.dp.domain.cart.dto.request.CartDeleteRequestMenuDto;
 import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
 import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
+import com.example.dp.domain.category.entity.Category;
+import com.example.dp.domain.category.repository.CategoryRepository;
+import com.example.dp.domain.menu.dto.request.MenuRequestDto;
+import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -37,10 +43,18 @@ public class CartIntegrationTest {
     MenuRepository menuRepository;
     @Autowired
     CartServiceImpl cartService;
+    @Autowired
+    AdminMenuServiceImpl adminMenuService;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     private User user;
     private Menu menu1;
     private Menu menu2;
+
+    private Category category1;
+
+    private Category category2;
 
     @BeforeAll
     void setup() {
@@ -52,20 +66,38 @@ public class CartIntegrationTest {
             .build();
 
         userRepository.save(user);
-        menu1 = Menu.builder()
+
+        category1 = Category.builder()
+            .type("버거")
+            .build();
+        category2 = Category.builder()
+            .type("치킨")
+            .build();
+
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+
+        MenuRequestDto menuRequestDto1 = MenuRequestDto.builder()
             .name("햄버거")
-            .price(3000)
             .description("맛있는 햄버거")
+            .price(3000)
             .quantity(50)
+            .status(true)
+            .categoryNameList(Arrays.asList("버거"))
             .build();
-        menu2 = Menu.builder()
+        MenuDetailResponseDto responseDto1 = adminMenuService.createMenu(menuRequestDto1);
+        menu1 = menuRepository.findById(responseDto1.getId()).orElseThrow(RuntimeException::new);
+
+        MenuRequestDto menuRequestDto2 = MenuRequestDto.builder()
             .name("치킨")
-            .price(13000)
             .description("맛있는 치킨")
+            .price(13000)
             .quantity(50)
+            .status(true)
+            .categoryNameList(Arrays.asList("치킨"))
             .build();
-        menuRepository.save(menu1);
-        menuRepository.save(menu2);
+        MenuDetailResponseDto responseDto2 = adminMenuService.createMenu(menuRequestDto2);
+        menu2 = menuRepository.findById(responseDto2.getId()).orElseThrow(RuntimeException::new);
     }
 
     @Test
