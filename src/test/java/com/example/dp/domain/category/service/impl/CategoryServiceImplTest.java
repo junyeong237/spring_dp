@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.example.dp.domain.category.dto.request.CategoryRequestDto;
 import com.example.dp.domain.category.dto.response.CategoryResponseDto;
 import com.example.dp.domain.category.entity.Category;
+import com.example.dp.domain.category.exception.ExistsCategoryTypeException;
+import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.category.service.CategoryService;
 import com.navercorp.fixturemonkey.FixtureMonkey;
@@ -17,7 +19,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -73,7 +74,7 @@ class CategoryServiceImplTest {
 
             // When - Then
             assertThatThrownBy(() -> categoryService.createCategory(requestDto))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(ExistsCategoryTypeException.class);
         }
     }
 
@@ -110,8 +111,8 @@ class CategoryServiceImplTest {
 
             // When - Then
             assertThatThrownBy(() -> categoryService.updateCategory(
-                2L, new CategoryRequestDto("수정 테스트")))
-                .isInstanceOf(RuntimeException.class);
+                2214125125151L, new CategoryRequestDto("수정 테스트")))
+                .isInstanceOf(NotFoundCategoryException.class);
         }
     }
 
@@ -136,14 +137,14 @@ class CategoryServiceImplTest {
             assertThat(categoryRepository.existsById(responseDto.getId())).isEqualTo(false);
         }
 
-        @DisplayName("카테고리 수정 실패 : 없는 카테고리")
+        @DisplayName("카테고리 삭제 실패 : 없는 카테고리")
         @Test
         void 카테고리_삭제_실패() {
             // Given x
 
             // When - Then
-            assertThatThrownBy(() -> categoryService.deleteCategory(2L))
-                .isInstanceOf(RuntimeException.class);
+            assertThatThrownBy(() -> categoryService.deleteCategory(1023241251L))
+                .isInstanceOf(NotFoundCategoryException.class);
         }
     }
 }
