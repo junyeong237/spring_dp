@@ -6,7 +6,7 @@ import com.example.dp.domain.order.repository.OrderRepository;
 import com.example.dp.domain.review.dto.request.ReviewRequestDto;
 import com.example.dp.domain.review.dto.response.ReviewResponseDto;
 import com.example.dp.domain.review.entity.Review;
-import com.example.dp.domain.review.exception.ForbiddenAccessException;
+import com.example.dp.domain.review.exception.ForbiddenAccessReviewException;
 import com.example.dp.domain.review.exception.ForbiddenCreateReviewException;
 import com.example.dp.domain.review.exception.NotFoundOrderException;
 import com.example.dp.domain.review.exception.NotFoundReviewException;
@@ -43,7 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         if (!order.getUser().getId().equals(user.getId())) {
-            throw new ForbiddenAccessException(ReviewErrorCode.FORBIDDEN_ACCESS);
+            throw new ForbiddenAccessReviewException(ReviewErrorCode.FORBIDDEN_ACCESS);
         }
 
         if (reviewRepository.existsByOrder(order)) {
@@ -71,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
             .orElseThrow(() -> new NotFoundReviewException(ReviewErrorCode.NOT_FOUND_REVIEW));
 
         if (!review.getOrder().getUser().getId().equals(user.getId())) {
-            throw new ForbiddenAccessException(ReviewErrorCode.FORBIDDEN_ACCESS);
+            throw new ForbiddenAccessReviewException(ReviewErrorCode.FORBIDDEN_ACCESS);
         }
 
         review.updateContent(reviewRequestDto.getContent());
@@ -85,7 +85,7 @@ public class ReviewServiceImpl implements ReviewService {
             .orElseThrow(() -> new NotFoundReviewException(ReviewErrorCode.NOT_FOUND_REVIEW));
 
         if (!review.getOrder().getUser().getId().equals(user.getId())) {
-            throw new ForbiddenAccessException(ReviewErrorCode.FORBIDDEN_ACCESS);
+            throw new ForbiddenAccessReviewException(ReviewErrorCode.FORBIDDEN_ACCESS);
         }
 
         reviewRepository.delete(review);
