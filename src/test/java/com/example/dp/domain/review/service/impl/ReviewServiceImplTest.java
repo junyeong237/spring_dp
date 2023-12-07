@@ -2,19 +2,25 @@ package com.example.dp.domain.review.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.shouldHaveThrown;
 
 import com.example.dp.domain.order.entity.Order;
+import com.example.dp.domain.order.entity.OrderState;
 import com.example.dp.domain.order.repository.OrderRepository;
 import com.example.dp.domain.review.dto.request.ReviewRequestDto;
 import com.example.dp.domain.review.dto.response.ReviewResponseDto;
 import com.example.dp.domain.review.entity.Review;
 import com.example.dp.domain.review.repository.ReviewRepository;
 import com.example.dp.domain.review.service.ReviewService;
+import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
+import java.util.ArrayList;
+import java.util.List;
+import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -52,7 +58,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("주문자가 리뷰를 생성하는 경우")
-        void 주문자_리뷰_생성() {
+        void createReview() {
             // given
             User user = createAndSaveUser();
             Order order = createAndSaveOrder(user);
@@ -71,7 +77,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("주문자가 아닌 사람이 리뷰를 생성하는 경우")
-        void 다른_사람이_리뷰_생성() {
+        void createReviewByAnotherUser() {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
@@ -86,11 +92,11 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("이미 리뷰가 존재한 상태에서 리뷰를 생성하는 경우")
-        void 리뷰_중복_생성() {
+        void createReviewAgain() {
             // given
             User user = createAndSaveUser();
             Order order = createAndSaveOrder(user);
-            createAndSaveReview(order);
+            createAndSaveReview(order, user);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
@@ -106,11 +112,11 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("주문자가 리뷰를 수정하는 경우")
-        void 주문자_리뷰_수정() {
+        void updateReview() {
             // given
             User user = createAndSaveUser();
             Order order = createAndSaveOrder(user);
-            Review review = createAndSaveReview(order);
+            Review review = createAndSaveReview(order, user);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when
@@ -126,12 +132,12 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("주문자가 아닌 사람이 리뷰를 수정하는 경우")
-        void 다른_사람이_리뷰_수정() {
+        void updateReviewByAnotherUser() {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
             Order order = createAndSaveOrder(user);
-            Review review = createAndSaveReview(order);
+            Review review = createAndSaveReview(order, user);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
@@ -142,7 +148,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("존재하지 않는 리뷰를 수정하는 경우")
-        void 없는_리뷰_수정() {
+        void updateNonExistReview() {
             // given
             User user = createAndSaveUser();
             long noExistReviewId = 10;
@@ -161,11 +167,11 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("작성자가 리뷰를 삭제하는 경우")
-        void 작성자_리뷰_삭제() {
+        void deleteReview() {
             // given
             User user = createAndSaveUser();
             Order order = createAndSaveOrder(user);
-            Review review = createAndSaveReview(order);
+            Review review = createAndSaveReview(order, user);
 
             // when
             reviewService.deleteReview(review.getId(), user);
@@ -176,12 +182,12 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("작성자가 아닌 사람이 리뷰를 삭제하는 경우")
-        void 다른_사람이_리뷰_삭제() {
+        void deleteReviewByAnotherUser() {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
             Order order = createAndSaveOrder(user);
-            Review review = createAndSaveReview(order);
+            Review review = createAndSaveReview(order, user);
 
             // when - then
             assertThatThrownBy(
@@ -191,7 +197,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("존재하지 않는 리뷰를 삭제하는 경우")
-        void 없는_리뷰_삭제() {
+        void deleteNonExistReview() {
             // given
             User user = createAndSaveUser();
             long noExistReviewId = 10;
@@ -203,9 +209,56 @@ class ReviewServiceImplTest {
         }
     }
 
+    @Nested
+    @DisplayName("리뷰 조회 테스트")
+    class ReadReviewTest {
+
+        @Test
+        @DisplayName("사용자가 작성한 리뷰 조회")
+        void readUserReview() {
+            // given
+            int count = 5;
+//            User user = createAndSaveUser();
+//            for (int i = 0; i < count; i++) {
+//                Order order = createAndSaveOrder(user);
+//                createAndSaveReview(order, user);
+//            }
+            User user = User.builder()
+                .email("asdas@asd.asd")
+                .username("asdasd")
+                .password("asdasdasd")
+                .role(UserRole.USER)
+                .build();
+            user = userRepository.save(user);
+
+            List<Order> orders = new ArrayList<>();
+            List<Review> reviews = new ArrayList<>();
+            for(int i=0;i<count;i++) {
+                Order order = Order.builder()
+                    .user(user)
+                    .state(OrderState.PENDING)
+                    .build();
+                orders.add(orderRepository.save(order));
+                Review review = Review.builder()
+                    .user(user)
+                    .order(order)
+                    .content("asdsa")
+                    .build();
+                reviews.add(reviewRepository.save(review));
+            }
+
+            // when
+            List<ReviewResponseDto> responseDto = reviewService.getUserReviews(user.getId());
+
+            // then
+            assertThat(responseDto.size()).isEqualTo(count);
+        }
+    }
+
     private User createAndSaveUser() {
         User sample = fixtureMonkey.giveMeBuilder(User.class)
             .setNotNull("*")
+            .setNull("id")
             .sample();
         return userRepository.save(sample);
     }
@@ -213,16 +266,19 @@ class ReviewServiceImplTest {
     private Order createAndSaveOrder(User user) {
         Order sample = fixtureMonkey.giveMeBuilder(Order.class)
             .setNotNull("*")
+            .setNull("id")
             .setNull("orderMenuList")
             .set("user", user)
             .sample();
         return orderRepository.save(sample);
     }
 
-    private Review createAndSaveReview(Order order) {
+    private Review createAndSaveReview(Order order, User user) {
         Review sample = fixtureMonkey.giveMeBuilder(Review.class)
             .setNotNull("*")
+            .setNull("id")
             .set("order", order)
+            .set("user", user)
             .sample();
         return reviewRepository.save(sample);
     }
