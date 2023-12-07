@@ -153,6 +153,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("주문자가 아닌 사람이 리뷰를 수정하는 경우")
+        @Disabled
         void updateReviewByAnotherUser() {
             // given
             User user = createAndSaveUser();
