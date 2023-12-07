@@ -132,7 +132,6 @@ class ReviewServiceImplTest {
             User anotherUser = createAndSaveUser();
             Order order = createAndSaveOrder(user);
             Review review = createAndSaveReview(order);
-
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
@@ -146,13 +145,60 @@ class ReviewServiceImplTest {
         void 없는_리뷰_수정() {
             // given
             User user = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
-            long noExistReviewId = 1;
+            long noExistReviewId = 10;
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
             assertThatThrownBy(
                 () -> reviewService.updateReview(noExistReviewId, requestDto, user))
+                .isInstanceOf(RuntimeException.class);
+        }
+    }
+
+    @Nested
+    @DisplayName("리뷰 삭제 테스트")
+    class DeleteReviewTest {
+
+        @Test
+        @DisplayName("작성자가 리뷰를 삭제하는 경우")
+        void 작성자_리뷰_삭제() {
+            // given
+            User user = createAndSaveUser();
+            Order order = createAndSaveOrder(user);
+            Review review = createAndSaveReview(order);
+
+            // when
+            reviewService.deleteReview(review.getId(), user);
+
+            // then
+            assertThat(reviewRepository.existsById(review.getId())).isEqualTo(false);
+        }
+
+        @Test
+        @DisplayName("작성자가 아닌 사람이 리뷰를 삭제하는 경우")
+        void 다른_사람이_리뷰_삭제() {
+            // given
+            User user = createAndSaveUser();
+            User anotherUser = createAndSaveUser();
+            Order order = createAndSaveOrder(user);
+            Review review = createAndSaveReview(order);
+
+            // when - then
+            assertThatThrownBy(
+                () -> reviewService.deleteReview(review.getId(), anotherUser))
+                .isInstanceOf(RuntimeException.class);
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 리뷰를 삭제하는 경우")
+        void 없는_리뷰_삭제() {
+            // given
+            User user = createAndSaveUser();
+            long noExistReviewId = 10;
+
+            // when - then
+            assertThatThrownBy(
+                () -> reviewService.deleteReview(noExistReviewId, user))
                 .isInstanceOf(RuntimeException.class);
         }
     }
@@ -180,6 +226,4 @@ class ReviewServiceImplTest {
             .sample();
         return reviewRepository.save(sample);
     }
-
-
 }
