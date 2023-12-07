@@ -1,7 +1,7 @@
 package com.example.dp.domain.order.controller;
 
 
-import com.example.dp.domain.order.dto.OrderResponseDto;
+import com.example.dp.domain.order.dto.response.OrderResponseDto;
 import com.example.dp.domain.order.dto.response.OrderSimpleResponseDto;
 import com.example.dp.domain.order.service.impl.OrderServiceImpl;
 import com.example.dp.global.security.UserDetailsImpl;
@@ -24,7 +24,7 @@ public class OrderController {
 
     private final OrderServiceImpl orderService;
 
-    @PostMapping("")
+    @PostMapping()
     public ResponseEntity<OrderResponseDto> createOrders(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
     ){

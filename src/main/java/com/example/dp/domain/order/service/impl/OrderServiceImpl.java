@@ -3,7 +3,7 @@ package com.example.dp.domain.order.service.impl;
 import com.example.dp.domain.cart.entity.Cart;
 import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
-import com.example.dp.domain.order.dto.OrderResponseDto;
+import com.example.dp.domain.order.dto.response.OrderResponseDto;
 import com.example.dp.domain.order.dto.response.OrderSimpleResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
