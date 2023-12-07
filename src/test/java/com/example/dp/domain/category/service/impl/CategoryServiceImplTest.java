@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.example.dp.domain.category.dto.request.CategoryRequestDto;
 import com.example.dp.domain.category.dto.response.CategoryResponseDto;
 import com.example.dp.domain.category.entity.Category;
+import com.example.dp.domain.category.exception.ExistsCategoryTypeException;
+import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.category.service.CategoryService;
 import com.navercorp.fixturemonkey.FixtureMonkey;
@@ -73,7 +75,7 @@ class CategoryServiceImplTest {
 
             // When - Then
             assertThatThrownBy(() -> categoryService.createCategory(requestDto))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(ExistsCategoryTypeException.class);
         }
     }
 
@@ -111,7 +113,7 @@ class CategoryServiceImplTest {
             // When - Then
             assertThatThrownBy(() -> categoryService.updateCategory(
                 2L, new CategoryRequestDto("수정 테스트")))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(NotFoundCategoryException.class);
         }
     }
 
@@ -143,7 +145,7 @@ class CategoryServiceImplTest {
 
             // When - Then
             assertThatThrownBy(() -> categoryService.deleteCategory(2L))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(NotFoundCategoryException.class);
         }
     }
 }

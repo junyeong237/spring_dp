@@ -3,6 +3,9 @@ package com.example.dp.domain.category.service.impl;
 import com.example.dp.domain.category.dto.request.CategoryRequestDto;
 import com.example.dp.domain.category.dto.response.CategoryResponseDto;
 import com.example.dp.domain.category.entity.Category;
+import com.example.dp.domain.category.exception.CategoryErrorCode;
+import com.example.dp.domain.category.exception.ExistsCategoryTypeException;
+import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponseDto createCategory(final CategoryRequestDto requestDto) {
 
+        if (categoryRepository.existsByType(requestDto.getType())) {
+            throw new ExistsCategoryTypeException(CategoryErrorCode.EXISTS_CATEGORY_TYPE);
+        }
         Category category = Category.builder()
             .type(requestDto.getType())
             .build();
@@ -45,6 +51,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private Category findCategory(final Long categoryId) {
         return categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new RuntimeException("중복된 카테고리 입니다"));
+            .orElseThrow(() -> new NotFoundCategoryException(CategoryErrorCode.NOT_FOUND_CATEGORY));
     }
 }
