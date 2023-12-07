@@ -10,6 +10,10 @@ import com.example.dp.domain.order.repository.OrderRepository;
 import com.example.dp.domain.review.dto.request.ReviewRequestDto;
 import com.example.dp.domain.review.dto.response.ReviewResponseDto;
 import com.example.dp.domain.review.entity.Review;
+import com.example.dp.domain.review.exception.ForbiddenAccessReviewException;
+import com.example.dp.domain.review.exception.ForbiddenCreateReviewException;
+import com.example.dp.domain.review.exception.NotFoundReviewException;
+import com.example.dp.domain.review.exception.ReviewAlreadyExistsException;
 import com.example.dp.domain.review.repository.ReviewRepository;
 import com.example.dp.domain.review.service.ReviewService;
 import com.example.dp.domain.user.UserRole;
@@ -28,6 +32,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -62,7 +67,7 @@ class ReviewServiceImplTest {
         void createReview() {
             // given
             User user = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when
@@ -77,18 +82,33 @@ class ReviewServiceImplTest {
         }
 
         @Test
-        @DisplayName("주문자가 아닌 사람이 리뷰를 생성하는 경우")
-        void createReviewByAnotherUser() {
+        @DisplayName("아직 완료되지 않은 주문에 리뷰를 생성하는 경우")
+        void createReviewWhilePending() {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.PENDING);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
             assertThatThrownBy(
                 () -> reviewService.createReview(order.getId(), requestDto, anotherUser))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(ForbiddenCreateReviewException.class);
+        }
+
+        @Test
+        @DisplayName("주문자가 아닌 사람이 리뷰를 생성하는 경우")
+        void createReviewByAnotherUser() {
+            // given
+            User user = createAndSaveUser();
+            User anotherUser = createAndSaveUser();
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
+            ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
+
+            // when - then
+            assertThatThrownBy(
+                () -> reviewService.createReview(order.getId(), requestDto, anotherUser))
+                .isInstanceOf(ForbiddenAccessReviewException.class);
         }
 
         @Test
@@ -96,14 +116,14 @@ class ReviewServiceImplTest {
         void createReviewAgain() {
             // given
             User user = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
             createAndSaveReview(order, user);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
             assertThatThrownBy(
                 () -> reviewService.createReview(order.getId(), requestDto, user))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(ReviewAlreadyExistsException.class);
         }
     }
 
@@ -116,7 +136,7 @@ class ReviewServiceImplTest {
         void updateReview() {
             // given
             User user = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
             Review review = createAndSaveReview(order, user);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
@@ -137,14 +157,14 @@ class ReviewServiceImplTest {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
             Review review = createAndSaveReview(order, user);
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
 
             // when - then
             assertThatThrownBy(
                 () -> reviewService.updateReview(review.getId(), requestDto, anotherUser))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(ForbiddenAccessReviewException.class);
         }
 
         @Test
@@ -158,7 +178,7 @@ class ReviewServiceImplTest {
             // when - then
             assertThatThrownBy(
                 () -> reviewService.updateReview(noExistReviewId, requestDto, user))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(NotFoundReviewException.class);
         }
     }
 
@@ -171,7 +191,7 @@ class ReviewServiceImplTest {
         void deleteReview() {
             // given
             User user = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
             Review review = createAndSaveReview(order, user);
 
             // when
@@ -187,13 +207,13 @@ class ReviewServiceImplTest {
             // given
             User user = createAndSaveUser();
             User anotherUser = createAndSaveUser();
-            Order order = createAndSaveOrder(user);
+            Order order = createAndSaveOrder(user, OrderState.COMPLETED);
             Review review = createAndSaveReview(order, user);
 
             // when - then
             assertThatThrownBy(
                 () -> reviewService.deleteReview(review.getId(), anotherUser))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(ForbiddenAccessReviewException.class);
         }
 
         @Test
@@ -206,7 +226,7 @@ class ReviewServiceImplTest {
             // when - then
             assertThatThrownBy(
                 () -> reviewService.deleteReview(noExistReviewId, user))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(NotFoundReviewException.class);
         }
     }
 
@@ -214,17 +234,13 @@ class ReviewServiceImplTest {
     @DisplayName("리뷰 조회 테스트")
     class ReadReviewTest {
 
+        @Transactional(propagation = Propagation.NEVER)
         @Test
         @DisplayName("사용자가 작성한 리뷰 조회")
-        @Disabled
         void readUserReview() {
             // given
             int count = 5;
-//            User user = createAndSaveUser();
-//            for (int i = 0; i < count; i++) {
-//                Order order = createAndSaveOrder(user);
-//                createAndSaveReview(order, user);
-//            }
+
             User user = User.builder()
                 .email("asdas@asd.asd")
                 .username("asdasd")
@@ -236,7 +252,7 @@ class ReviewServiceImplTest {
             for(int i=0;i<count;i++) {
                 Order order = Order.builder()
                     .user(user)
-                    .state(OrderState.PENDING)
+                    .state(OrderState.COMPLETED)
                     .build();
                 orderRepository.save(order);
                 Review review = Review.builder()
@@ -263,12 +279,13 @@ class ReviewServiceImplTest {
         return userRepository.save(sample);
     }
 
-    private Order createAndSaveOrder(User user) {
+    private Order createAndSaveOrder(final User user, final OrderState orderState) {
         Order sample = fixtureMonkey.giveMeBuilder(Order.class)
             .setNotNull("*")
             .setNull("id")
             .setNull("orderMenuList")
             .set("user", user)
+            .set("state", orderState)
             .sample();
         return orderRepository.save(sample);
     }
