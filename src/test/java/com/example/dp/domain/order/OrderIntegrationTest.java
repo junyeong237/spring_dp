@@ -51,34 +51,34 @@ public class OrderIntegrationTest {
     @Autowired
     OrderServiceImpl orderService;
 
-    private User user;
-    private Menu menu1;
-    private Menu menu2;
+    private User user1;
+    private Menu menu11;
+    private Menu menu12;
 
     @BeforeAll
     void setup() {
-        user = User.builder()
+        user1 = User.builder()
             .username("홍길동1")
             .password("1234567891")
             .email("junyeong2371@gmail.com")
             .role(UserRole.USER)
             .build();
 
-        userRepository.save(user);
-        menu1 = Menu.builder()
+        userRepository.save(user1);
+        menu11 = Menu.builder()
             .name("햄버거")
             .price(3000)
             .description("맛있는 햄버거")
             .quantity(50)
             .build();
-        menu2 = Menu.builder()
+        menu12 = Menu.builder()
             .name("치킨")
             .price(13000)
             .description("맛있는 치킨")
             .quantity(50)
             .build();
-        menuRepository.save(menu1);
-        menuRepository.save(menu2);
+        menuRepository.save(menu11);
+        menuRepository.save(menu12);
     }
 
     @Test
@@ -88,15 +88,15 @@ public class OrderIntegrationTest {
 
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
 
-        CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
+        CartResponseDto cart = cartService.postCart(user1, cartRequestMenuDto);
         CartRequestMenuDto cart2RequestMenuDto = new CartRequestMenuDto("치킨", 2, 26000);
 
-        CartResponseDto cart2 = cartService.postCart(user, cart2RequestMenuDto);
+        CartResponseDto cart2 = cartService.postCart(user1, cart2RequestMenuDto);
 
-        OrderResponseDto orderResponseDto = orderService.createOrder(user);
+        OrderResponseDto orderResponseDto = orderService.createOrder(user1);
         assertNotNull(orderResponseDto);
-        assertEquals(Collections.emptyList(),cartRepository.findByUser(user));
-        assertEquals(user.getUsername(), orderResponseDto.getUser().getUsername());
+        assertEquals(Collections.emptyList(),cartRepository.findByUser(user1));
+        assertEquals(user1.getUsername(), orderResponseDto.getUser().getUsername());
         assertEquals(2, orderResponseDto.getOrderMenuList().size());
 
     }
@@ -108,9 +108,9 @@ public class OrderIntegrationTest {
 
         Order order = orderRepository.findById(1L)
             .orElseThrow(()-> new IllegalArgumentException("해당하는 주문이 없습니다."));
-        orderService.deleteOrder(user,order.getId());
+        orderService.deleteOrder(user1,order.getId());
 
-        List<Order> orderList = orderRepository.findByUserAndState(user,OrderState.CANCELLED);
+        List<Order> orderList = orderRepository.findByUserAndState(user1,OrderState.CANCELLED);
 
         //취소된 주문건무
         assertEquals(1,orderList.size());
@@ -126,10 +126,10 @@ public class OrderIntegrationTest {
     void 사용자_주문_조회() {
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3, 9000);
 
-        CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
-        OrderResponseDto orderResponseDto = orderService.createOrder(user);
+        CartResponseDto cart = cartService.postCart(user1, cartRequestMenuDto);
+        OrderResponseDto orderResponseDto = orderService.createOrder(user1);
 
-        List<Order> orderList = orderRepository.findByUser(user);
+        List<Order> orderList = orderRepository.findByUser(user1);
 
         //취소된 주문건무
         assertNotNull(orderList);
