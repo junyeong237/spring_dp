@@ -15,6 +15,12 @@ on:
 #   S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
 #   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
+permissions:
+  contents: read
+  issues: read
+  checks: write
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
