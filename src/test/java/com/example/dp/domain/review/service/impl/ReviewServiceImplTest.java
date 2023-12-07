@@ -54,10 +54,10 @@ class ReviewServiceImplTest {
         @DisplayName("주문자가 리뷰를 생성하는 경우")
         void 주문자_리뷰_생성() {
             // given
-            User user = createUser();
+            User user = createAndSaveUser();
             user = userRepository.save(user);
 
-            Order order = createOrder(user);
+            Order order = createAndSaveOrder(user);
             order = orderRepository.save(order);
 
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
@@ -77,11 +77,11 @@ class ReviewServiceImplTest {
         @DisplayName("주문자가 아닌 사람이 리뷰를 생성하는 경우")
         void 다른_사람이_리뷰_생성() {
             // given
-            User user = createUser();
-            User anotherUser = createUser();
+            User user = createAndSaveUser();
+            User anotherUser = createAndSaveUser();
             user = userRepository.save(user);
 
-            Order order = createOrder(user);
+            Order order = createAndSaveOrder(user);
             order = orderRepository.save(order);
 
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
@@ -97,13 +97,13 @@ class ReviewServiceImplTest {
         @DisplayName("이미 리뷰가 존재한 상태에서 리뷰를 생성하는 경우")
         void 리뷰_중복_생성() {
             // given
-            User user = createUser();
+            User user = createAndSaveUser();
             user = userRepository.save(user);
 
-            Order order = createOrder(user);
+            Order order = createAndSaveOrder(user);
             order = orderRepository.save(order);
 
-            Review review = createReview(order);
+            Review review = createAndSaveReview(order);
             reviewRepository.save(review);
 
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
@@ -125,13 +125,13 @@ class ReviewServiceImplTest {
         @DisplayName("주문자가 리뷰를 수정하는 경우")
         void 주문자_리뷰_수정() {
             // given
-            User user = createUser();
+            User user = createAndSaveUser();
             user = userRepository.save(user);
 
-            Order order = createOrder(user);
+            Order order = createAndSaveOrder(user);
             order = orderRepository.save(order);
 
-            Review review = createReview(order);
+            Review review = createAndSaveReview(order);
             review = reviewRepository.save(review);
 
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
@@ -151,14 +151,14 @@ class ReviewServiceImplTest {
         @DisplayName("주문자가 아닌 사람이 리뷰를 수정하는 경우")
         void 다른_사람이_리뷰_수정() {
             // given
-            User user = createUser();
-            User anotherUser = createUser();
+            User user = createAndSaveUser();
+            User anotherUser = createAndSaveUser();
             user = userRepository.save(user);
 
-            Order order = createOrder(user);
+            Order order = createAndSaveOrder(user);
             order = orderRepository.save(order);
 
-            Review review = createReview(order);
+            Review review = createAndSaveReview(order);
             review = reviewRepository.save(review);
 
             ReviewRequestDto requestDto = new ReviewRequestDto("테스트 내용");
@@ -174,10 +174,10 @@ class ReviewServiceImplTest {
         @DisplayName("존재하지 않는 리뷰를 수정하는 경우")
         void 없는_리뷰_수정() {
             // given
-            User user = createUser();
+            User user = createAndSaveUser();
             user = userRepository.save(user);
 
-            Order order = createOrder(user);
+            Order order = createAndSaveOrder(user);
             order = orderRepository.save(order);
 
             long noExistReviewId = 1;
@@ -192,25 +192,28 @@ class ReviewServiceImplTest {
         }
     }
 
-    private User createUser() {
-        return fixtureMonkey.giveMeBuilder(User.class)
+    private User createAndSaveUser() {
+        User sample = fixtureMonkey.giveMeBuilder(User.class)
             .setNotNull("*")
             .sample();
+        return userRepository.save(sample);
     }
 
-    private Order createOrder(User user) {
-        return fixtureMonkey.giveMeBuilder(Order.class)
+    private Order createAndSaveOrder(User user) {
+        Order sample = fixtureMonkey.giveMeBuilder(Order.class)
             .setNotNull("*")
             .setNull("orderMenuList")
             .set("user", user)
             .sample();
+        return orderRepository.save(sample);
     }
 
-    private Review createReview(Order order) {
-        return fixtureMonkey.giveMeBuilder(Review.class)
+    private Review createAndSaveReview(Order order) {
+        Review sample = fixtureMonkey.giveMeBuilder(Review.class)
             .setNotNull("*")
             .set("order", order)
             .sample();
+        return reviewRepository.save(sample);
     }
 
 
