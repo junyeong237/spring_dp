@@ -40,7 +40,7 @@ public class AdminMenuController {
     }
 
     @DeleteMapping("/menus/{menuId}")
-    public ResponseEntity<?> deleteMenu(@PathVariable Long menuId) {
+    public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
         adminMenuService.deleteMenu(menuId);
         return ResponseEntity.noContent().build();
     }
