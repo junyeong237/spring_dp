@@ -37,8 +37,14 @@ public class CategoryServiceImpl implements CategoryService {
         return new CategoryResponseDto(category);
     }
 
+    @Override
+    public void deleteCategory(final Long categoryId) {
+        Category category = findCategory(categoryId);
+        categoryRepository.delete(category);
+    }
+
     private Category findCategory(final Long categoryId) {
         return categoryRepository.findById(categoryId)
-            .orElseThrow(RuntimeException::new);
+            .orElseThrow(() -> new RuntimeException("중복된 카테고리 입니다"));
     }
 }

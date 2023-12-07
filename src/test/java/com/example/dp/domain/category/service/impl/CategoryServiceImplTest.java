@@ -60,7 +60,7 @@ class CategoryServiceImplTest {
             assertThat(findCategory.getType()).isEqualTo(responseDto.getType());
         }
 
-        @DisplayName("중복된 카테고리 생성 실패")
+        @DisplayName("카테고리 생성 실패 : 중복된 카테고리")
         @Test
         void 중복된_카테고리_생성_실패() {
             // Given
@@ -111,6 +111,38 @@ class CategoryServiceImplTest {
             // When - Then
             assertThatThrownBy(() -> categoryService.updateCategory(
                 2L, new CategoryRequestDto("수정 테스트")))
+                .isInstanceOf(RuntimeException.class);
+        }
+    }
+
+    @DisplayName("카테고리 삭제 테스트")
+    @Nested
+    class deleteCategory{
+        @DisplayName("카테고리 삭제 성공")
+        @Test
+        void 카테고리_삭제_성공(){
+            // Given
+            Category category = fixtureMonkey.giveMeBuilder(Category.class)
+                .setNotNull("*")
+                .sample();
+
+            CategoryRequestDto requestDto = new CategoryRequestDto(category.getType());
+            CategoryResponseDto responseDto = categoryService.createCategory(requestDto);
+
+            // When
+            categoryService.deleteCategory(responseDto.getId());
+
+            // Then
+            assertThat(categoryRepository.existsById(responseDto.getId())).isEqualTo(false);
+        }
+
+        @DisplayName("카테고리 수정 실패 : 없는 카테고리")
+        @Test
+        void 카테고리_삭제_실패() {
+            // Given x
+
+            // When - Then
+            assertThatThrownBy(() -> categoryService.deleteCategory(2L))
                 .isInstanceOf(RuntimeException.class);
         }
     }
