@@ -1,13 +1,20 @@
 package com.example.dp.domain.review.service.impl;
 
 import com.example.dp.domain.order.entity.Order;
+import com.example.dp.domain.order.entity.OrderState;
 import com.example.dp.domain.order.repository.OrderRepository;
 import com.example.dp.domain.review.dto.request.ReviewRequestDto;
 import com.example.dp.domain.review.dto.response.ReviewResponseDto;
 import com.example.dp.domain.review.entity.Review;
+import com.example.dp.domain.review.exception.ForbiddenAccessException;
+import com.example.dp.domain.review.exception.ForbiddenCreateReviewException;
+import com.example.dp.domain.review.exception.NotFoundOrderException;
+import com.example.dp.domain.review.exception.NotFoundReviewException;
+import com.example.dp.domain.review.exception.NotFoundUserException;
+import com.example.dp.domain.review.exception.ReviewAlreadyExistsException;
+import com.example.dp.domain.review.exception.ReviewErrorCode;
 import com.example.dp.domain.review.repository.ReviewRepository;
 import com.example.dp.domain.review.service.ReviewService;
-import com.example.dp.domain.review.validator.ReviewValidator;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
 import java.util.List;
@@ -23,20 +30,25 @@ public class ReviewServiceImpl implements ReviewService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    private static final String NOT_FOUND_USER = "사용자를 찾을 수 없습니다.";
-    private static final String NOT_FOUND_ORDER = "해당 주문을 찾을 수 없습니다.";
-    private static final String NOT_FOUND_REVIEW = "해당 리뷰를 찾을 수 없습니다.";
-
     @Override
     public ReviewResponseDto createReview(
         final Long orderId,
         final ReviewRequestDto reviewRequestDto,
         final User user) {
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new RuntimeException(NOT_FOUND_ORDER));
+            .orElseThrow(() -> new NotFoundOrderException(ReviewErrorCode.NOT_FOUND_ORDER));
 
-        ReviewValidator.validOrderBy(order, user);
-        ReviewValidator.validExistReview(reviewRepository.existsByOrder(order));
+        if(order.getState() != OrderState.COMPLETED){
+            throw new ForbiddenCreateReviewException(ReviewErrorCode.FORBIDDEN_CREATE);
+        }
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new ForbiddenAccessException(ReviewErrorCode.FORBIDDEN_ACCESS);
+        }
+
+        if (reviewRepository.existsByOrder(order)) {
+            throw new ReviewAlreadyExistsException(ReviewErrorCode.EXISTS_REVIEW);
+        }
 
         Review review = Review.builder()
             .user(user)
@@ -56,9 +68,11 @@ public class ReviewServiceImpl implements ReviewService {
         final ReviewRequestDto reviewRequestDto,
         final User user) {
         Review review = reviewRepository.findById(reviewId)
-            .orElseThrow(() -> new RuntimeException(NOT_FOUND_REVIEW));
+            .orElseThrow(() -> new NotFoundReviewException(ReviewErrorCode.NOT_FOUND_REVIEW));
 
-        ReviewValidator.validOrderBy(review.getOrder(), user);
+        if (!review.getOrder().getUser().getId().equals(user.getId())) {
+            throw new ForbiddenAccessException(ReviewErrorCode.FORBIDDEN_ACCESS);
+        }
 
         review.updateContent(reviewRequestDto.getContent());
 
@@ -68,9 +82,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReview(final Long reviewId, final User user) {
         Review review = reviewRepository.findById(reviewId)
-            .orElseThrow(() -> new RuntimeException(NOT_FOUND_REVIEW));
+            .orElseThrow(() -> new NotFoundReviewException(ReviewErrorCode.NOT_FOUND_REVIEW));
 
-        ReviewValidator.validOrderBy(review.getOrder(), user);
+        if (!review.getOrder().getUser().getId().equals(user.getId())) {
+            throw new ForbiddenAccessException(ReviewErrorCode.FORBIDDEN_ACCESS);
+        }
 
         reviewRepository.delete(review);
     }
@@ -79,7 +95,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getUserReviews(final Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException(NOT_FOUND_USER));
+            .orElseThrow(() -> new NotFoundUserException(ReviewErrorCode.NOT_FOUND_USER));
 
         return user.getReviews()
             .stream()
