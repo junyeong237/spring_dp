@@ -20,5 +20,5 @@ class JasyptConfigTest {
 
         // then
         Assertions.assertEquals(encryptor.decrypt(encryptPassword), "test");
-     }
+    }
 }
