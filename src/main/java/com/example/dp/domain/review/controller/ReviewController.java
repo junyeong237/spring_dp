@@ -31,6 +31,12 @@ public class ReviewController {
         return ResponseEntity.ok(resultDto);
     }
 
+    @GetMapping("/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getAllReviews(){
+        List<ReviewResponseDto> resultDto = reviewService.getAllReviews();
+        return ResponseEntity.ok(resultDto);
+    }
+
     @PostMapping("/reviews/{orderId}")
     public ResponseEntity<ReviewResponseDto> createReview(
         @PathVariable Long orderId,

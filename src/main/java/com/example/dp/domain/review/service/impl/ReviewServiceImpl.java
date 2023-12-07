@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -77,6 +76,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ReviewResponseDto> getUserReviews(final Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException(NOT_FOUND_USER));
@@ -85,6 +85,13 @@ public class ReviewServiceImpl implements ReviewService {
             .stream()
             .map(this::toDto)
             .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getAllReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        return reviews.stream().map(this::toDto).toList();
     }
 
     private ReviewResponseDto toDto(Review review){
