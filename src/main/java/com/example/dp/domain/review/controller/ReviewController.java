@@ -5,8 +5,10 @@ import com.example.dp.domain.review.dto.response.ReviewResponseDto;
 import com.example.dp.domain.review.service.ReviewService;
 import com.example.dp.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,7 +30,7 @@ public class ReviewController {
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         ReviewResponseDto responseDto = reviewService.createReview(orderId, reviewRequestDto,
             userDetailsImpl.getUser());
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PutMapping("/{reviewId}")
@@ -39,6 +41,14 @@ public class ReviewController {
         ReviewResponseDto responseDto = reviewService.updateReview(reviewId, reviewRequestDto,
             userDetailsImpl.getUser());
         return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Long> deleteReview(
+        @PathVariable Long reviewId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        reviewService.deleteReview(reviewId, userDetails.getUser());
+        return ResponseEntity.noContent().build();
     }
 
 }
