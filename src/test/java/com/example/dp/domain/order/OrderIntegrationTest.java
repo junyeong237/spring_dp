@@ -58,9 +58,9 @@ public class OrderIntegrationTest {
     @BeforeAll
     void setup() {
         user = User.builder()
-            .username("홍길동")
-            .password("123456789")
-            .email("junyeong237@gmail.com")
+            .username("홍길동1")
+            .password("1234567891")
+            .email("junyeong2371@gmail.com")
             .role(UserRole.USER)
             .build();
 
