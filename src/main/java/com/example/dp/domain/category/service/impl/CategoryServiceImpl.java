@@ -7,6 +7,7 @@ import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,20 @@ public class CategoryServiceImpl implements CategoryService {
         category = categoryRepository.save(category);
 
         return new CategoryResponseDto(category);
+    }
+
+    @Override
+    @Transactional
+    public CategoryResponseDto updateCategory(
+        final Long categoryId,
+        final CategoryRequestDto requestDto) {
+        Category category = findCategory(categoryId);
+        category.update(requestDto);
+        return new CategoryResponseDto(category);
+    }
+
+    private Category findCategory(final Long categoryId) {
+        return categoryRepository.findById(categoryId)
+            .orElseThrow(RuntimeException::new);
     }
 }

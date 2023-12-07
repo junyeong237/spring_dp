@@ -76,4 +76,42 @@ class CategoryServiceImplTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
         }
     }
+
+    @DisplayName("카테고리 수정 테스트")
+    @Nested
+    class updateCategoryTest {
+
+        @DisplayName("카테고리 수정 성공")
+        @Test
+        void 카테고리_수정_성공() {
+            // Given
+            Category category = fixtureMonkey.giveMeBuilder(Category.class)
+                .setNotNull("*")
+                .sample();
+
+            CategoryRequestDto requestDto = new CategoryRequestDto(category.getType());
+            CategoryResponseDto responseDto1 = categoryService.createCategory(requestDto);
+            Category findCategory = categoryRepository.findById(responseDto1.getId())
+                .orElseThrow(RuntimeException::new);
+
+            // When
+            CategoryResponseDto responseDto2 = categoryService.updateCategory(
+                responseDto1.getId(), new CategoryRequestDto("수정 테스트"));
+
+            // Then
+            assertThat(responseDto2.getId()).isEqualTo(responseDto1.getId());
+            assertThat(responseDto2.getType()).isEqualTo("수정 테스트");
+        }
+
+        @DisplayName("카테고리 수정 실패 : 없는 카테고리")
+        @Test
+        void 카테고리_수정_실패() {
+            // Given x
+
+            // When - Then
+            assertThatThrownBy(() -> categoryService.updateCategory(
+                2L, new CategoryRequestDto("수정 테스트")))
+                .isInstanceOf(RuntimeException.class);
+        }
+    }
 }

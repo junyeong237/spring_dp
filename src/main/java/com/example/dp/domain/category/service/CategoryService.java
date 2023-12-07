@@ -6,4 +6,6 @@ import com.example.dp.domain.category.dto.response.CategoryResponseDto;
 public interface CategoryService {
 
     CategoryResponseDto createCategory(CategoryRequestDto requestDto);
+
+    CategoryResponseDto updateCategory(Long categoryId, CategoryRequestDto requestDto);
 }
