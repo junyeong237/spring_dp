@@ -1,5 +1,6 @@
 package com.example.dp.domain.cart.service.impl;
 
+import com.example.dp.domain.cart.dto.request.CartDeleteRequestMenuDto;
 import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
 import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.entity.Cart;
@@ -40,18 +41,34 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartResponseDto postCart(User user, CartRequestMenuDto cartRequestMenuDto) {
         Menu menu = findMenuByname(cartRequestMenuDto.getName());
-
-        Optional<Cart> cart = cartRepository.findByUserAndMenu(user, menu);
-        if (cart.isEmpty()) { // 사용자가 해당하는 메뉴에대한 장바구니를 가지고 있지 않다면 새로 장바구니 생성
+        List<Cart> cartList = cartRepository.findByUser(user);
+        //Optional<Cart> cart1 = cartRepository.findByUserAndMenu(user, menu);
+        if (cartList.isEmpty()) {// 사용자가 장바구니를 가지고 있지 않다면 새로 장바구니 생성
             Cart newCart = Cart.builder()
                 .menu(menu)
                 .user(user)
                 .menuCount(cartRequestMenuDto.getMenuCounts())
                 .build();
-            cartRepository.save(newCart);
+            cartList.add(newCart);
+            cartRepository.saveAll(cartList);
             return new CartResponseDto(newCart);
         }
-        Cart newCart = cart.get();
+
+        Optional<Cart> cartMenu = cartRepository.findByUserAndMenu(user, menu);
+        if (cartMenu.isEmpty()) { // 사용자가 장바구니를 가지고 있지만 해당메뉴에 대한 장바구니가 없다면
+            Cart newCart = Cart.builder()
+                .user(user)
+                .menu(menu)
+                .menuCount(cartRequestMenuDto.getMenuCounts())
+                .build();
+
+            cartList.add(newCart);
+
+            cartRepository.saveAll(cartList);
+            return new CartResponseDto(newCart);
+        }
+
+        Cart newCart = cartMenu.get();
         //사용자가 해당메뉴에 대한 장바구니를 가지고 있다면 수량만추가
         newCart.addCount(cartRequestMenuDto.getMenuCounts());
 
@@ -59,14 +76,15 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartMenu(final User user, final CartRequestMenuDto cartRequestMenuDto) {
-        Menu menu = findMenuByname(cartRequestMenuDto.getName());
+    public void deleteCartMenu(final User user, final CartDeleteRequestMenuDto deleteMenu) {
+        Menu menu = findMenuByname(deleteMenu.getName());
 
         Cart cart = cartRepository.findByUserAndMenu(user, menu)
             .orElseThrow(() -> new IllegalArgumentException("삭제하려는 메뉴에대한 장바구니 리스트가 없습니다."));
 
+        List<Cart> cartList = cartRepository.findByUser(user);
+        cartList.remove(cart);
         cartRepository.delete(cart);
-
     }
 
     @Override
