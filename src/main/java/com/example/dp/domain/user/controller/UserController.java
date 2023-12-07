@@ -1,7 +1,7 @@
 package com.example.dp.domain.user.controller;
 
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
-import com.example.dp.domain.user.service.UserService;
+import com.example.dp.domain.user.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody @Valid UserSignupRequestDto request) {
