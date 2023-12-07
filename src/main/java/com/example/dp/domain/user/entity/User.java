@@ -1,15 +1,20 @@
 package com.example.dp.domain.user.entity;
 
 import com.example.dp.domain.model.TimeEntity;
+import com.example.dp.domain.review.entity.Review;
 import com.example.dp.domain.user.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,6 +42,9 @@ public class User extends TimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Review> reviews = new ArrayList<>();
 
     @Builder
     private User(String username, String email, String password, UserRole role) {
