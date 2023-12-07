@@ -120,4 +120,25 @@ public class OrderIntegrationTest {
     }
 
 
+    @Test
+    @org.junit.jupiter.api.Order(3)
+    @DisplayName("주문조회")
+    void 사용자_주문_조회() {
+        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3, 9000);
+
+        CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
+        OrderResponseDto orderResponseDto = orderService.createOrder(user);
+
+        List<Order> orderList = orderRepository.findByUser(user);
+
+        //취소된 주문건무
+        assertNotNull(orderList);
+        assertEquals(2,orderList.size());
+        assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
+        assertEquals(OrderState.PENDING, orderList.get(1).getState());
+
+
+    }
+
+
 }
