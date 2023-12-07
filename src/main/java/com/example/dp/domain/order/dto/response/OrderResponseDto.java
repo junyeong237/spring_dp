@@ -1,4 +1,4 @@
-package com.example.dp.domain.order.dto;
+package com.example.dp.domain.order.dto.response;
 
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
@@ -8,7 +8,6 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-
 public class OrderResponseDto {
 
     private final Long id;
