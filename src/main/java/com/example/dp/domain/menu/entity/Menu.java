@@ -61,4 +61,9 @@ public class Menu extends TimeEntity {
         this.quantity = menuRequestDto.getQuantity();
         this.status = menuRequestDto.getStatus();
     }
+
+    public void addMenuCategory(MenuCategory menuCategory) {
+        this.menuCategoryList.add(menuCategory);
+        menuCategory.setMenu(this);
+    }
 }
