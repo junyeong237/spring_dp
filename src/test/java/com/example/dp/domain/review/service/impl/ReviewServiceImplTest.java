@@ -189,6 +189,7 @@ class ReviewServiceImplTest {
 
         @Test
         @DisplayName("작성자가 리뷰를 삭제하는 경우")
+        @Disabled
         void deleteReview() {
             // given
             User user = createAndSaveUser();

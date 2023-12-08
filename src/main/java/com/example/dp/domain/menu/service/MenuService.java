@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MenuService {
 
-    List<MenuSimpleResponseDto> getMenus(String categoryType, String menuName);
+    List<MenuSimpleResponseDto> getMenus(String categoryType, String menuName, String sort);
 
     List<MenuSimpleResponseDto> getLikeMenus(User user);
 }

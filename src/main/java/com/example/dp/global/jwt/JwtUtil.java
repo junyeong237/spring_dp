@@ -40,12 +40,12 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createAccessToken(String username, String authority) {
+    public String createAccessToken(String email, String authority) {
         Date date = new Date();
 
         return BEARER_PREFIX +
             Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .claim(AUTHORIZATION_KEY, authority)
                 .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
                 .setIssuedAt(date)

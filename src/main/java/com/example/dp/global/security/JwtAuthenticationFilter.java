@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    requestDto.getUsername(),
+                    requestDto.getEmail(),
                     requestDto.getPassword(),
                     null
                 )
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
 
-        String accessToken = jwtUtil.createAccessToken(user.getUsername(),
+        String accessToken = jwtUtil.createAccessToken(user.getEmail(),
             user.getRole().getAuthority());
         String refreshToken = jwtUtil.createRefreshToken();
 
@@ -65,7 +65,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         refreshToken = refreshToken.split(" ")[1].trim();
 
         redisUtil.set(refreshToken, user.getId(), REFRESH_TOKEN_TIME);
-
     }
 
     @Override

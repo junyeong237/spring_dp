@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>이메일 인증 코드 페이지입니다.</title>
+</head>
+<body style="width: 100%; margin: 0 auto; padding: 10px;">
+<div align="center">
+  <h1 class="text-center">
+    4족 배달 🏍️
+  </h1>
+</div>
+<div align="center">
+  <div align='center' style='border:1px solid black; width: 300px'>
+    <h3 style='color:blue;'>인증 코드입니다.</h3>
+    <div style='font-size:130%'>
+      CODE : <strong th:text="${code}"></strong>
+      <br/>
+    </div>
+  </div>
+</div>
+</body>
+</html>

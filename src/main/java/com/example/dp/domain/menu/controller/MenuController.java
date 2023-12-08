@@ -22,8 +22,10 @@ public class MenuController {
     @GetMapping
     public ResponseEntity<List<MenuSimpleResponseDto>> getAllMenus(
         @RequestParam(name = "category", defaultValue = "") String categoryType,
-        @RequestParam(name = "name", defaultValue = "") String menuName) {
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus(categoryType, menuName);
+        @RequestParam(name = "name", defaultValue = "") String menuName,
+        @RequestParam(name = "sort") String sort
+    ) {
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus(categoryType, menuName,sort);
         return ResponseEntity.ok(responseDto);
     }
 

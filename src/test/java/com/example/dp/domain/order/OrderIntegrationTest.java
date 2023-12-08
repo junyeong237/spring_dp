@@ -88,10 +88,10 @@ public class OrderIntegrationTest {
     @Disabled
     void 장바구니_생성후_주문하기() {
         setup();
-        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
+        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
-        CartRequestMenuDto cart2RequestMenuDto = new CartRequestMenuDto("치킨", 2, 26000);
+        CartRequestMenuDto cart2RequestMenuDto = new CartRequestMenuDto("치킨", 2);
 
         CartResponseDto cart2 = cartService.postCart(user, cart2RequestMenuDto);
 
@@ -128,7 +128,7 @@ public class OrderIntegrationTest {
     @DisplayName("주문조회")
     @Disabled
     void 사용자_주문_조회() {
-        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3, 9000);
+        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3);
 
         cartService.postCart(user, cartRequestMenuDto);
         orderService.createOrder(user);

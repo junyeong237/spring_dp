@@ -14,5 +14,5 @@ public interface AdminMenuService {
 
     MenuDetailResponseDto getAdminMenu(Long menuId);
 
-    List<MenuDetailResponseDto> getAdminMenus();
+    List<MenuDetailResponseDto> getAdminMenus(String sort);
 }
