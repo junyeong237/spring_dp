@@ -64,8 +64,8 @@ public class Menu extends TimeEntity {
     private Integer likeCounts;
 
     @Builder
-    private Menu(String name, String description, Integer price, Integer quantity, Boolean status,
-        String imageName, String imagePath) {
+    private Menu(final String name, final String description, final Integer price, final Integer quantity, final Boolean status,
+        final String imageName, final String imagePath) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -77,11 +77,13 @@ public class Menu extends TimeEntity {
     }
 
     public void update(final String name, final String description, final Integer price,
-        final Integer quantity, final boolean status) {
+        final Integer quantity, final boolean status, final String imageName, final String imagePath) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
+        this.imageName = imageName;
+        this.imagePath = imagePath;
         this.status = status;
     }
 

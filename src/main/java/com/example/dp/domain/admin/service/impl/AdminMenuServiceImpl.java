@@ -42,6 +42,11 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         final MenuRequestDto requestDto) throws IOException {
 
         String imageName = null;
+
+        if (multipartFile.isEmpty()){
+            throw new InvalidInputException(MenuErrorCode.NOT_ENTER_IMAGE);
+        }
+
         try {
             if (menuRepository.existsByName(requestDto.getName())) {
                 throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
@@ -77,21 +82,38 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Transactional
     public MenuDetailResponseDto updateMenu(
         final Long menuId,
-        final MenuRequestDto menuRequestDto) {
+        final MultipartFile multipartFile, final MenuRequestDto menuRequestDto) throws IOException {
+
+        if (multipartFile.isEmpty()){
+            throw new InvalidInputException(MenuErrorCode.NOT_ENTER_IMAGE);
+        }
 
         Menu menu = findMenu(menuId);
 
+        // 카테고리 업데이트
         List<String> requestedCategories = menuRequestDto.getCategoryNameList();
         updateCategory(menu, requestedCategories);
 
+        // 존재하는 이름의 메뉴일 경우 예외처리(본인 제외)
         if (!menu.getName().equals(menuRequestDto.getName())
             && menuRepository.existsByName(menuRequestDto.getName())) {
             throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
         }
 
+        // 이미지 이름과 주소를 가져옴
+        String imageName = awsS3Util.uploadImage(multipartFile, ImagePath.MENU);
+        String imagePath = awsS3Util.getImagePath(imageName, ImagePath.MENU);
+
+        // 오류 없이 진행 됐을 경우 기존에 있던 이미지를 삭제함
+        String menuImageName = menu.getImageName();
+        if (menuImageName != null) {
+            awsS3Util.deleteImage(menuImageName, ImagePath.MENU);
+        }
+
+        // 업데이트 진행
         menu.update(menuRequestDto.getName(),
             menuRequestDto.getDescription(), menuRequestDto.getPrice(),
-            menuRequestDto.getQuantity(), menuRequestDto.getStatus());
+            menuRequestDto.getQuantity(), menuRequestDto.getStatus(), imageName, imagePath);
 
         return new MenuDetailResponseDto(menu);
     }
@@ -132,7 +154,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     public List<MenuDetailResponseDto> getAdminMenus(String sort) {
         List<Menu> menus = menuRepository.findByOrderByCreatedAt();
-        return filtering(menus,sort).map(MenuDetailResponseDto::new).toList();
+        return filtering(menus, sort).map(MenuDetailResponseDto::new).toList();
     }
 
     private void addCategory(List<String> categoryNameList, Menu menu) {
@@ -173,8 +195,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
             return menus.stream()
                 .sorted((menu1, menu2) -> Integer.compare(menu2.getLikeCounts(),
                     menu1.getLikeCounts()));
-        } else
+        } else {
             throw new InvalidInputException(MenuErrorCode.INVALID_INPUT);
+        }
     }
 
 }

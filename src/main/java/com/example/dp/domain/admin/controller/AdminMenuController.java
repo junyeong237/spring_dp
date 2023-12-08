@@ -38,8 +38,9 @@ public class AdminMenuController {
     @PutMapping("/menus/{menuId}")
     public ResponseEntity<MenuDetailResponseDto> updateMenu(
         @PathVariable Long menuId,
-        @RequestBody MenuRequestDto menuRequestDto) {
-        MenuDetailResponseDto responseDto = adminMenuService.updateMenu(menuId, menuRequestDto);
+        @RequestPart("image") MultipartFile multipartFile,
+        @RequestPart("dto") MenuRequestDto menuRequestDto) throws IOException {
+        MenuDetailResponseDto responseDto = adminMenuService.updateMenu(menuId, multipartFile, menuRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 

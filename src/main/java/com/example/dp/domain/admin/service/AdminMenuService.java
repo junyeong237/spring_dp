@@ -11,7 +11,8 @@ public interface AdminMenuService {
     MenuDetailResponseDto createMenu(MultipartFile multipartFile, MenuRequestDto menuRequestDto)
         throws IOException;
 
-    MenuDetailResponseDto updateMenu(Long menuId, MenuRequestDto menuRequestDto);
+    MenuDetailResponseDto updateMenu(Long menuId, final MultipartFile multipartFile, MenuRequestDto menuRequestDto)
+        throws IOException;
 
     void deleteMenu(Long menuId);
 
