@@ -44,6 +44,9 @@ public class Menu extends TimeEntity {
     @Column(nullable = false)
     private Boolean status;
 
+    @Column(nullable = false)
+    private String imageName;
+
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<MenuCategory> menuCategoryList = new ArrayList<>();
 
@@ -54,17 +57,18 @@ public class Menu extends TimeEntity {
     private final List<OrderMenu> orderMenuList = new ArrayList<>();
 
 
-
     @Column(nullable = false)
     private Integer likeCounts;
 
     @Builder
-    private Menu(String name, String description, Integer price, Integer quantity, Boolean status, Integer likeCounts) {
+    private Menu(String name, String description, Integer price, Integer quantity, Boolean status,
+        String imageName, Integer likeCounts) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.status = status;
+        this.imageName = imageName;
         this.likeCounts = likeCounts;
     }
 
@@ -81,7 +85,8 @@ public class Menu extends TimeEntity {
         this.menuCategoryList.add(menuCategory);
         menuCategory.setMenu(this);
     }
-    public void subQuantity(Integer count){
+
+    public void subQuantity(Integer count) {
         this.quantity -= count;
     }
 
@@ -90,21 +95,22 @@ public class Menu extends TimeEntity {
         menuCategory.setMenu(null);
     }
 
-    public void addLikeCounts(){
-        this.likeCounts ++;
+    public void addLikeCounts() {
+        this.likeCounts++;
     }
-    public void subLikeCounts(){
-        this.likeCounts --;
+
+    public void subLikeCounts() {
+        this.likeCounts--;
     }
 
 
-    public void addMenuLike(MenuLike menuLike){
+    public void addMenuLike(MenuLike menuLike) {
         this.menuLikeList.add(menuLike);
         this.addLikeCounts();
         menuLike.setMenu(this);
     }
 
-    public void addOrderMenu(OrderMenu orderMenu){
+    public void addOrderMenu(OrderMenu orderMenu) {
         this.orderMenuList.add(orderMenu);
         this.addLikeCounts();
         orderMenu.setMenu(this);

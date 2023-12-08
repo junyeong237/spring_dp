@@ -16,11 +16,15 @@ import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
+import com.example.dp.global.s3.AwsS3Util;
+import com.example.dp.global.s3.AwsS3Util.ImagePath;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -29,21 +33,25 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     private final MenuRepository menuRepository;
     private final CategoryRepository categoryRepository;
     private final MenuCategoryRepository menuCategoryRepository;
-
+    private final AwsS3Util awsS3Util;
 
     @Transactional
     @Override
-    public MenuDetailResponseDto createMenu(final MenuRequestDto requestDto) {
+    public MenuDetailResponseDto createMenu(final MultipartFile multipartFile,
+        final MenuRequestDto requestDto) throws IOException {
 
         if (menuRepository.existsByName(requestDto.getName())) {
             throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
         }
+
+        String imageName = awsS3Util.uploadImage(multipartFile, ImagePath.MENU);
 
         Menu menu = Menu.builder()
             .name(requestDto.getName())
             .description(requestDto.getDescription())
             .price(requestDto.getPrice())
             .quantity(requestDto.getQuantity())
+            .imageName(imageName)
             .status(requestDto.getStatus())
             .build();
 
