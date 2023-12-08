@@ -137,6 +137,7 @@ class MenuServiceImplTest {
         // when
         List<MenuSimpleResponseDto> responseDto = menuService.getMenus("메인 메뉴", "", "recent");
 
+
         // then
         assertThat(responseDto).hasSize(SAMPLE_COUNT / 2);
     }
