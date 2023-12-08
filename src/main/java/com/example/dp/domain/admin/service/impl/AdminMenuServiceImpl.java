@@ -43,7 +43,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
         String imageName = null;
 
-        if (multipartFile.isEmpty()){
+        if (multipartFile.isEmpty()) {
             throw new InvalidInputException(MenuErrorCode.NOT_ENTER_IMAGE);
         }
 
@@ -84,7 +84,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         final Long menuId,
         final MultipartFile multipartFile, final MenuRequestDto menuRequestDto) throws IOException {
 
-        if (multipartFile.isEmpty()){
+        if (multipartFile.isEmpty()) {
             throw new InvalidInputException(MenuErrorCode.NOT_ENTER_IMAGE);
         }
 
@@ -142,6 +142,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     public void deleteMenu(final Long menuId) {
         Menu menu = findMenu(menuId);
+        awsS3Util.deleteImage(menu.getImageName(), ImagePath.MENU);
         menuRepository.delete(menu);
     }
 
