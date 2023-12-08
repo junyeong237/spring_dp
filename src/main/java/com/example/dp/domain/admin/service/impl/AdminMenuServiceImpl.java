@@ -31,7 +31,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     public MenuDetailResponseDto createMenu(final MenuRequestDto requestDto) {
 
-        if (menuRepository.existsByName(requestDto.getName())){
+        if (menuRepository.existsByName(requestDto.getName())) {
             throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
         }
         //메뉴를 생성합니다.
@@ -49,7 +49,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
         return new MenuDetailResponseDto(menu);
     }
-    
+
     private void addCategory(MenuRequestDto requestDto, Menu menu) {
         // 카테고리들이 각각 존재하는 카테고리인지 확인
         List<Category> categoryList = requestDto.getCategoryNameList().stream()
@@ -101,7 +101,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
     public Menu findMenu(Long menuId) {
         return menuRepository.findById(menuId)
-            .orElseThrow(()-> new NotFoundMenuException(MenuErrorCode.NOT_FOUND_MENU));
+            .orElseThrow(() -> new NotFoundMenuException(MenuErrorCode.NOT_FOUND_MENU));
     }
 
 }
