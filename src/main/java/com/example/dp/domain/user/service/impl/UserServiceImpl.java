@@ -4,16 +4,23 @@ import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.dto.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
+import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.ExistsUserEmailException;
+import com.example.dp.domain.user.exception.NotFoundUserException;
 import com.example.dp.domain.user.exception.UserErrorCode;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.example.dp.domain.user.service.UserService;
 import com.example.dp.global.infra.mail.service.impl.MailServiceImpl;
+import com.example.dp.global.s3.AwsS3Util;
+import com.example.dp.global.s3.AwsS3Util.ImagePath;
+import java.io.IOException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final MailServiceImpl mailService;
     private final PasswordEncoder passwordEncoder;
+    private final AwsS3Util awsS3Util;
 
     private static final String SUBJECT = "4족 배달 [이메일 인증]";
     private static final String NAME = "라이더";
@@ -59,5 +67,46 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean checkCode(UserCheckCodeRequestDto requestDto) {
         return mailService.checkCode(requestDto.getEmail(), requestDto.getCode());
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDto updateProfileImage(final MultipartFile multipartFile, final User user)
+        throws IOException {
+        User findUser = userRepository.findById(user.getId())
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+
+        String userImageName = findUser.getImageName();
+        if (userImageName != null) {
+            awsS3Util.deleteImage(userImageName, ImagePath.PROFILE);
+        }
+
+        String imageName = awsS3Util.uploadImage(multipartFile, ImagePath.PROFILE);
+        String imagePath = awsS3Util.getImagePath(imageName, ImagePath.PROFILE);
+        findUser.updateImage(imageName, imagePath);
+        return toDto(findUser);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProfileImage(final User user) {
+        User findUser = userRepository.findById(user.getId())
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+
+        String userImageName = findUser.getImageName();
+        if(awsS3Util.existsImage(userImageName, ImagePath.PROFILE)){
+            awsS3Util.deleteImage(userImageName, ImagePath.PROFILE);
+        }
+        findUser.updateImage(null, null);
+    }
+
+    private UserResponseDto toDto(User user) {
+        return UserResponseDto.builder()
+            .id(user.getId())
+            .username(user.getUsername())
+            .role(user.getRole())
+            .imageName(user.getImageName())
+            .imagePath(user.getImagePath())
+            .createdAt(user.getCreatedAt()).build();
     }
 }

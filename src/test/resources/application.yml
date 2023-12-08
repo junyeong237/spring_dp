@@ -18,6 +18,17 @@ spring:
       host: localhost
       port: 6370
 
+  mail:
+    host: test.test.test
+    port: 1234
+    username: test@test.test
+    password: test test test test
+    properties:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+
 jwt:
   secret:
     key: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
