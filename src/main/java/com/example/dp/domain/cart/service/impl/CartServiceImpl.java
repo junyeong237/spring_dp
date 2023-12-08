@@ -68,9 +68,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartMenu(final User user, final CartDeleteRequestMenuDto deleteMenu) {
-        Menu menu = findMenuByname(deleteMenu.getName());
-
+    public void deleteCartMenu(final User user, final Long menuId) {
+        Menu menu = findMenuById(menuId);
         Cart cart = cartRepository.findByUserAndMenu(user, menu)
             .orElseThrow(() -> new NotFoundCartMenuExcepiton(CartErrorCode.NOT_FOUND_CART_MENU));
 
@@ -90,6 +89,11 @@ public class CartServiceImpl implements CartService {
 
     private Menu findMenuByname(String menuName) {
         return menuRepository.findByName(menuName)
+            .orElseThrow(() -> new NotFoundMenuException(CartErrorCode.NOT_FOUND_MENU));
+    }
+
+    private Menu findMenuById(Long id){
+        return menuRepository.findById(id)
             .orElseThrow(() -> new NotFoundMenuException(CartErrorCode.NOT_FOUND_MENU));
     }
 }
