@@ -3,6 +3,7 @@ package com.example.dp.global.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.dp.global.s3.exception.AwsS3ErrorCode;
+import com.example.dp.global.s3.exception.AwsS3InternalException;
 import com.example.dp.global.s3.exception.FileTypeNotAllowedException;
 import com.example.dp.global.s3.exception.NotFoundS3FileException;
 import java.io.IOException;
@@ -65,5 +66,13 @@ public class AwsS3Util {
             throw new NotFoundS3FileException(AwsS3ErrorCode.FILE_NOT_FOUND);
         }
         amazonS3.deleteObject(bucketName, imagePath.getPath() + fileName);
+    }
+
+    public boolean existsImage(String fileName, ImagePath imagePath){
+        try{
+            return amazonS3.doesObjectExist(bucketName, imagePath.getPath() + fileName);
+        } catch (Exception e){
+            throw new AwsS3InternalException(AwsS3ErrorCode.AWS_INTERNAL_ERROR);
+        }
     }
 }
