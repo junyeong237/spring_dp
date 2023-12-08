@@ -47,6 +47,9 @@ public class Menu extends TimeEntity {
     @Column(nullable = false)
     private String imageName;
 
+    @Column(nullable = false)
+    private String imagePath;
+
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<MenuCategory> menuCategoryList = new ArrayList<>();
 
@@ -62,14 +65,15 @@ public class Menu extends TimeEntity {
 
     @Builder
     private Menu(String name, String description, Integer price, Integer quantity, Boolean status,
-        String imageName, Integer likeCounts) {
+        String imageName, String imagePath) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.status = status;
         this.imageName = imageName;
-        this.likeCounts = likeCounts;
+        this.imagePath = imagePath;
+        this.likeCounts = 0;
     }
 
     public void update(final String name, final String description, final Integer price,

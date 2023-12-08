@@ -13,7 +13,7 @@ public class MenuDetailResponseDto {
     private final Integer price;
     private final Integer quantity;
     private final Boolean status;
-    private final String imageName;
+    private final String imagePath;
     private final List<String> categoryNameList;
     private final Integer likeCounts;
 
@@ -24,7 +24,7 @@ public class MenuDetailResponseDto {
         this.price = menu.getPrice();
         this.quantity = menu.getQuantity();
         this.status = menu.getStatus();
-        this.imageName = menu.getImageName();
+        this.imagePath = menu.getImagePath();
         this.categoryNameList = menu.getMenuCategoryList().stream()
             .map(menuCategory -> menuCategory.getCategory().getType())
             .toList();

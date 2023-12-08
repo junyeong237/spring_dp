@@ -16,6 +16,7 @@ import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
+import com.example.dp.global.exception.RestApiException;
 import com.example.dp.global.s3.AwsS3Util;
 import com.example.dp.global.s3.AwsS3Util.ImagePath;
 import java.io.IOException;
@@ -40,26 +41,36 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     public MenuDetailResponseDto createMenu(final MultipartFile multipartFile,
         final MenuRequestDto requestDto) throws IOException {
 
-        if (menuRepository.existsByName(requestDto.getName())) {
-            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+        String imageName = null;
+        try {
+            if (menuRepository.existsByName(requestDto.getName())) {
+                throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+            }
+
+            imageName = awsS3Util.uploadImage(multipartFile, ImagePath.MENU);
+            String imagePath = awsS3Util.getImagePath(imageName, ImagePath.MENU);
+
+            Menu menu = Menu.builder()
+                .name(requestDto.getName())
+                .description(requestDto.getDescription())
+                .price(requestDto.getPrice())
+                .quantity(requestDto.getQuantity())
+                .imageName(imageName)
+                .imagePath(imagePath)
+                .status(requestDto.getStatus())
+                .build();
+
+            menu = menuRepository.save(menu);
+
+            addCategory(requestDto.getCategoryNameList(), menu);
+
+            return new MenuDetailResponseDto(menu);
+        } catch (RestApiException e) {
+            if (imageName != null) {
+                awsS3Util.deleteImage(imageName, ImagePath.MENU);
+            }
+            throw e;
         }
-
-        String imageName = awsS3Util.uploadImage(multipartFile, ImagePath.MENU);
-
-        Menu menu = Menu.builder()
-            .name(requestDto.getName())
-            .description(requestDto.getDescription())
-            .price(requestDto.getPrice())
-            .quantity(requestDto.getQuantity())
-            .imageName(imageName)
-            .status(requestDto.getStatus())
-            .build();
-
-        menu = menuRepository.save(menu);
-
-        addCategory(requestDto.getCategoryNameList(), menu);
-
-        return new MenuDetailResponseDto(menu);
     }
 
     @Override
@@ -67,9 +78,25 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     public MenuDetailResponseDto updateMenu(
         final Long menuId,
         final MenuRequestDto menuRequestDto) {
+
         Menu menu = findMenu(menuId);
 
         List<String> requestedCategories = menuRequestDto.getCategoryNameList();
+        updateCategory(menu, requestedCategories);
+
+        if (!menu.getName().equals(menuRequestDto.getName())
+            && menuRepository.existsByName(menuRequestDto.getName())) {
+            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+        }
+
+        menu.update(menuRequestDto.getName(),
+            menuRequestDto.getDescription(), menuRequestDto.getPrice(),
+            menuRequestDto.getQuantity(), menuRequestDto.getStatus());
+
+        return new MenuDetailResponseDto(menu);
+    }
+
+    private void updateCategory(Menu menu, List<String> requestedCategories) {
 
         if (requestedCategories.isEmpty()) {
             throw new ForbiddenUpdateMenuException(MenuErrorCode.NOT_ENTER_CATEGORY);
@@ -88,17 +115,6 @@ public class AdminMenuServiceImpl implements AdminMenuService {
             .filter(category -> !currentCategories.contains(category))
             .toList();
         addCategory(categoriesToAdd, menu);
-
-        if (!menu.getName().equals(menuRequestDto.getName())
-            && menuRepository.existsByName(menuRequestDto.getName())) {
-            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
-        }
-
-        menu.update(menuRequestDto.getName(),
-            menuRequestDto.getDescription(), menuRequestDto.getPrice(),
-            menuRequestDto.getQuantity(), menuRequestDto.getStatus());
-
-        return new MenuDetailResponseDto(menu);
     }
 
     @Override

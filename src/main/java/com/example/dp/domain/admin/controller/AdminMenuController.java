@@ -29,8 +29,8 @@ public class AdminMenuController {
 
     @PostMapping("/menus")
     public ResponseEntity<MenuDetailResponseDto> createMenu(
-        @RequestPart MultipartFile multipartFile,
-        @RequestPart MenuRequestDto menuRequestDto) throws IOException {
+        @RequestPart("image") MultipartFile multipartFile,
+        @RequestPart("dto") MenuRequestDto menuRequestDto) throws IOException {
         MenuDetailResponseDto responseDto = adminMenuService.createMenu(multipartFile, menuRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
