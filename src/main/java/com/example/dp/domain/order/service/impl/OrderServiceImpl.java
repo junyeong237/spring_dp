@@ -52,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
             .map(cart -> {
                     OrderMenu orderMenu = new OrderMenu(order, cart.getMenu(),cart.getMenuCount(),cart.getTotalPrice());
                     order.addOrderMenuList(orderMenu);
+                    cart.getMenu().addOrderMenu(orderMenu);
                     return orderMenu;
                 }
             )
