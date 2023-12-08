@@ -1,10 +1,8 @@
 package com.example.dp.global.config;
 
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.UserRole.Authority;
-import com.example.dp.global.redis.RedisUtil;
 import com.example.dp.domain.user.service.impl.UserLogoutImpl;
 import com.example.dp.global.jwt.JwtUtil;
+import com.example.dp.global.redis.RedisUtil;
 import com.example.dp.global.security.JwtAuthenticationFilter;
 import com.example.dp.global.security.JwtAuthorizationFilter;
 import com.example.dp.global.security.UserDetailsServiceImpl;
@@ -72,6 +70,8 @@ public class WebSecurityConfig {
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**")
                     .permitAll()
                     .requestMatchers("/api/users/signup")
+                    .permitAll()
+                    .requestMatchers("/api/menus")
                     .permitAll()
 //                .requestMatchers("/api/admin/**")
 //                .hasAuthority(Authority.ADMIN)
