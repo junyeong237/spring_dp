@@ -108,7 +108,7 @@ public class CartIntegrationTest {
     @DisplayName("장바구니 생성")
     @Disabled
     void 주문자_장바구니_생성() {
-
+        setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
