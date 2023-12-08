@@ -7,6 +7,7 @@ import com.example.dp.domain.order.dto.response.OrderResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
 import com.example.dp.domain.order.exception.ForbiddenDeleteOrderRoleExcepiton;
+import com.example.dp.domain.order.exception.ForbiddenOrderQuantity;
 import com.example.dp.domain.order.exception.NotFoundCartListForOrderException;
 import com.example.dp.domain.order.exception.NotFoundOrderException;
 import com.example.dp.domain.order.exception.OrderErrorCode;
@@ -45,17 +46,26 @@ public class OrderServiceImpl implements OrderService {
             .state(OrderState.PENDING)
             .build();
 
-        orderRepository.save(order);
+        //orderRepository.save(order);
 
         List<OrderMenu> orderMenuList = cartList.stream()
             .map(cart -> {
-                    OrderMenu orderMenu = new OrderMenu(order, cart.getMenu());
+                    OrderMenu orderMenu = new OrderMenu(order, cart.getMenu(),cart.getMenuCount());
                     order.addOrderMenuList(orderMenu);
                     return orderMenu;
                 }
             )
             .toList();
 
+        //수량 체크
+        for(OrderMenu orderMenu : orderMenuList){
+            if(orderMenu.getMenuCounts() > orderMenu.getMenu().getQuantity()){
+                throw new ForbiddenOrderQuantity(OrderErrorCode.FORBIDDEN_ORDER_QUANTITY);
+            }
+            orderMenu.getMenu().subQuantity(orderMenu.getMenuCounts());
+        }
+
+        orderRepository.save(order);
         orderMenuRepository.saveAll(orderMenuList);
 
         //장바구니 내역 삭제
