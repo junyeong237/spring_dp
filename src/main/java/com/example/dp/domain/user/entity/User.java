@@ -64,4 +64,8 @@ public class User extends TimeEntity {
         this.imageName = imageName;
         this.imagePath = imagePath;
     }
+
+    public void setUserRole(UserRole role) {
+        this.role = role;
+    }
 }

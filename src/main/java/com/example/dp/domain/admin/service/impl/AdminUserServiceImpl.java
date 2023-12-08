@@ -1,6 +1,7 @@
 package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminUserService;
+import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.NotFoundUserException;
@@ -21,8 +22,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUser(final Long userId) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NotFoundUserException(
-                UserErrorCode.NOT_FOUND_USER));
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
 
         return toDto(user);
     }
@@ -37,11 +37,22 @@ public class AdminUserServiceImpl implements AdminUserService {
             .toList();
     }
 
+    @Override
+    @Transactional
+    public UserResponseDto grantUserRole(final Long userId) {
+        // TODO: 관리자 -> 사용자로 등급관리 가능하게 할지 고려
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        user.setUserRole(UserRole.ADMIN);
+        return toDto(user);
+    }
+
     private UserResponseDto toDto(User user) {
         return UserResponseDto.builder()
             .id(user.getId())
             .username(user.getUsername())
             .role(user.getRole())
-            .createdAt(user.getCreatedAt()).build();
+            .createdAt(user.getCreatedAt())
+            .modifiedAt(user.getModifiedAt()).build();
     }
 }
