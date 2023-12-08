@@ -1,9 +1,9 @@
 package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminUserService;
-import com.example.dp.domain.review.exception.NotFoundUserException;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
+import com.example.dp.domain.user.exception.NotFoundUserException;
 import com.example.dp.domain.user.exception.UserErrorCode;
 import com.example.dp.domain.user.repository.UserRepository;
 import java.util.List;

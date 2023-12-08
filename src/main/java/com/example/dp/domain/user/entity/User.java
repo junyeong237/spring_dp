@@ -39,6 +39,12 @@ public class User extends TimeEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column
+    private String imageName;
+
+    @Column
+    private String imagePath;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -52,5 +58,10 @@ public class User extends TimeEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public void updateImage(final String imageName, final String imagePath) {
+        this.imageName = imageName;
+        this.imagePath = imagePath;
     }
 }

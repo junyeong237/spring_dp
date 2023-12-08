@@ -36,8 +36,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 
+@Transactional
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // 테스트 인스턴스의 생성 단위를 클래스로 변경합니다.
@@ -132,7 +135,6 @@ public class OrderIntegrationTest {
         assertEquals(Collections.emptyList(), cartRepository.findByUser(user));
         assertEquals(user.getUsername(), orderResponseDto.getUserName());
         assertEquals(2, orderResponseDto.getOrderMenuNameList().size());
-
     }
 
     @Test
@@ -140,7 +142,6 @@ public class OrderIntegrationTest {
     @DisplayName("주문취소")
     @Disabled
     void 주문취소() {
-
         Order order = orderRepository.findById(1L).orElse(null);
         assertNotNull(order);
         orderService.cancelOrder(user, order.getId());
@@ -150,8 +151,6 @@ public class OrderIntegrationTest {
         //취소된 주문건무
         assertEquals(1, orderList.size());
         assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
-
-
     }
 
 
@@ -172,8 +171,6 @@ public class OrderIntegrationTest {
         assertEquals(2, orderList.size());
         assertEquals(OrderState.CANCELLED, orderList.get(0).getState());
         assertEquals(OrderState.PENDING, orderList.get(1).getState());
-
-
     }
 
 

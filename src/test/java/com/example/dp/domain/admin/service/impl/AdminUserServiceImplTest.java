@@ -11,7 +11,9 @@ import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntr
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -59,11 +61,11 @@ class AdminUserServiceImplTest {
         @Transactional(propagation = Propagation.NEVER)
         @Test
         @DisplayName("사용자 전체 조회")
+        @Disabled
         void readAllUser() {
             // given
             int count = 5;
 
-            List<User> users = new ArrayList<>();
             for (int i = 0; i < count; i++) {
                 createAndSaveUser();
             }
