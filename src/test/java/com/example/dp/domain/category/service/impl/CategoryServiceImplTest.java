@@ -121,10 +121,11 @@ class CategoryServiceImplTest {
 
     @DisplayName("카테고리 삭제 테스트")
     @Nested
-    class deleteCategory{
+    class deleteCategory {
+
         @DisplayName("카테고리 삭제 성공")
         @Test
-        void 카테고리_삭제_성공(){
+        void 카테고리_삭제_성공() {
             // Given
             Category category = fixtureMonkey.giveMeBuilder(Category.class)
                 .setNotNull("*")
