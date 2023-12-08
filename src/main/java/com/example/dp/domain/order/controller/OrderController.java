@@ -34,12 +34,12 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> deleteOrders(
+    public ResponseEntity<?> cancelOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
         @PathVariable Long orderId
     ) {
 
-        orderService.deleteOrder(userDetailsImpl.getUser(), orderId);
+        orderService.cancelOrder(userDetailsImpl.getUser(), orderId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

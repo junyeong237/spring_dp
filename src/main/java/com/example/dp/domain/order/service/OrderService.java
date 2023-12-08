@@ -11,7 +11,7 @@ public interface OrderService {
 
     OrderResponseDto createOrder(User user);
 
-    void deleteOrder(User user, Long id);
+    void cancelOrder(User user, Long id);
 
     List<OrderResponseDto> getOrder(User user);
 }

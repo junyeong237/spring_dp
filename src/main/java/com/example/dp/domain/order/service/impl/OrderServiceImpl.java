@@ -8,6 +8,7 @@ import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
 import com.example.dp.domain.order.exception.ForbiddenDeleteOrderRoleExcepiton;
 import com.example.dp.domain.order.exception.ForbiddenOrderQuantity;
+import com.example.dp.domain.order.exception.ForbiddenOrderStateNotPending;
 import com.example.dp.domain.order.exception.NotFoundCartListForOrderException;
 import com.example.dp.domain.order.exception.NotFoundOrderException;
 import com.example.dp.domain.order.exception.OrderErrorCode;
@@ -78,18 +79,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void deleteOrder(final User user, final Long orderId) {
+    public void cancelOrder(final User user, final Long orderId) {
 
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new NotFoundOrderException(OrderErrorCode.NOT_FOUND_ORDER));
 
-        if (!order.getUser().getId().equals(user.getId()) ||
-            !user.getRole().equals(UserRole.ADMIN)) {
-            //주문을 한 사용자와 현재 사용자가 불일치할경우 혹은 관리자가 아닌경우
-            throw new ForbiddenDeleteOrderRoleExcepiton(OrderErrorCode.FORBIDDEN_DELETE_ORDER_ROLE);
+
+        if(!order.getUser().getId().equals(user.getId())){ // 주문을 한 사용자가 아니고
+            if(!user.getRole().equals(UserRole.ADMIN)){ //사용자가 관리자가 아닌경우
+                throw new ForbiddenDeleteOrderRoleExcepiton(OrderErrorCode.FORBIDDEN_DELETE_ORDER_ROLE);
+            }
         }
+
         if (order.getState().equals(OrderState.PENDING)) {
             order.updateState(OrderState.CANCELLED);
+        }
+
+        else{
+            throw new ForbiddenOrderStateNotPending(OrderErrorCode.FORBIDDEN_ORDER_STATE_NOT_PENDING);
         }
     }
 

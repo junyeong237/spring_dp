@@ -71,7 +71,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     }
 
     private void checkstate(OrderState state) {
-        if(state != OrderState.COMPLETED && state != OrderState.CREATED && state != OrderState.CANCELLED){
+        if(state == OrderState.PENDING){
             throw new ForbiddenOrderState(OrderErrorCode.FORBIDDEN_ORDER_STATE);
         }
     }
