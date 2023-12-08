@@ -113,7 +113,7 @@ class MenuServiceImplTest {
         // given
 
         // when
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", "");
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", "","");
 
         // then
         assertThat(responseDto).hasSize(SAMPLE_COUNT);
@@ -126,7 +126,7 @@ class MenuServiceImplTest {
         Menu menu = menuRepository.findAll().get(0);
 
         // when
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", menu.getName());
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", menu.getName(),"");
 
         // then
         assertThat(responseDto.get(0)).extracting("name").isEqualTo(menu.getName());
@@ -138,7 +138,7 @@ class MenuServiceImplTest {
         // given
 
         // when
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("메인 메뉴", "");
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("메인 메뉴", "","");
 
         // then
         assertThat(responseDto).hasSize(SAMPLE_COUNT / 2);
