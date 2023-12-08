@@ -1,6 +1,4 @@
 package com.example.dp.domain.menulike.entity;
-
-import com.example.dp.domain.category.entity.Category;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;
@@ -18,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "TB_LIKE")
+@Table(name = "TB_MENULIKE")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuLike extends TimeEntity {
