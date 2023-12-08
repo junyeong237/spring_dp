@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -55,6 +56,7 @@ class AdminUserServiceImplTest {
             assertThat(responseDto.getId()).isEqualTo(user.getId());
         }
 
+        @Transactional(propagation = Propagation.NEVER)
         @Test
         @DisplayName("사용자 전체 조회")
         void readAllUser() {

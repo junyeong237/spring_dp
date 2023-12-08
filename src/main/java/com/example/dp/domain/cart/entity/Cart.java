@@ -41,11 +41,15 @@ public class Cart extends TimeEntity {
     @Column(nullable = false)
     private Integer menuCount;
 
+    @Column(nullable = false)
+    private Integer totalPrice;
+
     @Builder
-    private Cart(User user, Menu menu, Integer menuCount) {
+    private Cart(User user, Menu menu, Integer menuCount,Integer totalPrice) {
         this.user = user;
         this.menu = menu;
         this.menuCount = menuCount;
+        this.totalPrice = totalPrice;
     }
 
     public void addCount(Integer count) {

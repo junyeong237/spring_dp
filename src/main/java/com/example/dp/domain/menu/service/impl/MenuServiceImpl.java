@@ -10,6 +10,9 @@ import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menu.service.MenuService;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
+import com.example.dp.domain.menulike.entity.MenuLike;
+import com.example.dp.domain.menulike.repository.MenuLikeRepository;
+import com.example.dp.domain.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuCategoryRepository menuCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final MenuLikeRepository menuLikeRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -35,6 +39,16 @@ public class MenuServiceImpl implements MenuService {
             responseDto = getAllMenus();
         }
         return responseDto;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MenuSimpleResponseDto> getLikeMenus(final User user) {
+        List<MenuLike> menuLikes = menuLikeRepository.findByUserId(user.getId());
+
+        return menuLikes.stream()
+            .map(menuLike -> new MenuSimpleResponseDto(menuLike.getMenu()))
+            .toList();
     }
 
     private List<MenuSimpleResponseDto> getAllMenus() {

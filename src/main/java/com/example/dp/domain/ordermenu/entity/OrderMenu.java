@@ -37,11 +37,15 @@ public class OrderMenu {
     @Column(nullable = false)
     private Integer menuCounts;
 
+    @Column(nullable = false)
+    private Integer totalPrice;
+
     @Builder
-    public OrderMenu(Order order, Menu menu, Integer counts) {
+    public OrderMenu(Order order, Menu menu, Integer counts, Integer totalPrice) {
         this.order = order;
         this.menu = menu;
         this.menuCounts = counts;
+        this.totalPrice = totalPrice;
     }
 
     public void setOrder(Order order) {
