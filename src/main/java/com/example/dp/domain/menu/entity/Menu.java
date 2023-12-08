@@ -67,4 +67,7 @@ public class Menu extends TimeEntity {
         this.menuCategoryList.add(menuCategory);
         menuCategory.setMenu(this);
     }
+    public void subQuantity(Integer count){
+        this.quantity -= count;
+    }
 }
