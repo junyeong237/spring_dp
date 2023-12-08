@@ -15,21 +15,15 @@ import com.example.dp.domain.menulike.repository.MenuLikeRepository;
 import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
-import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
-import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
-import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Disabled
@@ -53,14 +47,14 @@ class MenuServiceImplTest {
     @BeforeEach
     void setUp() {
         List<Menu> menus = new ArrayList<>();
-        for(int i=0;i<SAMPLE_COUNT;i++){
+        for (int i = 0; i < SAMPLE_COUNT; i++) {
             menus.add(
                 Menu.builder()
-                    .name("asdsa"+i)
-                    .price(i*100)
+                    .name("asdsa" + i)
+                    .price(i * 100)
                     .description("test")
                     .status(true)
-                    .quantity(i+5)
+                    .quantity(i + 5)
                     .build()
             );
         }
@@ -99,7 +93,7 @@ class MenuServiceImplTest {
     }
 
     @AfterEach
-    void post(){
+    void post() {
         menuLikeRepository.deleteAll();
         menuCategoryRepository.deleteAll();
         menuRepository.deleteAll();
@@ -113,7 +107,7 @@ class MenuServiceImplTest {
         // given
 
         // when
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", "");
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", "", "recent");
 
         // then
         assertThat(responseDto).hasSize(SAMPLE_COUNT);
@@ -126,7 +120,8 @@ class MenuServiceImplTest {
         Menu menu = menuRepository.findAll().get(0);
 
         // when
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", menu.getName());
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("", menu.getName(),
+            "recent");
 
         // then
         assertThat(responseDto.get(0)).extracting("name").isEqualTo(menu.getName());
@@ -138,7 +133,7 @@ class MenuServiceImplTest {
         // given
 
         // when
-        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("메인 메뉴", "");
+        List<MenuSimpleResponseDto> responseDto = menuService.getMenus("메인 메뉴", "", "recent");
 
         // then
         assertThat(responseDto).hasSize(SAMPLE_COUNT / 2);
