@@ -17,6 +17,6 @@ public class MenuSimpleResponseDto {
         this.name = menu.getName();
         this.description = menu.getDescription();
         this.price = menu.getPrice();
-        this.likeCounts = menu.getMenuLikeList().size();
+        this.likeCounts = menu.getLikeCounts();
     }
 }

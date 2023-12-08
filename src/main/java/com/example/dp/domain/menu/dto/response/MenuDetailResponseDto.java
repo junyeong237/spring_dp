@@ -26,6 +26,6 @@ public class MenuDetailResponseDto {
         this.categoryNameList = menu.getMenuCategoryList().stream()
             .map(menuCategory -> menuCategory.getCategory().getType())
             .toList();
-        this.likeCounts = menu.getMenuLikeList().size();
+        this.likeCounts = menu.getLikeCounts();
     }
 }

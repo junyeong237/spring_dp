@@ -6,4 +6,5 @@ public interface MenuLikeService {
 
     void clickLike(User user, Long menuId);
 
+
 }
