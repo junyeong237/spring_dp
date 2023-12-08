@@ -139,7 +139,7 @@ public class OrderIntegrationTest {
     @Test
     @org.junit.jupiter.api.Order(2)
     @DisplayName("주문취소")
-    void 주문취소() 
+    void 주문취소() {
         Order order = orderRepository.findById(1L).orElse(null);
         assertNotNull(order);
         orderService.cancelOrder(user, order.getId());
