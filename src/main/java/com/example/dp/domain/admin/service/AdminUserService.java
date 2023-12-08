@@ -10,4 +10,6 @@ public interface AdminUserService {
     List<UserResponseDto> getAllUsers();
 
     UserResponseDto grantUserRole(Long userId);
+
+    UserResponseDto blockUser(Long userId);
 }

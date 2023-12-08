@@ -1,6 +1,7 @@
 package com.example.dp.domain.user.service.impl;
 
 import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.UserStatus;
 import com.example.dp.domain.user.dto.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
@@ -94,10 +95,17 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
 
         String userImageName = findUser.getImageName();
-        if(awsS3Util.existsImage(userImageName, ImagePath.PROFILE)){
+        if (awsS3Util.existsImage(userImageName, ImagePath.PROFILE)) {
             awsS3Util.deleteImage(userImageName, ImagePath.PROFILE);
         }
         findUser.updateImage(null, null);
+    }
+
+    @Override
+    public boolean userIsBlocked(final String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        return user.getStatus() == UserStatus.BLOCKED;
     }
 
     private UserResponseDto toDto(User user) {
@@ -105,6 +113,7 @@ public class UserServiceImpl implements UserService {
             .id(user.getId())
             .username(user.getUsername())
             .role(user.getRole())
+            .status(user.getStatus())
             .imageName(user.getImageName())
             .imagePath(user.getImagePath())
             .createdAt(user.getCreatedAt()).build();

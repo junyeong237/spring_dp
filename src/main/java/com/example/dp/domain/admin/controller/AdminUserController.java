@@ -35,4 +35,10 @@ public class AdminUserController {
         UserResponseDto responseDto = adminUserService.grantUserRole(userId);
         return ResponseEntity.ok(responseDto);
     }
+
+    @PutMapping("/users/{userId}/block")
+    public ResponseEntity<UserResponseDto> blockUser(@PathVariable Long userId) {
+        UserResponseDto responseDto = adminUserService.blockUser(userId);
+        return ResponseEntity.ok(responseDto);
+    }
 }

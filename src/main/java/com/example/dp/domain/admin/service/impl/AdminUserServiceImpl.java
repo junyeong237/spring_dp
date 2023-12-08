@@ -2,6 +2,7 @@ package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminUserService;
 import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.UserStatus;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.NotFoundUserException;
@@ -43,7 +44,17 @@ public class AdminUserServiceImpl implements AdminUserService {
         // TODO: 관리자 -> 사용자로 등급관리 가능하게 할지 고려
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
-        user.setUserRole(UserRole.ADMIN);
+        user.updateUserRole(UserRole.ADMIN);
+        return toDto(user);
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDto blockUser(final Long userId) {
+        // TODO: 관리자 -> 차단을 해제해주는 기능 구현할지 고려
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        user.updateUserStatus(UserStatus.BLOCKED);
         return toDto(user);
     }
 
@@ -52,7 +63,9 @@ public class AdminUserServiceImpl implements AdminUserService {
             .id(user.getId())
             .username(user.getUsername())
             .role(user.getRole())
-            .createdAt(user.getCreatedAt())
-            .modifiedAt(user.getModifiedAt()).build();
+            .status(user.getStatus())
+            .imagePath(user.getImagePath())
+            .imageName(user.getImageName())
+            .createdAt(user.getCreatedAt()).build();
     }
 }
