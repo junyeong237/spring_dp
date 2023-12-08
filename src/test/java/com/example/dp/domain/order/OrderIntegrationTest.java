@@ -30,6 +30,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 
 @SpringBootTest
@@ -110,7 +111,7 @@ public class OrderIntegrationTest {
 
         Order order = orderRepository.findById(1L).orElse(null);
         assertNotNull(order);
-        orderService.deleteOrder(user, order.getId());
+        orderService.cancelOrder(user, order.getId());
 
         List<Order> orderList = orderRepository.findByUserAndState(user, OrderState.CANCELLED);
 

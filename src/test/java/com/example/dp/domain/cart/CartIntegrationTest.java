@@ -58,7 +58,6 @@ public class CartIntegrationTest {
 
     private Category category2;
 
-
     void setup() {
         user = User.builder()
             .username("홍길동")
@@ -108,7 +107,7 @@ public class CartIntegrationTest {
     @DisplayName("장바구니 생성")
     @Disabled
     void 주문자_장바구니_생성() {
-        setup();
+
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
@@ -157,8 +156,8 @@ public class CartIntegrationTest {
     @Disabled
     void 주문자_장바구니_특정메뉴삭제() {
 
-        CartDeleteRequestMenuDto cartRequestMenuDto = new CartDeleteRequestMenuDto("햄버거");
-        cartService.deleteCartMenu(user, cartRequestMenuDto);
+        Long deleteMenuId = menu1.getId();
+        cartService.deleteCartMenu(user, deleteMenuId);
         List<CartResponseDto> cart = cartService.getCart(user);
 
         assertEquals(1, cart.size());
