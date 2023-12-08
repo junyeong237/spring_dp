@@ -12,11 +12,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "TB_LIKE")
+@Table(name = "TB_MENULIKE")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenuLike extends TimeEntity {
@@ -32,4 +33,10 @@ public class MenuLike extends TimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    private MenuLike(final Menu menu, final User user) {
+        this.menu = menu;
+        this.user = user;
+    }
 }
