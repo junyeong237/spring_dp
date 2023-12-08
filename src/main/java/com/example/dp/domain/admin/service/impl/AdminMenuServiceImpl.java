@@ -2,6 +2,8 @@ package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminMenuService;
 import com.example.dp.domain.category.entity.Category;
+import com.example.dp.domain.category.exception.CategoryErrorCode;
+import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
@@ -110,6 +112,10 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     private void addCategory(List<String> categoryNameList, Menu menu) {
         List<Category> categories = categoryRepository.findByTypeIn(categoryNameList);
 
+        if (categoryNameList.size() != categories.size()) {
+            throw new NotFoundCategoryException(CategoryErrorCode.NOT_FOUND_CATEGORY);
+        }
+
         categories.forEach(category -> {
             MenuCategory menuCategory = MenuCategory.builder()
                 .category(category)
@@ -120,8 +126,8 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     }
 
     private void removeCategory(List<String> categoryNameList, Menu menu) {
-        List<MenuCategory> menuCategories = menuCategoryRepository.findByCategory_TypeIn(
-            categoryNameList);
+        List<MenuCategory> menuCategories = menuCategoryRepository.findByMenuAndCategory_TypeIn(
+            menu, categoryNameList);
 
         menuCategories.forEach(menuCategory -> {
             menu.removeCategory(menuCategory);
