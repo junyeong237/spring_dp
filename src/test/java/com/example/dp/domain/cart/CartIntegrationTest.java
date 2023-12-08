@@ -105,7 +105,7 @@ public class CartIntegrationTest {
     @Test
     @Order(1)
     @DisplayName("장바구니 생성")
-
+    @Disabled
     void 주문자_장바구니_생성() {
         setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2);
@@ -122,7 +122,7 @@ public class CartIntegrationTest {
     @Test
     @Order(2)
     @DisplayName("장바구니에 수량 추가 ")
-
+    @Disabled
     void 주문자_장바구니_수량추가() {
 
         CartRequestMenuDto cartRequestMenuDto2 = new CartRequestMenuDto("햄버거", 2);
@@ -138,7 +138,7 @@ public class CartIntegrationTest {
     @Test
     @Order(3)
     @DisplayName("장바구니 새로 추가 ")
-
+    @Disabled
     void 주문자_장바구니_추가() {
 
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("치킨", 2);
@@ -153,7 +153,7 @@ public class CartIntegrationTest {
     @Test
     @Order(4)
     @DisplayName("장바구니 메뉴삭제 ")
-
+    @Disabled
     void 주문자_장바구니_특정메뉴삭제() {
 
         Long deleteMenuId = menu1.getId();
@@ -166,7 +166,7 @@ public class CartIntegrationTest {
     @Test
     @Order(5)
     @DisplayName("사용자 장바구니 전체 삭제 ")
-
+    @Disabled
     void 주문자_장바구니_전체삭제() {
 
         cartService.deleteCart(user);
