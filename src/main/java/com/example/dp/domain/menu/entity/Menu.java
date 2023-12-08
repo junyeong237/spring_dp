@@ -1,6 +1,5 @@
 package com.example.dp.domain.menu.entity;
 
-import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.model.TimeEntity;
 import jakarta.persistence.CascadeType;
@@ -55,7 +54,8 @@ public class Menu extends TimeEntity {
         this.status = status;
     }
 
-    public void update(final String name, final String description, final Integer price, final Integer quantity, final boolean status) {
+    public void update(final String name, final String description, final Integer price,
+        final Integer quantity, final boolean status) {
         this.name = name;
         this.description = description;
         this.price = price;

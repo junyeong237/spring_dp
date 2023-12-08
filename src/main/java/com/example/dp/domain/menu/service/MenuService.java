@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface MenuService {
 
-    List<MenuSimpleResponseDto> getAllMenus();
+    List<MenuSimpleResponseDto> getMenus(String categoryType, String menuName);
 }
