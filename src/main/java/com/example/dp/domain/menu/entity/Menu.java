@@ -43,7 +43,7 @@ public class Menu extends TimeEntity {
     @Column(nullable = false)
     private Boolean status;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<MenuCategory> menuCategoryList = new ArrayList<>();
 
     @Builder
