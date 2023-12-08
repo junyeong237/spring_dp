@@ -1,5 +1,7 @@
 package com.example.dp.domain.user.controller;
 
+import com.example.dp.domain.user.dto.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -21,7 +23,19 @@ public class UserController {
     public ResponseEntity<Void> signup(@RequestBody @Valid UserSignupRequestDto request) {
         userService.signup(request);
         return ResponseEntity.noContent().build();
-        //TODO: 공통 응답 메세지 추가
+    }
+
+    @PostMapping("/signup/mail")
+    public ResponseEntity<Void> sendMail(@RequestBody @Valid UserSendMailRequestDto request) {
+        userService.sendMail(request);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("signup/mail/code")
+    public ResponseEntity<Boolean> checkCode(@RequestBody UserCheckCodeRequestDto request) {
+
+        return ResponseEntity.ok(userService.checkCode(request));
     }
 }
 
