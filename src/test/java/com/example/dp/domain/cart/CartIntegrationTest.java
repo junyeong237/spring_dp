@@ -108,7 +108,7 @@ public class CartIntegrationTest {
     @Disabled
     void 주문자_장바구니_생성() {
 
-        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2, 6000);
+        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
         assertNotNull(cart);
@@ -125,7 +125,7 @@ public class CartIntegrationTest {
     @Disabled
     void 주문자_장바구니_수량추가() {
 
-        CartRequestMenuDto cartRequestMenuDto2 = new CartRequestMenuDto("햄버거", 2, 6000);
+        CartRequestMenuDto cartRequestMenuDto2 = new CartRequestMenuDto("햄버거", 2);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto2);
         assertNotNull(cart);
@@ -141,7 +141,7 @@ public class CartIntegrationTest {
     @Disabled
     void 주문자_장바구니_추가() {
 
-        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("치킨", 2, 26000);
+        CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("치킨", 2);
 
         CartResponseDto cart = cartService.postCart(user, cartRequestMenuDto);
         assertNotNull(cart);
