@@ -1,6 +1,5 @@
 package com.example.dp.domain.category.entity;
 
-import com.example.dp.domain.category.dto.request.CategoryRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
