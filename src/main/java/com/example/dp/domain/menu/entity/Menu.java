@@ -3,6 +3,7 @@ package com.example.dp.domain.menu.entity;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menulike.entity.MenuLike;
 import com.example.dp.domain.model.TimeEntity;
+import com.example.dp.domain.ordermenu.entity.OrderMenu;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,6 +49,11 @@ public class Menu extends TimeEntity {
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<MenuLike> menuLikeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private final List<OrderMenu> orderMenuList = new ArrayList<>();
+
+
 
     @Column(nullable = false)
     private Integer likeCounts;
@@ -96,6 +102,12 @@ public class Menu extends TimeEntity {
         this.menuLikeList.add(menuLike);
         this.addLikeCounts();
         menuLike.setMenu(this);
+    }
+
+    public void addOrderMenu(OrderMenu orderMenu){
+        this.orderMenuList.add(orderMenu);
+        this.addLikeCounts();
+        orderMenu.setMenu(this);
     }
 
 }
