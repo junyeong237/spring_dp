@@ -47,11 +47,10 @@ public class OrderServiceImpl implements OrderService {
             .state(OrderState.PENDING)
             .build();
 
-        //orderRepository.save(order);
 
         List<OrderMenu> orderMenuList = cartList.stream()
             .map(cart -> {
-                    OrderMenu orderMenu = new OrderMenu(order, cart.getMenu(),cart.getMenuCount());
+                    OrderMenu orderMenu = new OrderMenu(order, cart.getMenu(),cart.getMenuCount(),cart.getTotalPrice());
                     order.addOrderMenuList(orderMenu);
                     return orderMenu;
                 }
