@@ -2,11 +2,14 @@ package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminMenuService;
 import com.example.dp.domain.category.entity.Category;
+import com.example.dp.domain.category.exception.CategoryErrorCode;
+import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.exception.ExistsMenuNameException;
+import com.example.dp.domain.menu.exception.ForbiddenUpdateMenuException;
 import com.example.dp.domain.menu.exception.MenuErrorCode;
 import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
@@ -14,7 +17,6 @@ import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,10 +33,10 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     public MenuDetailResponseDto createMenu(final MenuRequestDto requestDto) {
 
-        if (menuRepository.existsByName(requestDto.getName())){
+        if (menuRepository.existsByName(requestDto.getName())) {
             throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
         }
-        //메뉴를 생성합니다.
+
         Menu menu = Menu.builder()
             .name(requestDto.getName())
             .description(requestDto.getDescription())
@@ -45,28 +47,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
 
         menu = menuRepository.save(menu);
 
-        addCategory(requestDto, menu);
+        addCategory(requestDto.getCategoryNameList(), menu);
 
         return new MenuDetailResponseDto(menu);
-    }
-    
-    private void addCategory(MenuRequestDto requestDto, Menu menu) {
-        // 카테고리들이 각각 존재하는 카테고리인지 확인
-        List<Category> categoryList = requestDto.getCategoryNameList().stream()
-            .map(categoryType ->
-                categoryRepository.findByType(categoryType)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다.")))
-            .toList();
-
-        // 메뉴카테고리 테이블에 연관관계 저장
-        categoryList.forEach(category -> {
-            MenuCategory menuCategory = MenuCategory.builder()
-                .category(category)
-                .menu(menu)
-                .build();
-            menuCategoryRepository.save(menuCategory);
-            menu.addMenuCategory(menuCategory);
-        });
     }
 
     @Override
@@ -75,9 +58,35 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         final Long menuId,
         final MenuRequestDto menuRequestDto) {
         Menu menu = findMenu(menuId);
+
+        List<String> currentCategories = menu.getMenuCategoryList().stream()
+            .map(menuCategory -> menuCategory.getCategory().getType())
+            .toList();
+        List<String> requestedCategories = menuRequestDto.getCategoryNameList();
+
+        if (requestedCategories.isEmpty()) {
+            throw new ForbiddenUpdateMenuException(MenuErrorCode.NOT_ENTER_CATEGORY);
+        }
+
+        List<String> categoriesToRemove = currentCategories.stream()
+            .filter(category -> !requestedCategories.contains(category))
+            .toList();
+        removeCategory(categoriesToRemove, menu);
+
+        List<String> categoriesToAdd = requestedCategories.stream()
+            .filter(category -> !currentCategories.contains(category))
+            .toList();
+        addCategory(categoriesToAdd, menu);
+
+        if (!menu.getName().equals(menuRequestDto.getName())
+            && menuRepository.existsByName(menuRequestDto.getName())) {
+            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+        }
+
         menu.update(menuRequestDto.getName(),
             menuRequestDto.getDescription(), menuRequestDto.getPrice(),
             menuRequestDto.getQuantity(), menuRequestDto.getStatus());
+
         return new MenuDetailResponseDto(menu);
     }
 
@@ -99,9 +108,39 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         return menus.stream().map(MenuDetailResponseDto::new).toList();
     }
 
+    private void addCategory(List<String> categoryNameList, Menu menu) {
+        List<Category> categories = categoryNameList.stream()
+            .map(categoryType ->
+                categoryRepository.findByType(categoryType)
+                    .orElseThrow(
+                        () -> new NotFoundCategoryException(CategoryErrorCode.NOT_FOUND_CATEGORY)))
+            .toList();
+
+        categories.forEach(category -> {
+            MenuCategory menuCategory = MenuCategory.builder()
+                .category(category)
+                .menu(menu)
+                .build();
+            menu.addMenuCategory(menuCategory);
+        });
+    }
+
+    private void removeCategory(List<String> categoryNameList, Menu menu) {
+        categoryNameList.forEach(category -> {
+            MenuCategory menuCategoryToRemove = menu.getMenuCategoryList().stream()
+                .filter(menuCategory -> menuCategory.getCategory().getType().equals(category))
+                .findFirst()
+                .orElse(null);
+            if (menuCategoryToRemove != null) {
+                menu.removeCategory(menuCategoryToRemove);
+                menuCategoryRepository.delete(menuCategoryToRemove);
+            }
+        });
+    }
+
     public Menu findMenu(Long menuId) {
         return menuRepository.findById(menuId)
-            .orElseThrow(()-> new NotFoundMenuException(MenuErrorCode.NOT_FOUND_MENU));
+            .orElseThrow(() -> new NotFoundMenuException(MenuErrorCode.NOT_FOUND_MENU));
     }
 
 }
