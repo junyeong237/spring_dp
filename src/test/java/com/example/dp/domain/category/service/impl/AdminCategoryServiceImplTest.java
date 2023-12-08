@@ -9,7 +9,7 @@ import com.example.dp.domain.category.entity.Category;
 import com.example.dp.domain.category.exception.ExistsCategoryTypeException;
 import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
-import com.example.dp.domain.category.service.CategoryService;
+import com.example.dp.domain.admin.service.AdminCategoryService;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
@@ -20,15 +20,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class CategoryServiceImplTest {
+class AdminCategoryServiceImplTest {
 
     @Autowired
-    CategoryService categoryService;
+    AdminCategoryService adminCategoryService;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -54,7 +53,7 @@ class CategoryServiceImplTest {
             CategoryRequestDto requestDto = new CategoryRequestDto("테스트 타입");
 
             // When
-            CategoryResponseDto responseDto = categoryService.createCategory(requestDto);
+            CategoryResponseDto responseDto = adminCategoryService.createCategory(requestDto);
 
             // Then
             Category findCategory = categoryRepository.findByType(responseDto.getType())
@@ -72,10 +71,10 @@ class CategoryServiceImplTest {
                 .sample();
 
             CategoryRequestDto requestDto = new CategoryRequestDto(category.getType());
-            categoryService.createCategory(requestDto);
+            adminCategoryService.createCategory(requestDto);
 
             // When - Then
-            assertThatThrownBy(() -> categoryService.createCategory(requestDto))
+            assertThatThrownBy(() -> adminCategoryService.createCategory(requestDto))
                 .isInstanceOf(ExistsCategoryTypeException.class);
         }
     }
@@ -93,12 +92,12 @@ class CategoryServiceImplTest {
                 .sample();
 
             CategoryRequestDto requestDto = new CategoryRequestDto(category.getType());
-            CategoryResponseDto responseDto1 = categoryService.createCategory(requestDto);
+            CategoryResponseDto responseDto1 = adminCategoryService.createCategory(requestDto);
             Category findCategory = categoryRepository.findById(responseDto1.getId())
                 .orElseThrow(RuntimeException::new);
 
             // When
-            CategoryResponseDto responseDto2 = categoryService.updateCategory(
+            CategoryResponseDto responseDto2 = adminCategoryService.updateCategory(
                 responseDto1.getId(), new CategoryRequestDto("수정 테스트"));
 
             // Then
@@ -113,7 +112,7 @@ class CategoryServiceImplTest {
             // Given x
 
             // When - Then
-            assertThatThrownBy(() -> categoryService.updateCategory(
+            assertThatThrownBy(() -> adminCategoryService.updateCategory(
                 2214125125151L, new CategoryRequestDto("수정 테스트")))
                 .isInstanceOf(NotFoundCategoryException.class);
         }
@@ -132,10 +131,10 @@ class CategoryServiceImplTest {
                 .sample();
 
             CategoryRequestDto requestDto = new CategoryRequestDto(category.getType());
-            CategoryResponseDto responseDto = categoryService.createCategory(requestDto);
+            CategoryResponseDto responseDto = adminCategoryService.createCategory(requestDto);
 
             // When
-            categoryService.deleteCategory(responseDto.getId());
+            adminCategoryService.deleteCategory(responseDto.getId());
 
             // Then
             assertThat(categoryRepository.existsById(responseDto.getId())).isEqualTo(false);
@@ -148,7 +147,7 @@ class CategoryServiceImplTest {
             // Given x
 
             // When - Then
-            assertThatThrownBy(() -> categoryService.deleteCategory(1023241251L))
+            assertThatThrownBy(() -> adminCategoryService.deleteCategory(1023241251L))
                 .isInstanceOf(NotFoundCategoryException.class);
         }
     }
