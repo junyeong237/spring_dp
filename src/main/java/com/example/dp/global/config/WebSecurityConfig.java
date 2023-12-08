@@ -70,7 +70,6 @@ public class WebSecurityConfig {
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**")
                     .permitAll()
                      .requestMatchers("/api/users/signup/**").permitAll()
-                    .permitAll()
                     .requestMatchers("/api/menus")
                     .permitAll()
 //                .requestMatchers("/api/admin/**")
