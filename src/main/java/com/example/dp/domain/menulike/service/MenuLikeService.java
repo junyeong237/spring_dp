@@ -4,6 +4,6 @@ import com.example.dp.domain.user.entity.User;
 
 public interface MenuLikeService {
 
-    void clikeLike(User user, Long menuId);
+    void clickLike(User user, Long menuId);
 
 }

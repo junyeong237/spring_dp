@@ -24,7 +24,7 @@ public class MenuLikeController {
         @PathVariable Long menuId,
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
     ){
-        menuLikeService.clikeLike(userDetailsImpl.getUser(),menuId);
+        menuLikeService.clickLike(userDetailsImpl.getUser(),menuId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 
