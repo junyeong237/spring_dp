@@ -8,6 +8,7 @@ import com.example.dp.global.s3.exception.NotFoundS3FileException;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class AwsS3Util {
 
+    @Getter
+    @RequiredArgsConstructor
+    public enum ImagePath {
+        PROFILE("profile/"), MENU("menu/");
+
+        private final String path;
+    }
+
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -25,7 +34,7 @@ public class AwsS3Util {
     private final static String IMAGE_JPG = "image/jpeg";
     private final static String IMAGE_PNG = "image/png";
 
-    public String uploadImage(MultipartFile multipartFile) throws IOException {
+    public String uploadImage(MultipartFile multipartFile, ImagePath imagePath) throws IOException {
         if (!isImageFile(multipartFile)) {
             throw new FileTypeNotAllowedException(AwsS3ErrorCode.FILE_NOT_ALLOW);
         }
@@ -35,7 +44,9 @@ public class AwsS3Util {
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
-        amazonS3.putObject(bucketName, fileName, multipartFile.getInputStream(), metadata);
+        amazonS3.putObject(bucketName, imagePath.getPath() + fileName,
+            multipartFile.getInputStream(), metadata);
+
         return fileName;
     }
 
@@ -44,15 +55,15 @@ public class AwsS3Util {
             || Objects.equals(multipartFile.getContentType(), IMAGE_PNG);
     }
 
-    public String getImagePath(String fileName) {
-        return amazonS3.getUrl(bucketName, fileName).toString();
+    public String getImagePath(String fileName, ImagePath imagePath) {
+        return amazonS3.getUrl(bucketName, imagePath.getPath() + fileName).toString();
     }
 
-    public void deleteImage(String fileName) {
-        if (fileName.isEmpty() && !amazonS3.doesObjectExist(bucketName, fileName)) {
+    public void deleteImage(String fileName, ImagePath imagePath) {
+        if (fileName.isEmpty()
+            || !amazonS3.doesObjectExist(bucketName, imagePath.getPath() + fileName)) {
             throw new NotFoundS3FileException(AwsS3ErrorCode.FILE_NOT_FOUND);
         }
-        amazonS3.deleteObject(bucketName, fileName);
+        amazonS3.deleteObject(bucketName, imagePath.getPath() + fileName);
     }
-
 }
