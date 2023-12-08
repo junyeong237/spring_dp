@@ -1,10 +1,8 @@
 package com.example.dp.global.config;
 
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.UserRole.Authority;
-import com.example.dp.global.redis.RedisUtil;
 import com.example.dp.domain.user.service.impl.UserLogoutImpl;
 import com.example.dp.global.jwt.JwtUtil;
+import com.example.dp.global.redis.RedisUtil;
 import com.example.dp.global.security.JwtAuthenticationFilter;
 import com.example.dp.global.security.JwtAuthorizationFilter;
 import com.example.dp.global.security.UserDetailsServiceImpl;
@@ -66,16 +64,18 @@ public class WebSecurityConfig {
         );
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
-            authorizeHttpRequests
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**")
-                .permitAll()
-                .requestMatchers("/api/users/signup")
-                .permitAll()
+                authorizeHttpRequests
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/api/users/signup")
+                    .permitAll()
+                    .requestMatchers("/api/menus")
+                    .permitAll()
 //                .requestMatchers("/api/admin/**")
 //                .hasAuthority(Authority.ADMIN)
-                .anyRequest().authenticated()
+                    .anyRequest().authenticated()
         );
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
