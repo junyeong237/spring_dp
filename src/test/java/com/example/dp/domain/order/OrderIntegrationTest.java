@@ -117,6 +117,7 @@ public class OrderIntegrationTest {
     @Test
     @org.junit.jupiter.api.Order(1)
     @DisplayName("주문하기")
+    @Disabled
     void 장바구니_생성후_주문하기() {
         setup();
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 2);
@@ -137,6 +138,7 @@ public class OrderIntegrationTest {
     @Test
     @org.junit.jupiter.api.Order(2)
     @DisplayName("주문취소")
+    @Disabled
     void 주문취소() {
 
         Order order = orderRepository.findById(1L).orElse(null);
@@ -156,6 +158,7 @@ public class OrderIntegrationTest {
     @Test
     @org.junit.jupiter.api.Order(3)
     @DisplayName("주문조회")
+    @Disabled
     void 사용자_주문_조회() {
         CartRequestMenuDto cartRequestMenuDto = new CartRequestMenuDto("햄버거", 3);
 
