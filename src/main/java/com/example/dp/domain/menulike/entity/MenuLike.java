@@ -1,5 +1,4 @@
 package com.example.dp.domain.menulike.entity;
-
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;
@@ -35,8 +34,13 @@ public class MenuLike extends TimeEntity {
     private User user;
 
     @Builder
-    private MenuLike(final Menu menu, final User user) {
-        this.menu = menu;
+    private MenuLike(User user, Menu menu) {
         this.user = user;
+        this.menu = menu;
     }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
 }

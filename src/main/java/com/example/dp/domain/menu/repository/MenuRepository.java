@@ -14,4 +14,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     boolean existsByName(String name);
 
     List<Menu> findByNameContains(String menuName);
+
+
 }

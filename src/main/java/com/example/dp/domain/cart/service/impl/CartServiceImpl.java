@@ -1,6 +1,5 @@
 package com.example.dp.domain.cart.service.impl;
 
-import com.example.dp.domain.cart.dto.request.CartDeleteRequestMenuDto;
 import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
 import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.entity.Cart;
@@ -52,6 +51,7 @@ public class CartServiceImpl implements CartService {
                 .user(user)
                 .menu(menu)
                 .menuCount(cartRequestMenuDto.getMenuCounts())
+                .totalPrice(menu.getPrice()*cartRequestMenuDto.getMenuCounts())
                 .build();
 
             cartList.add(newCart);

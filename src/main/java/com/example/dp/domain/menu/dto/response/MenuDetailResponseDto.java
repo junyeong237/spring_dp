@@ -14,6 +14,7 @@ public class MenuDetailResponseDto {
     private final Integer quantity;
     private final Boolean status;
     private final List<String> categoryNameList;
+    private final Integer likeCounts;
 
     public MenuDetailResponseDto(Menu menu) {
         this.id = menu.getId();
@@ -25,5 +26,6 @@ public class MenuDetailResponseDto {
         this.categoryNameList = menu.getMenuCategoryList().stream()
             .map(menuCategory -> menuCategory.getCategory().getType())
             .toList();
+        this.likeCounts = menu.getLikeCounts();
     }
 }
