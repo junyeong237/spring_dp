@@ -10,12 +10,14 @@ import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.menu.exception.ExistsMenuNameException;
 import com.example.dp.domain.menu.exception.ForbiddenUpdateMenuException;
+import com.example.dp.domain.menu.exception.InvalidInputException;
 import com.example.dp.domain.menu.exception.MenuErrorCode;
 import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,9 +106,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     }
 
     @Override
-    public List<MenuDetailResponseDto> getAdminMenus() {
+    public List<MenuDetailResponseDto> getAdminMenus(String sort) {
         List<Menu> menus = menuRepository.findByOrderByCreatedAt();
-        return menus.stream().map(MenuDetailResponseDto::new).toList();
+        return filtering(menus,sort).map(MenuDetailResponseDto::new).toList();
     }
 
     private void addCategory(List<String> categoryNameList, Menu menu) {
@@ -138,6 +140,17 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     public Menu findMenu(Long menuId) {
         return menuRepository.findById(menuId)
             .orElseThrow(() -> new NotFoundMenuException(MenuErrorCode.NOT_FOUND_MENU));
+    }
+
+    private Stream<Menu> filtering(List<Menu> menus, String sort) {
+        if (sort.equals("recent")) {
+            return menus.stream();
+        } else if (sort.equals("likes")) {
+            return menus.stream()
+                .sorted((menu1, menu2) -> Integer.compare(menu2.getLikeCounts(),
+                    menu1.getLikeCounts()));
+        } else
+            throw new InvalidInputException(MenuErrorCode.INVALID_INPUT);
     }
 
 }
