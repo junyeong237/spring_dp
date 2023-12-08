@@ -1,9 +1,11 @@
 package com.example.dp.domain.cart.service.impl;
 
-import com.example.dp.domain.cart.dto.request.CartDeleteRequestMenuDto;
 import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
 import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.entity.Cart;
+import com.example.dp.domain.cart.exception.CartErrorCode;
+import com.example.dp.domain.cart.exception.NotFoundCartMenuExcepiton;
+import com.example.dp.domain.cart.exception.NotFoundMenuException;
 import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.CartService;
 import com.example.dp.domain.menu.entity.Menu;
@@ -49,11 +51,12 @@ public class CartServiceImpl implements CartService {
                 .user(user)
                 .menu(menu)
                 .menuCount(cartRequestMenuDto.getMenuCounts())
+                .totalPrice(menu.getPrice()*cartRequestMenuDto.getMenuCounts())
                 .build();
 
             cartList.add(newCart);
-
             cartRepository.saveAll(cartList);
+
             return new CartResponseDto(newCart);
         }
 
@@ -65,11 +68,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartMenu(final User user, final CartDeleteRequestMenuDto deleteMenu) {
-        Menu menu = findMenuByname(deleteMenu.getName());
-
+    public void deleteCartMenu(final User user, final Long menuId) {
+        Menu menu = findMenuById(menuId);
         Cart cart = cartRepository.findByUserAndMenu(user, menu)
-            .orElseThrow(() -> new IllegalArgumentException("삭제하려는 메뉴에대한 장바구니 리스트가 없습니다."));
+            .orElseThrow(() -> new NotFoundCartMenuExcepiton(CartErrorCode.NOT_FOUND_CART_MENU));
 
         List<Cart> cartList = cartRepository.findByUser(user);
         cartList.remove(cart);
@@ -87,6 +89,11 @@ public class CartServiceImpl implements CartService {
 
     private Menu findMenuByname(String menuName) {
         return menuRepository.findByName(menuName)
-            .orElseThrow(() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다."));
+            .orElseThrow(() -> new NotFoundMenuException(CartErrorCode.NOT_FOUND_MENU));
+    }
+
+    private Menu findMenuById(Long id){
+        return menuRepository.findById(id)
+            .orElseThrow(() -> new NotFoundMenuException(CartErrorCode.NOT_FOUND_MENU));
     }
 }

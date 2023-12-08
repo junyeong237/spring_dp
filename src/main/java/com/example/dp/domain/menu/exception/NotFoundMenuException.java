@@ -1,8 +1,11 @@
 package com.example.dp.domain.menu.exception;
 
-public class NotFoundMenuException extends RuntimeException {
+import com.example.dp.global.exception.RestApiException;
+import com.example.dp.global.exception.code.ErrorCode;
 
-    public NotFoundMenuException() {
-        super("존재하지 않는 Menu입니다.");
+public class NotFoundMenuException extends RestApiException {
+
+    public NotFoundMenuException(final ErrorCode errorCode) {
+        super(errorCode);
     }
 }

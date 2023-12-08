@@ -13,7 +13,4 @@ public class CartRequestMenuDto {
 
     private Integer menuCounts; //해당 메뉴의 갯수
 
-    private Integer priceSum; //총 가격
-
-
 }

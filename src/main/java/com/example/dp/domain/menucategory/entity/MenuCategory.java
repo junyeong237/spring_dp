@@ -38,4 +38,12 @@ public class MenuCategory {
         this.category = category;
         this.menu = menu;
     }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
 }

@@ -17,6 +17,7 @@ public class UserLogoutImpl implements LogoutHandler {
 
     public final Integer ACCESS_TOKEN_TIME = 30;
     public final String VALUE = "blackToken";
+
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) {

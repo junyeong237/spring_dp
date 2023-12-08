@@ -12,7 +12,7 @@ public interface CartService {
 
     CartResponseDto postCart(User user, CartRequestMenuDto cartRequestMenuDto);
 
-    void deleteCartMenu(User user, CartDeleteRequestMenuDto deleteMenu);
+    void deleteCartMenu(User user, Long id);
 
     void deleteCart(User user);
 

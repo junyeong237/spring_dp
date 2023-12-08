@@ -10,4 +10,10 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     Optional<Menu> findByName(String name);
 
     List<Menu> findByOrderByCreatedAt();
+
+    boolean existsByName(String name);
+
+    List<Menu> findByNameContains(String menuName);
+
+
 }

@@ -62,11 +62,16 @@ dependencies {
 	//jasypt
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+	//s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2:2.2.224'
-	testImplementation 'org.assertj:assertj-core:3.24.2'
 	testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.4'
 	testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-jakarta-validation:1.0.4'
 	testImplementation 'it.ozimov:embedded-redis:0.7.3'

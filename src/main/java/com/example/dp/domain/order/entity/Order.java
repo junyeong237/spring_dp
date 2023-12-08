@@ -4,6 +4,7 @@ package com.example.dp.domain.order.entity;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.ordermenu.entity.OrderMenu;
 import com.example.dp.domain.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,7 +42,7 @@ public class Order extends TimeEntity {
     private OrderState state;
 
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.REMOVE})
     private final List<OrderMenu> orderMenuList = new ArrayList<>();
 
     @Builder
@@ -55,11 +56,9 @@ public class Order extends TimeEntity {
         orderMenu.setOrder(this);
     }
 
-    public void updateState(OrderState state){
+    public void updateState(OrderState state) {
         this.state = state;
     }
-
-
 
 
 }

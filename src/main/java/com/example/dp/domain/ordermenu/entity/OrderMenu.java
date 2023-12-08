@@ -2,6 +2,7 @@ package com.example.dp.domain.ordermenu.entity;
 
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.order.entity.Order;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,14 +34,26 @@ public class OrderMenu {
     @JoinColumn(name = "menu_id")
     private Menu menu;
 
+    @Column(nullable = false)
+    private Integer menuCounts;
+
+    @Column(nullable = false)
+    private Integer totalPrice;
+
     @Builder
-    public OrderMenu(Order order, Menu menu) {
+    public OrderMenu(Order order, Menu menu, Integer counts, Integer totalPrice) {
         this.order = order;
         this.menu = menu;
+        this.menuCounts = counts;
+        this.totalPrice = totalPrice;
     }
 
-    public void setOrder(Order order){
+    public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
     }
 
 }

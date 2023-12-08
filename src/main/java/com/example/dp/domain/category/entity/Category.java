@@ -28,4 +28,8 @@ public class Category {
     private Category(String type) {
         this.type = type;
     }
+
+    public void update(final String type) {
+        this.type = type;
+    }
 }
