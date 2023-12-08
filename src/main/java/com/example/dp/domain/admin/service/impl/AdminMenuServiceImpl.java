@@ -44,6 +44,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
             .description(requestDto.getDescription())
             .price(requestDto.getPrice())
             .quantity(requestDto.getQuantity())
+            .likeCounts(0)
             .status(requestDto.getStatus())
             .build();
 
