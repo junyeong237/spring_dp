@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.example.dp.domain.admin.service.impl.AdminMenuServiceImpl;
-import com.example.dp.domain.cart.dto.request.CartDeleteRequestMenuDto;
 import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
 import com.example.dp.domain.cart.dto.response.CartResponseDto;
 import com.example.dp.domain.cart.repository.CartRepository;
@@ -58,49 +57,51 @@ public class CartIntegrationTest {
 
     private Category category2;
 
-    void setup() {
-        user = User.builder()
-            .username("홍길동")
-            .password("123456789")
-            .email("junyeong237@gmail.com")
-            .role(UserRole.USER)
-            .build();
-
-        userRepository.save(user);
-
-        category1 = Category.builder()
-            .type("버거")
-            .build();
-        category2 = Category.builder()
-            .type("치킨")
-            .build();
-
-        categoryRepository.save(category1);
-        categoryRepository.save(category2);
-
-        MenuRequestDto menuRequestDto1 = MenuRequestDto.builder()
-            .name("햄버거")
-            .price(3000)
-            .description("맛있는 햄버거")
-            .price(3000)
-            .quantity(50)
-            .status(true)
-            .categoryNameList(Arrays.asList("버거"))
-            .build();
-        MenuDetailResponseDto responseDto1 = adminMenuService.createMenu(menuRequestDto1);
-        menu1 = menuRepository.findById(responseDto1.getId()).orElseThrow(RuntimeException::new);
-
-        MenuRequestDto menuRequestDto2 = MenuRequestDto.builder()
-            .name("치킨")
-            .description("맛있는 치킨")
-            .price(13000)
-            .quantity(50)
-            .status(true)
-            .categoryNameList(Arrays.asList("치킨"))
-            .build();
-        MenuDetailResponseDto responseDto2 = adminMenuService.createMenu(menuRequestDto2);
-        menu2 = menuRepository.findById(responseDto2.getId()).orElseThrow(RuntimeException::new);
-    }
+//    void setup() {
+//        user = User.builder()
+//            .username("홍길동")
+//            .password("123456789")
+//            .email("junyeong237@gmail.com")
+//            .role(UserRole.USER)
+//            .build();
+//
+//        userRepository.save(user);
+//
+//        category1 = Category.builder()
+//            .type("버거")
+//            .build();
+//        category2 = Category.builder()
+//            .type("치킨")
+//            .build();
+//
+//        categoryRepository.save(category1);
+//        categoryRepository.save(category2);
+//
+//        MenuRequestDto menuRequestDto1 = MenuRequestDto.builder()
+//            .name("햄버거")
+//            .price(3000)
+//            .description("맛있는 햄버거")
+//            .price(3000)
+//            .quantity(50)
+//            .status(true)
+//            .categoryNameList(Arrays.asList("버거"))
+//            .build();
+//        MenuDetailResponseDto responseDto1 = adminMenuService.createMenu(
+//            menuRequestDto1);
+//        menu1 = menuRepository.findById(responseDto1.getId()).orElseThrow(RuntimeException::new);
+//
+//        MenuRequestDto menuRequestDto2 = MenuRequestDto.builder()
+//            .name("치킨")
+//            .description("맛있는 치킨")
+//            .price(13000)
+//            .quantity(50)
+//            .status(true)
+//            .categoryNameList(Arrays.asList("치킨"))
+//            .build();
+//        MenuDetailResponseDto responseDto2 = adminMenuService.createMenu(
+//            menuRequestDto2);
+//        menu2 = menuRepository.findById(responseDto2.getId()).orElseThrow(RuntimeException::new);
+//    }
 
     @Test
     @Order(1)
