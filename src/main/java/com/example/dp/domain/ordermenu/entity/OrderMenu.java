@@ -52,4 +52,8 @@ public class OrderMenu {
         this.order = order;
     }
 
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
 }

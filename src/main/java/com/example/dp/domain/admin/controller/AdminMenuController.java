@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,8 +53,10 @@ public class AdminMenuController {
     }
 
     @GetMapping("/menus")
-    public ResponseEntity<List<MenuDetailResponseDto>> getAdminMenus() {
-        List<MenuDetailResponseDto> responseDto = adminMenuService.getAdminMenus();
+    public ResponseEntity<List<MenuDetailResponseDto>> getAdminMenus(
+        @RequestParam(name="sort") String sort
+    ) {
+        List<MenuDetailResponseDto> responseDto = adminMenuService.getAdminMenus(sort);
         return ResponseEntity.ok(responseDto);
     }
 }
