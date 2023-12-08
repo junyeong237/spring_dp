@@ -16,7 +16,6 @@ public class AdminReviewServiceImpl implements AdminReviewService {
 
     @Override
     public void deleteReview(final Long reviewId) {
-        // 리뷰가 있는지 확인
         Review review = reviewRepository.findById(reviewId)
             .orElseThrow(() -> new NotFoundReviewException(
                 ReviewErrorCode.NOT_FOUND_REVIEW));

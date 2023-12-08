@@ -16,8 +16,7 @@ public class AdminReviewController {
     private final AdminReviewService adminReviewService;
 
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(
-        @PathVariable Long reviewId) {
+    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
         adminReviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
