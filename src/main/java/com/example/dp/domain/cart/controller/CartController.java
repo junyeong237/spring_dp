@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartController {
 
     private final CartServiceImpl cartService;
+
     @GetMapping
     public ResponseEntity<List<CartResponseDto>> getCart(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl

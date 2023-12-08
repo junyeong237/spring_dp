@@ -4,13 +4,17 @@ import com.example.dp.domain.cart.entity.Cart;
 import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
 import com.example.dp.domain.order.dto.response.OrderResponseDto;
-import com.example.dp.domain.order.dto.response.OrderSimpleResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
+import com.example.dp.domain.order.exception.ForbiddenDeleteOrderRoleExcepiton;
+import com.example.dp.domain.order.exception.NotFoundCartListForOrderException;
+import com.example.dp.domain.order.exception.NotFoundOrderException;
+import com.example.dp.domain.order.exception.OrderErrorCode;
 import com.example.dp.domain.order.repository.OrderRepository;
 import com.example.dp.domain.order.service.OrderService;
 import com.example.dp.domain.ordermenu.entity.OrderMenu;
 import com.example.dp.domain.ordermenu.repository.OrderMenuRepository;
+import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +37,8 @@ public class OrderServiceImpl implements OrderService {
         List<Cart> cartList = cartRepository.findByUser(user);
 
         if (cartList.isEmpty()) {
-            throw new IllegalArgumentException("주문하실 장바구니가 없습니다.");
+            throw new NotFoundCartListForOrderException(
+                OrderErrorCode.NOT_FOUND_CARTLIST_FOR_ORDER);
         }
         Order order = Order.builder()
             .user(user)
@@ -44,20 +49,19 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderMenu> orderMenuList = cartList.stream()
             .map(cart -> {
-                OrderMenu orderMenu = new OrderMenu(order, cart.getMenu());
-                order.addOrderMenuList(orderMenu);
-                return orderMenu;
-            }
+                    OrderMenu orderMenu = new OrderMenu(order, cart.getMenu());
+                    order.addOrderMenuList(orderMenu);
+                    return orderMenu;
+                }
             )
             .toList();
 
         orderMenuRepository.saveAll(orderMenuList);
 
-
         //장바구니 내역 삭제
         cartService.deleteCart(user);
 
-        return new OrderResponseDto(order, user);
+        return new OrderResponseDto(order);
 
 
     }
@@ -67,24 +71,24 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(final User user, final Long orderId) {
 
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(()->new IllegalArgumentException("해당하는 주문이 없습니다."));
+            .orElseThrow(() -> new NotFoundOrderException(OrderErrorCode.NOT_FOUND_ORDER));
 
-        if(!order.getUser().getId().equals(user.getId())){
-            //주문을 한 사용자와 현재 사용자가 불일치할경우
-            throw new RuntimeException("주문자만 삭제할 수 있습니다.");
+        if (!order.getUser().getId().equals(user.getId()) ||
+            !user.getRole().equals(UserRole.ADMIN)) {
+            //주문을 한 사용자와 현재 사용자가 불일치할경우 혹은 관리자가 아닌경우
+            throw new ForbiddenDeleteOrderRoleExcepiton(OrderErrorCode.FORBIDDEN_DELETE_ORDER_ROLE);
         }
-
-        if(order.getState().equals(OrderState.PENDING)){
+        if (order.getState().equals(OrderState.PENDING)) {
             order.updateState(OrderState.CANCELLED);
         }
     }
 
     @Override
-    public List<OrderSimpleResponseDto> getOrder(final User user) {
+    public List<OrderResponseDto> getOrder(final User user) {
         List<Order> orderList = orderRepository.findByUser(user);
 
         return orderList.stream()
-            .map(OrderSimpleResponseDto::new)
+            .map(OrderResponseDto::new)
             .toList();
 
 
