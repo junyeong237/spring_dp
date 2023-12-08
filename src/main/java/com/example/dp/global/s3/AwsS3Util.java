@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.dp.global.s3.exception.AwsS3ErrorCode;
 import com.example.dp.global.s3.exception.FileTypeNotAllowedException;
+import com.example.dp.global.s3.exception.NotFoundS3FileException;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public class AwsS3Util {
 
     public void deleteImage(String fileName) {
         if (fileName.isEmpty() && !amazonS3.doesObjectExist(bucketName, fileName)) {
-            return;
+            throw new NotFoundS3FileException(AwsS3ErrorCode.FILE_NOT_FOUND);
         }
         amazonS3.deleteObject(bucketName, fileName);
     }
