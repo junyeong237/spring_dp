@@ -3,9 +3,9 @@ package com.example.dp.domain.order.exception;
 import com.example.dp.global.exception.RestApiException;
 import com.example.dp.global.exception.code.ErrorCode;
 
-public class AlreadyOrderStateCancelException extends RestApiException {
+public class ForbiddenOrderQuantity extends RestApiException {
 
-    public AlreadyOrderStateCancelException(final ErrorCode errorCode) {
+    public ForbiddenOrderQuantity(final ErrorCode errorCode) {
         super(errorCode);
     }
 
