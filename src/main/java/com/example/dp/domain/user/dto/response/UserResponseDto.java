@@ -9,13 +9,13 @@ import lombok.Getter;
 @Getter
 public class UserResponseDto {
 
-    private Long id;
-    private String username;
-    private UserRole role;
-    private UserStatus status;
-    private String imageName;
-    private String imagePath;
-    private LocalDateTime createdAt;
+    private final Long id;
+    private final String username;
+    private final UserRole role;
+    private final UserStatus status;
+    private final String imageName;
+    private final String imagePath;
+    private final LocalDateTime createdAt;
 
     @Builder
     private UserResponseDto(final Long id, final String username, final UserRole role,

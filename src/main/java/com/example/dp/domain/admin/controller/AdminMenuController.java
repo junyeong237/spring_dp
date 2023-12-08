@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,7 +30,8 @@ public class AdminMenuController {
     public ResponseEntity<MenuDetailResponseDto> createMenu(
         @RequestPart("image") MultipartFile multipartFile,
         @RequestPart("dto") MenuRequestDto menuRequestDto) throws IOException {
-        MenuDetailResponseDto responseDto = adminMenuService.createMenu(multipartFile, menuRequestDto);
+        MenuDetailResponseDto responseDto = adminMenuService.createMenu(multipartFile,
+            menuRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -40,7 +40,8 @@ public class AdminMenuController {
         @PathVariable Long menuId,
         @RequestPart("image") MultipartFile multipartFile,
         @RequestPart("dto") MenuRequestDto menuRequestDto) throws IOException {
-        MenuDetailResponseDto responseDto = adminMenuService.updateMenu(menuId, multipartFile, menuRequestDto);
+        MenuDetailResponseDto responseDto = adminMenuService.updateMenu(menuId, multipartFile,
+            menuRequestDto);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -58,7 +59,7 @@ public class AdminMenuController {
 
     @GetMapping("/menus")
     public ResponseEntity<List<MenuDetailResponseDto>> getAdminMenus(
-        @RequestParam(name="sort") String sort
+        @RequestParam(name = "sort") String sort
     ) {
         List<MenuDetailResponseDto> responseDto = adminMenuService.getAdminMenus(sort);
         return ResponseEntity.ok(responseDto);
