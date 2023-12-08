@@ -1,12 +1,12 @@
 package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminOrderService;
-import com.example.dp.domain.order.dto.request.OrderStateRequestDto;
 import com.example.dp.domain.order.dto.response.OrderResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
-import com.example.dp.domain.order.exception.AlreadyOrderStateCancelException;
-import com.example.dp.domain.order.exception.AlreadyOrderStateFinishedException;
+import com.example.dp.domain.order.exception.ForbiddenOrderState;
+import com.example.dp.domain.order.exception.ForbiddenOrderStateNotCreated;
+import com.example.dp.domain.order.exception.ForbiddenOrderStateNotPending;
 import com.example.dp.domain.order.exception.NotFoundOrderException;
 import com.example.dp.domain.order.exception.OrderErrorCode;
 import com.example.dp.domain.order.repository.OrderRepository;
@@ -37,7 +37,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return orderList.stream()
             .map(OrderResponseDto::new).toList();
 
-
     }
 
     @Override
@@ -49,37 +48,32 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         if (orderList.isEmpty()) {
             return Collections.emptyList();
         }
-
         return orderList.stream()
             .map(OrderResponseDto::new).toList();
     }
 
     @Override
     public OrderResponseDto updateOrderState(final Long id,
-        final OrderStateRequestDto orderStateRequestDto) {
+        final OrderState state) {
+        checkstate(state);
         Order order = findOrder(id);
-        validateOrderState(order);
-        order.updateState(orderStateRequestDto.getState());
-
+        validateOrderState(order,state);
+        order.updateState(state);
         return new OrderResponseDto(order);
     }
 
-
     @Override
-    public void cancelOrder(final Long id) {
+    public void deleteOrder(final Long id) {
+
         Order order = findOrder(id);
-        validateOrderState(order);
-        order.updateState(OrderState.CANCELLED);
+        orderRepository.delete(order);
+
     }
 
-    private void validateOrderState(final Order order) {
-
-        if (order.getState().equals(OrderState.CANCELLED)) {
-            throw new AlreadyOrderStateCancelException(OrderErrorCode.ALREADY_ORDER_STATE_CANCEL);
-        } else if (order.getState().equals(OrderState.COMPLETED)) {
-            throw new AlreadyOrderStateFinishedException(OrderErrorCode.ALREADY_ORDER_STATE_FINISHED);
+    private void checkstate(OrderState state) {
+        if(state != OrderState.COMPLETED && state != OrderState.CREATED && state != OrderState.CANCELLED){
+            throw new ForbiddenOrderState(OrderErrorCode.FORBIDDEN_ORDER_STATE);
         }
-
     }
 
     private Order findOrder(Long id) {
@@ -87,5 +81,24 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             .orElseThrow(() -> new NotFoundOrderException(OrderErrorCode.NOT_FOUND_ORDER));
     }
 
+    private void validateOrderState(Order order, OrderState state) {
+
+        if(state == OrderState.CANCELLED){
+            if(order.getState() != OrderState.PENDING){
+                throw new ForbiddenOrderStateNotPending(OrderErrorCode.FORBIDDEN_ORDER_STATE_NOT_PENDING);
+            }
+        }
+        else if(state == OrderState.COMPLETED){
+            if(order.getState() != OrderState.CREATED){
+                throw new ForbiddenOrderStateNotCreated(OrderErrorCode.FORBIDDEN_ORDER_STATE_NOT_CREATED);
+            }
+        }
+
+        else if(state == OrderState.CREATED){
+            if(order.getState() != OrderState.PENDING){
+                throw new ForbiddenOrderStateNotPending(OrderErrorCode.FORBIDDEN_ORDER_STATE_NOT_PENDING);
+            }
+        }
+    }
 
 }

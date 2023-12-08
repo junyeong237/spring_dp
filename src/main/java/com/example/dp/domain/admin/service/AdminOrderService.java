@@ -1,7 +1,7 @@
 package com.example.dp.domain.admin.service;
 
-import com.example.dp.domain.order.dto.request.OrderStateRequestDto;
 import com.example.dp.domain.order.dto.response.OrderResponseDto;
+import com.example.dp.domain.order.entity.OrderState;
 import java.util.List;
 
 public interface AdminOrderService {
@@ -10,8 +10,8 @@ public interface AdminOrderService {
 
     List<OrderResponseDto> getOrdersAllToday();
 
-    OrderResponseDto updateOrderState(Long id, OrderStateRequestDto orderStateRequestDto);
+    OrderResponseDto updateOrderState(Long id, OrderState state);
 
-    void cancelOrder(Long id);
+    void deleteOrder(Long id);
 
 }
