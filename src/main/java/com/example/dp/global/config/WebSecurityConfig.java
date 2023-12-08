@@ -66,16 +66,16 @@ public class WebSecurityConfig {
         );
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
-            authorizeHttpRequests
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**")
-                .permitAll()
-                .requestMatchers("/api/users/signup")
-                .permitAll()
+                authorizeHttpRequests
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/api/users/signup")
+                    .permitAll()
 //                .requestMatchers("/api/admin/**")
 //                .hasAuthority(Authority.ADMIN)
-                .anyRequest().authenticated()
+                    .anyRequest().authenticated()
         );
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
