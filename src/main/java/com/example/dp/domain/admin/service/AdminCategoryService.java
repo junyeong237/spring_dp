@@ -1,9 +1,9 @@
-package com.example.dp.domain.category.service;
+package com.example.dp.domain.admin.service;
 
 import com.example.dp.domain.category.dto.request.CategoryRequestDto;
 import com.example.dp.domain.category.dto.response.CategoryResponseDto;
 
-public interface CategoryService {
+public interface AdminCategoryService {
 
     CategoryResponseDto createCategory(CategoryRequestDto requestDto);
 
