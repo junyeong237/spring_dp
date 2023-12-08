@@ -1,5 +1,6 @@
 package com.example.dp.domain.menulike.entity;
 
+import com.example.dp.domain.category.entity.Category;
 import com.example.dp.domain.menu.entity.Menu;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;
@@ -12,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +34,15 @@ public class MenuLike extends TimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    private MenuLike(User user, Menu menu) {
+        this.user = user;
+        this.menu = menu;
+    }
+
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+
 }

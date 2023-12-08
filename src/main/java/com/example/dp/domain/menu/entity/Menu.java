@@ -1,6 +1,7 @@
 package com.example.dp.domain.menu.entity;
 
 import com.example.dp.domain.menucategory.entity.MenuCategory;
+import com.example.dp.domain.menulike.entity.MenuLike;
 import com.example.dp.domain.model.TimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,6 +46,9 @@ public class Menu extends TimeEntity {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<MenuCategory> menuCategoryList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private final List<MenuLike> menuLikeList = new ArrayList<>();
+
     @Builder
     private Menu(String name, String description, Integer price, Integer quantity, Boolean status) {
         this.name = name;
@@ -74,5 +78,10 @@ public class Menu extends TimeEntity {
     public void removeCategory(MenuCategory menuCategory) {
         this.menuCategoryList.remove(menuCategory);
         menuCategory.setMenu(null);
+    }
+
+    public void addMenuLike(MenuLike menuLike){
+        this.menuLikeList.add(menuLike);
+        menuLike.setMenu(this);
     }
 }
