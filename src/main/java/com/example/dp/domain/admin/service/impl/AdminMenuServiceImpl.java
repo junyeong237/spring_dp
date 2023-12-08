@@ -2,8 +2,6 @@ package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminMenuService;
 import com.example.dp.domain.category.entity.Category;
-import com.example.dp.domain.category.exception.CategoryErrorCode;
-import com.example.dp.domain.category.exception.NotFoundCategoryException;
 import com.example.dp.domain.category.repository.CategoryRepository;
 import com.example.dp.domain.menu.dto.request.MenuRequestDto;
 import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
@@ -59,14 +57,15 @@ public class AdminMenuServiceImpl implements AdminMenuService {
         final MenuRequestDto menuRequestDto) {
         Menu menu = findMenu(menuId);
 
-        List<String> currentCategories = menu.getMenuCategoryList().stream()
-            .map(menuCategory -> menuCategory.getCategory().getType())
-            .toList();
         List<String> requestedCategories = menuRequestDto.getCategoryNameList();
 
         if (requestedCategories.isEmpty()) {
             throw new ForbiddenUpdateMenuException(MenuErrorCode.NOT_ENTER_CATEGORY);
         }
+
+        List<String> currentCategories = menu.getMenuCategoryList().stream()
+            .map(menuCategory -> menuCategory.getCategory().getType())
+            .toList();
 
         List<String> categoriesToRemove = currentCategories.stream()
             .filter(category -> !requestedCategories.contains(category))
@@ -109,12 +108,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     }
 
     private void addCategory(List<String> categoryNameList, Menu menu) {
-        List<Category> categories = categoryNameList.stream()
-            .map(categoryType ->
-                categoryRepository.findByType(categoryType)
-                    .orElseThrow(
-                        () -> new NotFoundCategoryException(CategoryErrorCode.NOT_FOUND_CATEGORY)))
-            .toList();
+        List<Category> categories = categoryRepository.findByTypeIn(categoryNameList);
 
         categories.forEach(category -> {
             MenuCategory menuCategory = MenuCategory.builder()
@@ -126,15 +120,12 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     }
 
     private void removeCategory(List<String> categoryNameList, Menu menu) {
-        categoryNameList.forEach(category -> {
-            MenuCategory menuCategoryToRemove = menu.getMenuCategoryList().stream()
-                .filter(menuCategory -> menuCategory.getCategory().getType().equals(category))
-                .findFirst()
-                .orElse(null);
-            if (menuCategoryToRemove != null) {
-                menu.removeCategory(menuCategoryToRemove);
-                menuCategoryRepository.delete(menuCategoryToRemove);
-            }
+        List<MenuCategory> menuCategories = menuCategoryRepository.findByCategory_TypeIn(
+            categoryNameList);
+
+        menuCategories.forEach(menuCategory -> {
+            menu.removeCategory(menuCategory);
+            menuCategoryRepository.delete(menuCategory);
         });
     }
 

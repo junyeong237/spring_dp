@@ -9,4 +9,6 @@ public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long
     List<MenuCategory> findByMenuId(Long menuId);
 
     boolean existsByCategoryId(Long categoryId);
+
+    List<MenuCategory> findByCategory_TypeIn(List<String> categoryNameList);
 }
