@@ -2,7 +2,6 @@ package com.example.dp.domain.order.controller;
 
 
 import com.example.dp.domain.order.dto.response.OrderResponseDto;
-import com.example.dp.domain.order.dto.response.OrderSimpleResponseDto;
 import com.example.dp.domain.order.service.impl.OrderServiceImpl;
 import com.example.dp.global.security.UserDetailsImpl;
 import java.util.List;
@@ -27,7 +26,7 @@ public class OrderController {
     @PostMapping()
     public ResponseEntity<OrderResponseDto> createOrders(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
-    ){
+    ) {
 
         OrderResponseDto orderResponseDto = orderService.createOrder(userDetailsImpl.getUser());
 
@@ -38,20 +37,20 @@ public class OrderController {
     public ResponseEntity<?> deleteOrders(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
         @PathVariable Long orderId
-    ){
+    ) {
 
-        orderService.deleteOrder(userDetailsImpl.getUser(),orderId);
+        orderService.deleteOrder(userDetailsImpl.getUser(), orderId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @GetMapping("")
 
-    public ResponseEntity<List<OrderSimpleResponseDto>> getOrder(
+    public ResponseEntity<List<OrderResponseDto>> getOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl
-    )
-    {
-        List<OrderSimpleResponseDto> orderResponseDtoList = orderService.getOrder(userDetailsImpl.getUser());
+    ) {
+        List<OrderResponseDto> orderResponseDtoList = orderService.getOrder(
+            userDetailsImpl.getUser());
 
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDtoList);
     }

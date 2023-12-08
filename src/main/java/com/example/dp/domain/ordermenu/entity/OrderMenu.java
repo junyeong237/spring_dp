@@ -39,7 +39,7 @@ public class OrderMenu {
         this.menu = menu;
     }
 
-    public void setOrder(Order order){
+    public void setOrder(Order order) {
         this.order = order;
     }
 
