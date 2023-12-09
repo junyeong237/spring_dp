@@ -1,4 +1,4 @@
-package com.example.dp.global.redis;
+package com.example.dp.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

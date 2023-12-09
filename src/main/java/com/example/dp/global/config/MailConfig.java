@@ -1,4 +1,4 @@
-package com.example.dp.global.infra.mail;
+package com.example.dp.global.config;
 
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Value;
