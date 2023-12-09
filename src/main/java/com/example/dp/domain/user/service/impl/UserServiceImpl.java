@@ -9,10 +9,12 @@ import com.example.dp.domain.authemail.service.impl.AuthEmailServiceImpl;
 import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
 import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
+import com.example.dp.domain.user.dto.response.UserIntroduceMessageUpdateResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.dto.response.UsernameUpdateResponseDto;
 import com.example.dp.domain.user.entity.User;
@@ -98,13 +100,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UsernameUpdateResponseDto updateProfileUsername(UsernameUpdateRequestDto requestDto,
+    public UsernameUpdateResponseDto updateUsername(UsernameUpdateRequestDto requestDto,
         User user) {
         User findUser = getFindUser(user.getId());
 
         findUser.updateUsername(requestDto.getUsername());
 
         return UsernameUpdateResponseDto.of(findUser.getUsername());
+    }
+
+    @Override
+    @Transactional
+    public UserIntroduceMessageUpdateResponseDto updateIntroduceMessage(
+        UserIntroduceMessageUpdateRequestDto requestDto, User user) {
+        User findUser = getFindUser(user.getId());
+
+        findUser.updateIntroduceMessage(requestDto.getIntroduceMessage());
+
+        return UserIntroduceMessageUpdateResponseDto.of(findUser.getIntroduceMessage());
     }
 
     @Override

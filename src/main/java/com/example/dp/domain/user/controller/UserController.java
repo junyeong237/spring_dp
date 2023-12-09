@@ -1,10 +1,12 @@
 package com.example.dp.domain.user.controller;
 
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
 import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
+import com.example.dp.domain.user.dto.response.UserIntroduceMessageUpdateResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.dto.response.UsernameUpdateResponseDto;
 import com.example.dp.domain.user.service.impl.UserServiceImpl;
@@ -59,9 +61,15 @@ public class UserController {
     }
 
     @PutMapping("/name")
-    public ResponseEntity<UsernameUpdateResponseDto> updateProfileUsername(
+    public ResponseEntity<UsernameUpdateResponseDto> updateUsername(
         @RequestBody UsernameUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-            return ResponseEntity.ok(userService.updateProfileUsername(requestDto, userDetails.getUser()));
+            return ResponseEntity.ok(userService.updateUsername(requestDto, userDetails.getUser()));
+    }
+
+    @PutMapping("/introduce")
+    public ResponseEntity<UserIntroduceMessageUpdateResponseDto> updateIntroduceMessage(
+        @RequestBody UserIntroduceMessageUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(userService.updateIntroduceMessage(requestDto, userDetails.getUser()));
     }
 
 

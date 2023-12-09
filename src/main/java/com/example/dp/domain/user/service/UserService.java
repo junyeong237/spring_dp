@@ -1,10 +1,12 @@
 package com.example.dp.domain.user.service;
 
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
 import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
+import com.example.dp.domain.user.dto.response.UserIntroduceMessageUpdateResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.dto.response.UsernameUpdateResponseDto;
 import com.example.dp.domain.user.entity.User;
@@ -27,5 +29,8 @@ public interface UserService {
 
     UserResponseDto getProfile(Long userId);
 
-    UsernameUpdateResponseDto updateProfileUsername(UsernameUpdateRequestDto requestDto, User user);
+    UsernameUpdateResponseDto updateUsername(UsernameUpdateRequestDto requestDto, User user);
+
+    UserIntroduceMessageUpdateResponseDto updateIntroduceMessage(UserIntroduceMessageUpdateRequestDto requestDto, User user);
+
 }
