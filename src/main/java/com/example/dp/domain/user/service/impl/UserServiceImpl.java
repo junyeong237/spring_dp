@@ -1,14 +1,22 @@
 package com.example.dp.domain.user.service.impl;
 
+import static com.example.dp.domain.user.constant.UserConstant.FAIL_CHECK_CODE_MESSAGE;
+import static com.example.dp.domain.user.constant.UserConstant.NAME;
+import static com.example.dp.domain.user.constant.UserConstant.SUBJECT;
+import static com.example.dp.domain.user.constant.UserConstant.SUCCESS_CHECK_CODE_MESSAGE;
+
+import com.example.dp.domain.authemail.service.impl.AuthEmailServiceImpl;
 import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.UserStatus;
-import com.example.dp.domain.user.dto.UserCheckCodeRequestDto;
-import com.example.dp.domain.user.dto.UserSendMailRequestDto;
+import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
+import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.ExistsUserEmailException;
 import com.example.dp.domain.user.exception.NotFoundUserException;
+import com.example.dp.domain.user.exception.UnauthorizedEmailException;
 import com.example.dp.domain.user.exception.UserErrorCode;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.example.dp.domain.user.service.UserService;
@@ -29,18 +37,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final MailServiceImpl mailService;
+    private final AuthEmailServiceImpl authEmailService;
     private final PasswordEncoder passwordEncoder;
     private final AwsS3Util awsS3Util;
 
-    private static final String SUBJECT = "4족 배달 [이메일 인증]";
-    private static final String NAME = "라이더";
-
-    //TODO:: email check 값을 redis value 값으로 저장해 상태 변경을 하는 것 보다는 다른 방법을 고려해보기
 
     @Override
     public void signup(final UserSignupRequestDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ExistsUserEmailException(UserErrorCode.EXISTS_EMAIL);
+        }
+        if (!authEmailService.getAuthEmailIsChecked(request.getEmail())) {
+            throw new UnauthorizedEmailException(UserErrorCode.UNAUTHORIZED_EMAIL);
         }
 
         String encryptionPassword = passwordEncoder.encode(request.getPassword());
@@ -63,11 +71,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendMail(UserSendMailRequestDto requestDto) {
         mailService.sendMessage(requestDto.getEmail(), SUBJECT);
+        authEmailService.createAuthEmail(requestDto.getEmail());
     }
 
     @Override
-    public Boolean checkCode(UserCheckCodeRequestDto requestDto) {
-        return mailService.checkCode(requestDto.getEmail(), requestDto.getCode());
+    public UserCheckCodeResponseDto checkCode(UserCheckCodeRequestDto requestDto) {
+        boolean isChecked = mailService.checkCode(requestDto.getEmail(), requestDto.getCode());
+        String message = isChecked ? SUCCESS_CHECK_CODE_MESSAGE : FAIL_CHECK_CODE_MESSAGE;
+
+        return UserCheckCodeResponseDto.builder()
+            .isChecked(isChecked)
+            .message(message)
+            .build();
     }
 
     @Override
