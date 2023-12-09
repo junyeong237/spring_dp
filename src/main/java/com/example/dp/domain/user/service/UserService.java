@@ -19,4 +19,6 @@ public interface UserService {
     UserResponseDto updateProfileImage(MultipartFile multipartFile, User user) throws IOException;
 
     void deleteProfileImage(User user);
+
+    boolean userIsBlocked(String email);
 }

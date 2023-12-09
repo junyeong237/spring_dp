@@ -16,11 +16,16 @@ import com.example.dp.domain.menu.exception.NotFoundMenuException;
 import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
+import com.example.dp.global.exception.RestApiException;
+import com.example.dp.global.s3.AwsS3Util;
+import com.example.dp.global.s3.AwsS3Util.ImagePath;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -29,40 +34,91 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     private final MenuRepository menuRepository;
     private final CategoryRepository categoryRepository;
     private final MenuCategoryRepository menuCategoryRepository;
-
+    private final AwsS3Util awsS3Util;
 
     @Transactional
     @Override
-    public MenuDetailResponseDto createMenu(final MenuRequestDto requestDto) {
+    public MenuDetailResponseDto createMenu(final MultipartFile multipartFile,
+        final MenuRequestDto requestDto) throws IOException {
 
-        if (menuRepository.existsByName(requestDto.getName())) {
-            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+        String imageName = null;
+
+        if (multipartFile.isEmpty()) {
+            throw new InvalidInputException(MenuErrorCode.NOT_ENTER_IMAGE);
         }
 
-        Menu menu = Menu.builder()
-            .name(requestDto.getName())
-            .description(requestDto.getDescription())
-            .price(requestDto.getPrice())
-            .quantity(requestDto.getQuantity())
-            .likeCounts(0)
-            .status(requestDto.getStatus())
-            .build();
+        try {
+            if (menuRepository.existsByName(requestDto.getName())) {
+                throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+            }
 
-        menu = menuRepository.save(menu);
+            imageName = awsS3Util.uploadImage(multipartFile, ImagePath.MENU);
+            String imagePath = awsS3Util.getImagePath(imageName, ImagePath.MENU);
 
-        addCategory(requestDto.getCategoryNameList(), menu);
+            Menu menu = Menu.builder()
+                .name(requestDto.getName())
+                .description(requestDto.getDescription())
+                .price(requestDto.getPrice())
+                .quantity(requestDto.getQuantity())
+                .imageName(imageName)
+                .imagePath(imagePath)
+                .status(requestDto.getStatus())
+                .build();
 
-        return new MenuDetailResponseDto(menu);
+            menu = menuRepository.save(menu);
+
+            addCategory(requestDto.getCategoryNameList(), menu);
+
+            return new MenuDetailResponseDto(menu);
+        } catch (RestApiException e) {
+            if (imageName != null) {
+                awsS3Util.deleteImage(imageName, ImagePath.MENU);
+            }
+            throw e;
+        }
     }
 
     @Override
     @Transactional
     public MenuDetailResponseDto updateMenu(
         final Long menuId,
-        final MenuRequestDto menuRequestDto) {
+        final MultipartFile multipartFile, final MenuRequestDto menuRequestDto) throws IOException {
+
+        if (multipartFile.isEmpty()) {
+            throw new InvalidInputException(MenuErrorCode.NOT_ENTER_IMAGE);
+        }
+
         Menu menu = findMenu(menuId);
 
+        // 카테고리 업데이트
         List<String> requestedCategories = menuRequestDto.getCategoryNameList();
+        updateCategory(menu, requestedCategories);
+
+        // 존재하는 이름의 메뉴일 경우 예외처리(본인 제외)
+        if (!menu.getName().equals(menuRequestDto.getName())
+            && menuRepository.existsByName(menuRequestDto.getName())) {
+            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
+        }
+
+        // 이미지 이름과 주소를 가져옴
+        String imageName = awsS3Util.uploadImage(multipartFile, ImagePath.MENU);
+        String imagePath = awsS3Util.getImagePath(imageName, ImagePath.MENU);
+
+        // 오류 없이 진행 됐을 경우 기존에 있던 이미지를 삭제함
+        String menuImageName = menu.getImageName();
+        if (menuImageName != null) {
+            awsS3Util.deleteImage(menuImageName, ImagePath.MENU);
+        }
+
+        // 업데이트 진행
+        menu.update(menuRequestDto.getName(),
+            menuRequestDto.getDescription(), menuRequestDto.getPrice(),
+            menuRequestDto.getQuantity(), menuRequestDto.getStatus(), imageName, imagePath);
+
+        return new MenuDetailResponseDto(menu);
+    }
+
+    private void updateCategory(Menu menu, List<String> requestedCategories) {
 
         if (requestedCategories.isEmpty()) {
             throw new ForbiddenUpdateMenuException(MenuErrorCode.NOT_ENTER_CATEGORY);
@@ -81,22 +137,12 @@ public class AdminMenuServiceImpl implements AdminMenuService {
             .filter(category -> !currentCategories.contains(category))
             .toList();
         addCategory(categoriesToAdd, menu);
-
-        if (!menu.getName().equals(menuRequestDto.getName())
-            && menuRepository.existsByName(menuRequestDto.getName())) {
-            throw new ExistsMenuNameException(MenuErrorCode.EXISTS_MENU_NAME);
-        }
-
-        menu.update(menuRequestDto.getName(),
-            menuRequestDto.getDescription(), menuRequestDto.getPrice(),
-            menuRequestDto.getQuantity(), menuRequestDto.getStatus());
-
-        return new MenuDetailResponseDto(menu);
     }
 
     @Override
     public void deleteMenu(final Long menuId) {
         Menu menu = findMenu(menuId);
+        awsS3Util.deleteImage(menu.getImageName(), ImagePath.MENU);
         menuRepository.delete(menu);
     }
 
@@ -109,7 +155,7 @@ public class AdminMenuServiceImpl implements AdminMenuService {
     @Override
     public List<MenuDetailResponseDto> getAdminMenus(String sort) {
         List<Menu> menus = menuRepository.findByOrderByCreatedAt();
-        return filtering(menus,sort).map(MenuDetailResponseDto::new).toList();
+        return filtering(menus, sort).map(MenuDetailResponseDto::new).toList();
     }
 
     private void addCategory(List<String> categoryNameList, Menu menu) {
@@ -150,8 +196,9 @@ public class AdminMenuServiceImpl implements AdminMenuService {
             return menus.stream()
                 .sorted((menu1, menu2) -> Integer.compare(menu2.getLikeCounts(),
                     menu1.getLikeCounts()));
-        } else
+        } else {
             throw new InvalidInputException(MenuErrorCode.INVALID_INPUT);
+        }
     }
 
 }

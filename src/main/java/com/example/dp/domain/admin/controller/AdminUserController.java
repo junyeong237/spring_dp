@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +28,17 @@ public class AdminUserController {
     public ResponseEntity<List<UserResponseDto>> getUser() {
         List<UserResponseDto> responseDtos = adminUserService.getAllUsers();
         return ResponseEntity.ok(responseDtos);
+    }
+
+    @PutMapping("/users/{userId}/role")
+    public ResponseEntity<UserResponseDto> grantUserRole(@PathVariable Long userId) {
+        UserResponseDto responseDto = adminUserService.grantUserRole(userId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/users/{userId}/block")
+    public ResponseEntity<UserResponseDto> blockUser(@PathVariable Long userId) {
+        UserResponseDto responseDto = adminUserService.blockUser(userId);
+        return ResponseEntity.ok(responseDto);
     }
 }

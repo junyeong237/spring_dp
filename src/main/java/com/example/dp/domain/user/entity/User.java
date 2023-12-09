@@ -3,6 +3,7 @@ package com.example.dp.domain.user.entity;
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.review.entity.Review;
 import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -49,6 +50,10 @@ public class User extends TimeEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 
@@ -58,10 +63,19 @@ public class User extends TimeEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.status = UserStatus.ACTIVE;
     }
 
     public void updateImage(final String imageName, final String imagePath) {
         this.imageName = imageName;
         this.imagePath = imagePath;
+    }
+
+    public void updateUserRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void updateUserStatus(UserStatus status) {
+        this.status = status;
     }
 }
