@@ -70,6 +70,10 @@ public class User extends TimeEntity {
         this.status = UserStatus.ACTIVE;
     }
 
+    public void updateUsername(final String username) {
+        this.username = username;
+    }
+
     public void updateImage(final String imageName, final String imagePath) {
         this.imageName = imageName;
         this.imagePath = imagePath;

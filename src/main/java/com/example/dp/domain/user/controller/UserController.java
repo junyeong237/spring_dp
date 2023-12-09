@@ -3,8 +3,10 @@ package com.example.dp.domain.user.controller;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
+import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
 import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
+import com.example.dp.domain.user.dto.response.UsernameUpdateResponseDto;
 import com.example.dp.domain.user.service.impl.UserServiceImpl;
 import com.example.dp.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -55,6 +57,14 @@ public class UserController {
 
         return ResponseEntity.ok(userService.checkCode(request));
     }
+
+    @PutMapping("/name")
+    public ResponseEntity<UsernameUpdateResponseDto> updateProfileUsername(
+        @RequestBody UsernameUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+            return ResponseEntity.ok(userService.updateProfileUsername(requestDto, userDetails.getUser()));
+    }
+
+
 
     @PutMapping("/profile")
     public ResponseEntity<UserResponseDto> updateProfileImage(

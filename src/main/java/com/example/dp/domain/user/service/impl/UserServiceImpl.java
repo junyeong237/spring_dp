@@ -11,8 +11,10 @@ import com.example.dp.domain.user.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
+import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
 import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
+import com.example.dp.domain.user.dto.response.UsernameUpdateResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.ExistsUserEmailException;
 import com.example.dp.domain.user.exception.NotFoundUserException;
@@ -43,8 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getProfile(Long userId) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        User user = getFindUser(userId);
 
         return toDto(user);
     }
@@ -97,10 +98,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public UsernameUpdateResponseDto updateProfileUsername(UsernameUpdateRequestDto requestDto,
+        User user) {
+        User findUser = getFindUser(user.getId());
+
+        findUser.updateUsername(requestDto.getUsername());
+
+        return UsernameUpdateResponseDto.of(findUser.getUsername());
+    }
+
+    @Override
+    @Transactional
     public UserResponseDto updateProfileImage(final MultipartFile multipartFile, final User user)
         throws IOException {
-        User findUser = userRepository.findById(user.getId())
-            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        User findUser = getFindUser(user.getId());
 
         String userImageName = findUser.getImageName();
         if (userImageName != null) {
@@ -116,8 +127,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteProfileImage(final User user) {
-        User findUser = userRepository.findById(user.getId())
-            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+        User findUser = getFindUser(user.getId());
 
         String userImageName = findUser.getImageName();
         if (awsS3Util.existsImage(userImageName, ImagePath.PROFILE)) {
@@ -131,6 +141,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(userEmail)
             .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
         return user.getStatus() == UserStatus.BLOCKED;
+    }
+
+    private User getFindUser(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
     }
 
     private UserResponseDto toDto(User user) {
