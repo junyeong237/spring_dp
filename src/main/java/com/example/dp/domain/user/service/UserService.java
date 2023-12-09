@@ -1,8 +1,9 @@
 package com.example.dp.domain.user.service;
 
-import com.example.dp.domain.user.dto.UserCheckCodeRequestDto;
-import com.example.dp.domain.user.dto.UserSendMailRequestDto;
+import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
+import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public interface UserService {
 
     void sendMail(UserSendMailRequestDto requestDto);
 
-    Boolean checkCode(UserCheckCodeRequestDto requestDto);
+    UserCheckCodeResponseDto checkCode(UserCheckCodeRequestDto requestDto);
 
     UserResponseDto updateProfileImage(MultipartFile multipartFile, User user) throws IOException;
 

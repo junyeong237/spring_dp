@@ -1,15 +1,15 @@
 package com.example.dp.domain.user.controller;
 
-import com.example.dp.domain.user.dto.UserCheckCodeRequestDto;
-import com.example.dp.domain.user.dto.UserSendMailRequestDto;
+import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
+import com.example.dp.domain.user.dto.response.UserCheckCodeResponseDto;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.service.impl.UserServiceImpl;
 import com.example.dp.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/signup/mail/code")
-    public ResponseEntity<Boolean> checkCode(@RequestBody UserCheckCodeRequestDto request) {
+    public ResponseEntity<UserCheckCodeResponseDto> checkCode(@RequestBody @Valid UserCheckCodeRequestDto request) {
 
         return ResponseEntity.ok(userService.checkCode(request));
     }

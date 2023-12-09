@@ -1,5 +1,7 @@
 package com.example.dp.global.infra.mail.service.impl;
 
+import com.example.dp.global.infra.mail.exception.ExpiredCodeException;
+import com.example.dp.global.infra.mail.exception.MailErrorCode;
 import com.example.dp.global.infra.mail.service.MailService;
 import com.example.dp.global.redis.RedisUtil;
 import jakarta.mail.MessagingException;
@@ -23,7 +25,7 @@ public class MailServiceImpl implements MailService {
     private final SpringTemplateEngine templateEngine;
     private final RedisUtil redisUtil;
 
-    private static final int DURATION = 30;
+    private static final int DURATION = 3;
 
     @Value("${spring.mail.username}")
     private String email;
@@ -50,9 +52,12 @@ public class MailServiceImpl implements MailService {
     }
 
     public boolean checkCode(String to, String code) {
-        Object authCode = redisUtil.getCode(to);
-
-        return authCode.equals(code);
+        try {
+            Object authCode = redisUtil.getCode(to);
+            return authCode.equals(code);
+        } catch (Exception e) {
+            throw new ExpiredCodeException(MailErrorCode.EXPIRED_CODE);
+        }
     }
 
     private MimeMessage createMessage(String to, String subject, String code)
