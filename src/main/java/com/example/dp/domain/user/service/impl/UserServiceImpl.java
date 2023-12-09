@@ -41,6 +41,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AwsS3Util awsS3Util;
 
+    @Override
+    public UserResponseDto getProfile(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundUserException(UserErrorCode.NOT_FOUND_USER));
+
+        return toDto(user);
+    }
 
     @Override
     public void signup(final UserSignupRequestDto request) {
@@ -77,8 +84,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserCheckCodeResponseDto checkCode(UserCheckCodeRequestDto requestDto) {
         boolean isChecked = mailService.checkCode(requestDto.getEmail(), requestDto.getCode());
-        String message = isChecked ? SUCCESS_CHECK_CODE_MESSAGE : FAIL_CHECK_CODE_MESSAGE;
-
+        String message = FAIL_CHECK_CODE_MESSAGE;
+        if (isChecked) {
+            message = SUCCESS_CHECK_CODE_MESSAGE;
+            authEmailService.completedAuth(requestDto.getEmail());
+        }
         return UserCheckCodeResponseDto.builder()
             .isChecked(isChecked)
             .message(message)
@@ -127,6 +137,7 @@ public class UserServiceImpl implements UserService {
         return UserResponseDto.builder()
             .id(user.getId())
             .username(user.getUsername())
+            .introduceMessage(user.getIntroduceMessage())
             .role(user.getRole())
             .status(user.getStatus())
             .imageName(user.getImageName())

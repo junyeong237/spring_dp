@@ -40,6 +40,9 @@ public class User extends TimeEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String introduceMessage;
+
     @Column
     private String imageName;
 
@@ -63,6 +66,7 @@ public class User extends TimeEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.introduceMessage = "";
         this.status = UserStatus.ACTIVE;
     }
 

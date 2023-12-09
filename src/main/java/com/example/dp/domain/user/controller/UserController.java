@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +30,15 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> getProfile(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.getProfile(userId));
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody @Valid UserSignupRequestDto request) {
         userService.signup(request);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -42,7 +50,8 @@ public class UserController {
     }
 
     @PostMapping("/signup/mail/code")
-    public ResponseEntity<UserCheckCodeResponseDto> checkCode(@RequestBody @Valid UserCheckCodeRequestDto request) {
+    public ResponseEntity<UserCheckCodeResponseDto> checkCode(
+        @RequestBody UserCheckCodeRequestDto request) {
 
         return ResponseEntity.ok(userService.checkCode(request));
     }
@@ -53,6 +62,7 @@ public class UserController {
         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         UserResponseDto responseDto = userService.updateProfileImage(multipartFile,
             userDetails.getUser());
+
         return ResponseEntity.ok(responseDto);
     }
 
@@ -60,6 +70,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> deleteProfileImage(
         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         userService.deleteProfileImage(userDetails.getUser());
+
         return ResponseEntity.noContent().build();
     }
 }

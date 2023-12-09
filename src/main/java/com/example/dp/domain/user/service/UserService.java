@@ -22,4 +22,6 @@ public interface UserService {
     void deleteProfileImage(User user);
 
     boolean userIsBlocked(String email);
+
+    UserResponseDto getProfile(Long userId);
 }

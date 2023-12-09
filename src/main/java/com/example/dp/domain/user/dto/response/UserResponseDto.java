@@ -11,6 +11,7 @@ public class UserResponseDto {
 
     private final Long id;
     private final String username;
+    private final String introduceMessage;
     private final UserRole role;
     private final UserStatus status;
     private final String imageName;
@@ -18,11 +19,11 @@ public class UserResponseDto {
     private final LocalDateTime createdAt;
 
     @Builder
-    private UserResponseDto(final Long id, final String username, final UserRole role,
-        final UserStatus status, final String imageName, final String imagePath,
-        final LocalDateTime createdAt) {
+    private UserResponseDto(Long id, String username, String introduceMessage, UserRole role,
+        UserStatus status, String imageName, String imagePath, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
+        this.introduceMessage = introduceMessage;
         this.role = role;
         this.status = status;
         this.imageName = imageName;
