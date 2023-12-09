@@ -4,11 +4,13 @@ import static com.example.dp.domain.user.constant.UserConstant.FAIL_CHECK_CODE_M
 import static com.example.dp.domain.user.constant.UserConstant.NAME;
 import static com.example.dp.domain.user.constant.UserConstant.SUBJECT;
 import static com.example.dp.domain.user.constant.UserConstant.SUCCESS_CHECK_CODE_MESSAGE;
+import static com.example.dp.domain.user.exception.UserErrorCode.PASSWORD_MISMATCH;
 
 import com.example.dp.domain.authemail.service.impl.AuthEmailServiceImpl;
 import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserDeleteRequestDto;
 import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
@@ -129,7 +131,7 @@ public class UserServiceImpl implements UserService {
         User findUser = getFindUser(user.getId());
 
         if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
-            throw new VerifyPasswordException(UserErrorCode.PASSWORD_MISMATCH);
+            throw new VerifyPasswordException(PASSWORD_MISMATCH);
         }
         String encodePassword = passwordEncoder.encode(requestDto.getNewPassword());
         findUser.updatePassword(encodePassword);
@@ -150,6 +152,15 @@ public class UserServiceImpl implements UserService {
         String imagePath = awsS3Util.getImagePath(imageName, ImagePath.PROFILE);
         findUser.updateImage(imageName, imagePath);
         return toDto(findUser);
+    }
+
+    @Override
+    public void deleteUser(UserDeleteRequestDto requestDto, User user) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new VerifyPasswordException(PASSWORD_MISMATCH);
+        }
+
+        userRepository.delete(user);
     }
 
     @Override

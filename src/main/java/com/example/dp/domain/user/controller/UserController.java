@@ -1,6 +1,7 @@
 package com.example.dp.domain.user.controller;
 
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
+import com.example.dp.domain.user.dto.request.UserDeleteRequestDto;
 import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
@@ -63,19 +64,23 @@ public class UserController {
 
     @PutMapping("/name")
     public ResponseEntity<UsernameUpdateResponseDto> updateUsername(
-        @RequestBody UsernameUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-            return ResponseEntity.ok(userService.updateUsername(requestDto, userDetails.getUser()));
+        @RequestBody UsernameUpdateRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(userService.updateUsername(requestDto, userDetails.getUser()));
     }
 
     @PutMapping("/introduce")
     public ResponseEntity<UserIntroduceMessageUpdateResponseDto> updateIntroduceMessage(
-        @RequestBody UserIntroduceMessageUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(userService.updateIntroduceMessage(requestDto, userDetails.getUser()));
+        @RequestBody UserIntroduceMessageUpdateRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok(
+            userService.updateIntroduceMessage(requestDto, userDetails.getUser()));
     }
 
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(
-        @RequestBody UserPasswordUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        @RequestBody UserPasswordUpdateRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.updatePassword(requestDto, userDetails.getUser());
         return ResponseEntity.noContent().build();
     }
@@ -89,6 +94,15 @@ public class UserController {
             userDetails.getUser());
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(
+        @RequestBody UserDeleteRequestDto requestDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.deleteUser(requestDto, userDetails.getUser());
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/profile")
