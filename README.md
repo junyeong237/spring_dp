@@ -11,7 +11,7 @@ https://www.notion.so/S-A-e4116270e905478cacd415ba7dea9811
 > 겨울이 지나면 Spring조 : 팀장 이준영, 팀원 최준영, 이종렬, 정해인     
 
 * 최준영
-  * 유저, 관리자 유저, 인증 인가(+redis), 이메일 인증, global 예외처리, 
+  * 유저, 관리자 유저, 인증 인가(+redis), 이메일 인증, global 예외처리 
 * 이종렬
   * 리뷰, 관리자 리뷰, AwsS3, 유저 이미지 업로드,검색
 * 정해인
@@ -59,6 +59,10 @@ ex) `feat: 로그인 기능 구현`
     - develop: 1명 리뷰
     - feature/(기능 명)
  
+```
+![image](https://github.com/junyeong237/spring_dp/assets/70509488/a3281888-3a07-4933-9331-52fef23fec3c)
+```
+ 
 ## 구현 사항 
 
 ### **필수 구현 기능**
@@ -76,9 +80,7 @@ ex) `feat: 로그인 기능 구현`
 
 ### **추가 요구사항**
 
-- [ ]  **소셜 로그인 기능**
-    - 네이버 로그인
-    - 카카오 로그인
+- [ ]  ~~**소셜 로그인 기능**~~
 - [x] **백오피스 만들어보기**
     - 관리자 페이지 구성
 - [x]  **좋아요 기능**
@@ -89,5 +91,373 @@ ex) `feat: 로그인 기능 구현`
 
 - [x] **프로필에 사진 업로드 구현**
     - AWS3 사용
-- [x] ** 
+- [x] **메뉴에 사진 업로드 구현**
+    - AWS3 사용
+- [ ] ~~**AWS 를 이용한 서비스의 배포 ⭐**~~
+- [ ] ~~**HTTP를 HTTPS로 업그레이드 하기**~~
      
+
+## 디렉토리 구조
+> 크게 `domain`과 `global`로 나누었습니다.     
+<details>
+<summary>자세히보기</summary>
+
+```
+├─main
+│  ├─java
+│  │  └─com
+│  │      └─example
+│  │          └─dp
+│  │              │  DpApplication.java
+│  │              │
+│  │              ├─domain
+│  │              │  ├─admin
+│  │              │  │  ├─controller
+│  │              │  │  │      AdminCategoryController.java
+│  │              │  │  │      AdminMenuController.java
+│  │              │  │  │      AdminOrderController.java
+│  │              │  │  │      AdminReviewController.java
+│  │              │  │  │      AdminUserController.java
+│  │              │  │  │
+│  │              │  │  └─service
+│  │              │  │      │  AdminCategoryService.java
+│  │              │  │      │  AdminMenuService.java
+│  │              │  │      │  AdminOrderService.java
+│  │              │  │      │  AdminReviewService.java
+│  │              │  │      │  AdminUserService.java
+│  │              │  │      │
+│  │              │  │      └─impl
+│  │              │  │              AdminCategoryServiceImpl.java
+│  │              │  │              AdminMenuServiceImpl.java
+│  │              │  │              AdminOrderServiceImpl.java
+│  │              │  │              AdminReviewServiceImpl.java
+│  │              │  │              AdminUserServiceImpl.java
+│  │              │  │
+│  │              │  ├─cart
+│  │              │  │  ├─controller
+│  │              │  │  │      CartController.java
+│  │              │  │  │
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  │      CartDeleteRequestMenuDto.java
+│  │              │  │  │  │      CartRequestMenuDto.java
+│  │              │  │  │  │
+│  │              │  │  │  └─response
+│  │              │  │  │          CartResponseDto.java
+│  │              │  │  │
+│  │              │  │  ├─entity
+│  │              │  │  │      Cart.java
+│  │              │  │  │
+│  │              │  │  ├─exception
+│  │              │  │  │      CartErrorCode.java
+│  │              │  │  │      NotFoundCartMenuExcepiton.java
+│  │              │  │  │      NotFoundMenuException.java
+│  │              │  │  │
+│  │              │  │  ├─repository
+│  │              │  │  │      CartRepository.java
+│  │              │  │  │
+│  │              │  │  └─service
+│  │              │  │      │  CartService.java
+│  │              │  │      │
+│  │              │  │      └─impl
+│  │              │  │              CartServiceImpl.java
+│  │              │  │
+│  │              │  ├─category
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  │      CategoryRequestDto.java
+│  │              │  │  │  │
+│  │              │  │  │  └─response
+│  │              │  │  │          CategoryResponseDto.java
+│  │              │  │  │
+│  │              │  │  ├─entity
+│  │              │  │  │      Category.java
+│  │              │  │  │
+│  │              │  │  ├─exception
+│  │              │  │  │      CategoryErrorCode.java
+│  │              │  │  │      ExistsCategoryTypeException.java
+│  │              │  │  │      ForbiddenDeleteCategoryException.java
+│  │              │  │  │      NotFoundCategoryException.java
+│  │              │  │  │
+│  │              │  │  └─repository
+│  │              │  │          CategoryRepository.java
+│  │              │  │
+│  │              │  ├─menu
+│  │              │  │  ├─controller
+│  │              │  │  │      MenuController.java
+│  │              │  │  │
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  │      MenuRequestDto.java
+│  │              │  │  │  │
+│  │              │  │  │  └─response
+│  │              │  │  │          MenuDetailResponseDto.java
+│  │              │  │  │          MenuSimpleResponseDto.java
+│  │              │  │  │
+│  │              │  │  ├─entity
+│  │              │  │  │      Menu.java
+│  │              │  │  │
+│  │              │  │  ├─exception
+│  │              │  │  │      ExistsMenuNameException.java
+│  │              │  │  │      ForbiddenUpdateMenuException.java
+│  │              │  │  │      InvalidInputException.java
+│  │              │  │  │      MenuErrorCode.java
+│  │              │  │  │      NotFoundMenuException.java
+│  │              │  │  │
+│  │              │  │  ├─repository
+│  │              │  │  │      MenuRepository.java
+│  │              │  │  │
+│  │              │  │  └─service
+│  │              │  │      │  MenuService.java
+│  │              │  │      │
+│  │              │  │      └─impl
+│  │              │  │              MenuServiceImpl.java
+│  │              │  │
+│  │              │  ├─menucategory
+│  │              │  │  ├─entity
+│  │              │  │  │      MenuCategory.java
+│  │              │  │  │
+│  │              │  │  └─repository
+│  │              │  │          MenuCategoryRepository.java
+│  │              │  │
+│  │              │  ├─menulike
+│  │              │  │  ├─controller
+│  │              │  │  │      MenuLikeController.java
+│  │              │  │  │
+│  │              │  │  ├─entity
+│  │              │  │  │      MenuLike.java
+│  │              │  │  │
+│  │              │  │  ├─repository
+│  │              │  │  │      MenuLikeRepository.java
+│  │              │  │  │
+│  │              │  │  └─service
+│  │              │  │      │  MenuLikeService.java
+│  │              │  │      │
+│  │              │  │      └─impl
+│  │              │  │              MenuLikeServiceImpl.java
+│  │              │  │
+│  │              │  ├─model
+│  │              │  │      TimeEntity.java
+│  │              │  │
+│  │              │  ├─order
+│  │              │  │  ├─controller
+│  │              │  │  │      OrderController.java
+│  │              │  │  │
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  │      OrderStateRequestDto.java
+│  │              │  │  │  │
+│  │              │  │  │  └─response
+│  │              │  │  │          OrderResponseDto.java
+│  │              │  │  │
+│  │              │  │  ├─entity
+│  │              │  │  │      Order.java
+│  │              │  │  │      OrderState.java
+│  │              │  │  │
+│  │              │  │  ├─exception
+│  │              │  │  │      ForbiddenDeleteOrderRoleExcepiton.java
+│  │              │  │  │      ForbiddenDeleteOrderStateException.java
+│  │              │  │  │      ForbiddenOrderQuantity.java
+│  │              │  │  │      ForbiddenOrderState.java
+│  │              │  │  │      ForbiddenOrderStateNotCreated.java
+│  │              │  │  │      ForbiddenOrderStateNotPending.java
+│  │              │  │  │      NotFoundCartListForOrderException.java
+│  │              │  │  │      NotFoundOrderException.java
+│  │              │  │  │      OrderErrorCode.java
+│  │              │  │  │
+│  │              │  │  ├─repository
+│  │              │  │  │      OrderRepository.java
+│  │              │  │  │
+│  │              │  │  └─service
+│  │              │  │      │  OrderService.java
+│  │              │  │      │
+│  │              │  │      └─impl
+│  │              │  │              OrderServiceImpl.java
+│  │              │  │
+│  │              │  ├─ordermenu
+│  │              │  │  ├─entity
+│  │              │  │  │      OrderMenu.java
+│  │              │  │  │
+│  │              │  │  └─repository
+│  │              │  │          OrderMenuRepository.java
+│  │              │  │
+│  │              │  ├─review
+│  │              │  │  ├─controller
+│  │              │  │  │      ReviewController.java
+│  │              │  │  │
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  │      ReviewRequestDto.java
+│  │              │  │  │  │
+│  │              │  │  │  └─response
+│  │              │  │  │          ReviewResponseDto.java
+│  │              │  │  │
+│  │              │  │  ├─entity
+│  │              │  │  │      Review.java
+│  │              │  │  │
+│  │              │  │  ├─exception
+│  │              │  │  │      ForbiddenAccessReviewException.java
+│  │              │  │  │      ForbiddenCreateReviewException.java
+│  │              │  │  │      NotFoundOrderException.java
+│  │              │  │  │      NotFoundReviewException.java
+│  │              │  │  │      NotFoundUserException.java
+│  │              │  │  │      ReviewAlreadyExistsException.java
+│  │              │  │  │      ReviewErrorCode.java
+│  │              │  │  │
+│  │              │  │  ├─repository
+│  │              │  │  │      ReviewRepository.java
+│  │              │  │  │
+│  │              │  │  └─service
+│  │              │  │      │  ReviewService.java
+│  │              │  │      │
+│  │              │  │      └─impl
+│  │              │  │              ReviewServiceImpl.java
+│  │              │  │
+│  │              │  └─user
+│  │              │      │  UserRole.java
+│  │              │      │
+│  │              │      ├─controller
+│  │              │      │      UserController.java
+│  │              │      │
+│  │              │      ├─dto
+│  │              │      │  │  UserCheckCodeRequestDto.java
+│  │              │      │  │  UserSendMailRequestDto.java
+│  │              │      │  │
+│  │              │      │  ├─request
+│  │              │      │  │      UserLoginRequestDto.java
+│  │              │      │  │      UserSignupRequestDto.java
+│  │              │      │  │
+│  │              │      │  └─response
+│  │              │      │          UserResponseDto.java
+│  │              │      │
+│  │              │      ├─entity
+│  │              │      │      User.java
+│  │              │      │
+│  │              │      ├─exception
+│  │              │      │      ExistsUserEmailException.java
+│  │              │      │      ExistsUsernameException.java
+│  │              │      │      NotFoundUserException.java
+│  │              │      │      UserErrorCode.java
+│  │              │      │
+│  │              │      ├─repository
+│  │              │      │      UserRepository.java
+│  │              │      │
+│  │              │      └─service
+│  │              │          │  UserService.java
+│  │              │          │
+│  │              │          └─impl
+│  │              │                  UserLogoutImpl.java
+│  │              │                  UserServiceImpl.java
+│  │              │
+│  │              └─global
+│  │                  ├─config
+│  │                  │      AwsS3Config.java
+│  │                  │      JasyptConfig.java
+│  │                  │      JpaAuditingConfig.java
+│  │                  │      WebSecurityConfig.java
+│  │                  │
+│  │                  ├─exception
+│  │                  │  │  RestApiException.java
+│  │                  │  │
+│  │                  │  ├─code
+│  │                  │  │      CommonErrorCode.java
+│  │                  │  │      ErrorCode.java
+│  │                  │  │
+│  │                  │  ├─handler
+│  │                  │  │      GlobalExceptionHandler.java
+│  │                  │  │
+│  │                  │  └─response
+│  │                  │          ErrorResponse.java
+│  │                  │
+│  │                  ├─infra
+│  │                  │  └─mail
+│  │                  │      │  MailConfig.java
+│  │                  │      │
+│  │                  │      └─service
+│  │                  │          │  MailService.java
+│  │                  │          │
+│  │                  │          └─impl
+│  │                  │                  MailServiceImpl.java
+│  │                  │
+│  │                  ├─jwt
+│  │                  │      JwtUtil.java
+│  │                  │
+│  │                  ├─redis
+│  │                  │      RedisConfig.java
+│  │                  │      RedisUtil.java
+│  │                  │
+│  │                  ├─s3
+│  │                  │  │  AwsS3Util.java
+│  │                  │  │
+│  │                  │  └─exception
+│  │                  │          AwsS3ErrorCode.java
+│  │                  │          FileTypeNotAllowedException.java
+│  │                  │          NotFoundS3FileException.java
+│  │                  │
+│  │                  └─security
+│  │                          JwtAuthenticationFilter.java
+│  │                          JwtAuthorizationFilter.java
+│  │                          UserDetailsImpl.java
+│  │                          UserDetailsServiceImpl.java
+│  │
+│  └─resources
+│      │  application-dev.yml
+│      │  application.yml
+│      │
+│      ├─static
+│      └─templates
+│              mail.html
+│
+└─test
+    ├─java
+    │  └─com
+    │      └─example
+    │          └─dp
+    │              │  DpApplicationTests.java
+    │              │  TestRedisConfiguration.java
+    │              │
+    │              ├─domain
+    │              │  ├─admin
+    │              │  │  └─service
+    │              │  │      └─impl
+    │              │  │              AdminReviewServiceImplTest.java
+    │              │  │              AdminUserServiceImplTest.java
+    │              │  │
+    │              │  ├─cart
+    │              │  │      CartIntegrationTest.java
+    │              │  │
+    │              │  ├─category
+    │              │  │  └─service
+    │              │  │      └─impl
+    │              │  │              AdminCategoryServiceImplTest.java
+    │              │  │
+    │              │  ├─menu
+    │              │  │  └─service
+    │              │  │      └─impl
+    │              │  │              MenuServiceImplTest.java
+    │              │  │
+    │              │  ├─order
+    │              │  │      AdminOrderIntegrationTest.java
+    │              │  │      OrderIntegrationTest.java
+    │              │  │
+    │              │  └─review
+    │              │      └─service
+    │              │          └─impl
+    │              │                  ReviewServiceImplTest.java
+    │              │
+    │              └─global
+    │                  ├─cart
+    │                  └─config
+    │                          JasyptConfigTest.java
+    │
+    └─resources
+            application-test.properties
+            application.yml
+
+```
+
+</details>
+
+
+
+
