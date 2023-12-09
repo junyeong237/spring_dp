@@ -10,6 +10,7 @@ import com.example.dp.domain.user.UserRole;
 import com.example.dp.domain.user.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
+import com.example.dp.domain.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
@@ -22,6 +23,7 @@ import com.example.dp.domain.user.exception.ExistsUserEmailException;
 import com.example.dp.domain.user.exception.NotFoundUserException;
 import com.example.dp.domain.user.exception.UnauthorizedEmailException;
 import com.example.dp.domain.user.exception.UserErrorCode;
+import com.example.dp.domain.user.exception.VerifyPasswordException;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.example.dp.domain.user.service.UserService;
 import com.example.dp.global.infra.mail.service.impl.MailServiceImpl;
@@ -118,6 +120,19 @@ public class UserServiceImpl implements UserService {
         findUser.updateIntroduceMessage(requestDto.getIntroduceMessage());
 
         return UserIntroduceMessageUpdateResponseDto.of(findUser.getIntroduceMessage());
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(UserPasswordUpdateRequestDto requestDto,
+        User user) {
+        User findUser = getFindUser(user.getId());
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
+            throw new VerifyPasswordException(UserErrorCode.PASSWORD_MISMATCH);
+        }
+        String encodePassword = passwordEncoder.encode(requestDto.getNewPassword());
+        findUser.updatePassword(encodePassword);
     }
 
     @Override

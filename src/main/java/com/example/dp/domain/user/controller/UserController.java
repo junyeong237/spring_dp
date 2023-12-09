@@ -2,6 +2,7 @@ package com.example.dp.domain.user.controller;
 
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
+import com.example.dp.domain.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
@@ -72,6 +73,12 @@ public class UserController {
         return ResponseEntity.ok(userService.updateIntroduceMessage(requestDto, userDetails.getUser()));
     }
 
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+        @RequestBody UserPasswordUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.updatePassword(requestDto, userDetails.getUser());
+        return ResponseEntity.noContent().build();
+    }
 
 
     @PutMapping("/profile")

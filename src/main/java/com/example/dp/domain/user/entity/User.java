@@ -78,6 +78,10 @@ public class User extends TimeEntity {
         this.introduceMessage = introduceMessage;
     }
 
+    public void updatePassword(final String password) {
+        this.password = password;
+    }
+
     public void updateImage(final String imageName, final String imagePath) {
         this.imageName = imageName;
         this.imagePath = imagePath;

@@ -2,6 +2,7 @@ package com.example.dp.domain.user.service;
 
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;
+import com.example.dp.domain.user.dto.request.UserPasswordUpdateRequestDto;
 import com.example.dp.domain.user.dto.request.UserSendMailRequestDto;
 import com.example.dp.domain.user.dto.request.UserSignupRequestDto;
 import com.example.dp.domain.user.dto.request.UsernameUpdateRequestDto;
@@ -33,4 +34,5 @@ public interface UserService {
 
     UserIntroduceMessageUpdateResponseDto updateIntroduceMessage(UserIntroduceMessageUpdateRequestDto requestDto, User user);
 
+    void updatePassword(UserPasswordUpdateRequestDto requestDto, User user);
 }
