@@ -1,4 +1,4 @@
-package com.example.dp.domain.user.password.entity;
+package com.example.dp.domain.user.entity;
 
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.user.entity.User;

@@ -12,8 +12,6 @@ import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.menu.service.MenuService;
 import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
-import com.example.dp.domain.review.entity.Review;
-import java.util.Collections;
 import com.example.dp.domain.menulike.entity.MenuLike;
 import com.example.dp.domain.menulike.repository.MenuLikeRepository;
 import com.example.dp.domain.user.entity.User;
@@ -86,7 +84,8 @@ public class MenuServiceImpl implements MenuService {
 
     private Stream<Menu> filtering(List<Menu> menus, String sort) {
         if (sort.equals("recent")) {
-            return menus.stream();
+            return menus.stream()
+                .sorted((m1, m2) -> m2.getModifiedAt().compareTo(m1.getModifiedAt()));
         } else if (sort.equals("likes")) {
             return menus.stream()
                 .sorted((menu1, menu2) -> Integer.compare(menu2.getLikeCounts(),

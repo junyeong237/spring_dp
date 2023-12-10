@@ -1,7 +1,7 @@
-package com.example.dp.domain.user.password.service;
+package com.example.dp.domain.user.service;
 
 import com.example.dp.domain.user.entity.User;
-import com.example.dp.domain.user.password.dto.response.PasswordHistoryResponseDto;
+import com.example.dp.domain.user.dto.response.PasswordHistoryResponseDto;
 import java.util.List;
 
 public interface PasswordHistoryService {

@@ -1,4 +1,4 @@
-package com.example.dp.domain.user.authemail.service;
+package com.example.dp.domain.user.service;
 
 public interface AuthEmailService {
     Boolean getAuthEmailIsChecked(String email);

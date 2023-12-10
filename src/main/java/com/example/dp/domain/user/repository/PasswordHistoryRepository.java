@@ -1,6 +1,6 @@
-package com.example.dp.domain.user.password.repository;
+package com.example.dp.domain.user.repository;
 
-import com.example.dp.domain.user.password.entity.PasswordHistory;
+import com.example.dp.domain.user.entity.PasswordHistory;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
