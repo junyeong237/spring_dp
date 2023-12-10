@@ -6,7 +6,6 @@ import static com.example.dp.domain.user.constant.UserConstant.SUBJECT;
 import static com.example.dp.domain.user.constant.UserConstant.SUCCESS_CHECK_CODE_MESSAGE;
 import static com.example.dp.domain.user.exception.UserErrorCode.PASSWORD_MISMATCH;
 
-import com.example.dp.domain.user.authemail.service.impl.AuthEmailServiceImpl;
 import com.example.dp.domain.user.entity.UserRole;
 import com.example.dp.domain.user.entity.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
@@ -27,8 +26,8 @@ import com.example.dp.domain.user.exception.PasswordRestrictionException;
 import com.example.dp.domain.user.exception.UnauthorizedEmailException;
 import com.example.dp.domain.user.exception.UserErrorCode;
 import com.example.dp.domain.user.exception.VerifyPasswordException;
-import com.example.dp.domain.user.password.dto.response.PasswordHistoryResponseDto;
-import com.example.dp.domain.user.password.service.PasswordHistoryService;
+import com.example.dp.domain.user.dto.response.PasswordHistoryResponseDto;
+import com.example.dp.domain.user.service.PasswordHistoryService;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.example.dp.domain.user.service.UserService;
 import com.example.dp.global.infra.mail.service.impl.MailServiceImpl;
@@ -214,6 +213,7 @@ public class UserServiceImpl implements UserService {
             .status(user.getStatus())
             .imageName(user.getImageName())
             .imagePath(user.getImagePath())
-            .createdAt(user.getCreatedAt()).build();
+            .createdAt(user.getCreatedAt())
+            .build();
     }
 }

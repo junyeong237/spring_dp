@@ -1,10 +1,10 @@
-package com.example.dp.domain.user.password.service.impl;
+package com.example.dp.domain.user.service.impl;
 
 import com.example.dp.domain.user.entity.User;
-import com.example.dp.domain.user.password.dto.response.PasswordHistoryResponseDto;
-import com.example.dp.domain.user.password.entity.PasswordHistory;
-import com.example.dp.domain.user.password.repository.PasswordHistoryRepository;
-import com.example.dp.domain.user.password.service.PasswordHistoryService;
+import com.example.dp.domain.user.dto.response.PasswordHistoryResponseDto;
+import com.example.dp.domain.user.entity.PasswordHistory;
+import com.example.dp.domain.user.repository.PasswordHistoryRepository;
+import com.example.dp.domain.user.service.PasswordHistoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

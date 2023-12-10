@@ -1,4 +1,4 @@
-package com.example.dp.domain.user.password.dto.response;
+package com.example.dp.domain.user.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;

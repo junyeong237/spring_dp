@@ -1,4 +1,4 @@
-package com.example.dp.domain.user.authemail.entity;
+package com.example.dp.domain.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
