@@ -40,6 +40,9 @@ public class User extends TimeEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String introduceMessage;
+
     @Column
     private String imageName;
 
@@ -63,7 +66,20 @@ public class User extends TimeEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.introduceMessage = "";
         this.status = UserStatus.ACTIVE;
+    }
+
+    public void updateUsername(final String username) {
+        this.username = username;
+    }
+
+    public void updateIntroduceMessage(final String introduceMessage) {
+        this.introduceMessage = introduceMessage;
+    }
+
+    public void updatePassword(final String password) {
+        this.password = password;
     }
 
     public void updateImage(final String imageName, final String imagePath) {
