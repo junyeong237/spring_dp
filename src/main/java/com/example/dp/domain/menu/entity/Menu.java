@@ -59,7 +59,6 @@ public class Menu extends TimeEntity {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private final List<OrderMenu> orderMenuList = new ArrayList<>();
 
-
     @Column(nullable = false)
     private Integer likeCounts;
 
@@ -92,6 +91,10 @@ public class Menu extends TimeEntity {
         menuCategory.setMenu(this);
     }
 
+    public void addQuantity(Integer count){
+        this.quantity += count;
+    }
+
     public void subQuantity(Integer count) {
         this.quantity -= count;
     }
@@ -109,7 +112,6 @@ public class Menu extends TimeEntity {
         this.likeCounts--;
     }
 
-
     public void addMenuLike(MenuLike menuLike) {
         this.menuLikeList.add(menuLike);
         this.addLikeCounts();
@@ -118,7 +120,6 @@ public class Menu extends TimeEntity {
 
     public void addOrderMenu(OrderMenu orderMenu) {
         this.orderMenuList.add(orderMenu);
-        this.addLikeCounts();
         orderMenu.setMenu(this);
     }
 

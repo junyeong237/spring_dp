@@ -57,7 +57,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<Long> deleteReview(
         @PathVariable Long reviewId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
