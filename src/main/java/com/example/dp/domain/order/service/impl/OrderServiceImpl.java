@@ -16,7 +16,7 @@ import com.example.dp.domain.order.repository.OrderRepository;
 import com.example.dp.domain.order.service.OrderService;
 import com.example.dp.domain.ordermenu.entity.OrderMenu;
 import com.example.dp.domain.ordermenu.repository.OrderMenuRepository;
-import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.entity.UserRole;
 import com.example.dp.domain.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

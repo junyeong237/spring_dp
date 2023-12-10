@@ -1,6 +1,5 @@
 package com.example.dp.global.config;
 
-import com.example.dp.domain.user.UserRole.Authority;
 import com.example.dp.domain.user.service.impl.UserLogoutImpl;
 import com.example.dp.global.jwt.JwtUtil;
 import com.example.dp.global.redis.RedisUtil;

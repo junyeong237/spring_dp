@@ -1,7 +1,7 @@
 package com.example.dp.domain.user.dto.response;
 
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.UserStatus;
+import com.example.dp.domain.user.entity.UserRole;
+import com.example.dp.domain.user.entity.UserStatus;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;

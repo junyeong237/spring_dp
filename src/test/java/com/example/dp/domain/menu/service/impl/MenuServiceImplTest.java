@@ -12,7 +12,7 @@ import com.example.dp.domain.menucategory.entity.MenuCategory;
 import com.example.dp.domain.menucategory.repository.MenuCategoryRepository;
 import com.example.dp.domain.menulike.entity.MenuLike;
 import com.example.dp.domain.menulike.repository.MenuLikeRepository;
-import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.entity.UserRole;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
 import java.util.ArrayList;

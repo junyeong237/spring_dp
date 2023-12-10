@@ -1,8 +1,8 @@
 package com.example.dp.domain.admin.service.impl;
 
 import com.example.dp.domain.admin.service.AdminUserService;
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.UserStatus;
+import com.example.dp.domain.user.entity.UserRole;
+import com.example.dp.domain.user.entity.UserStatus;
 import com.example.dp.domain.user.dto.response.UserResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.NotFoundUserException;

@@ -2,8 +2,6 @@ package com.example.dp.domain.user.entity;
 
 import com.example.dp.domain.model.TimeEntity;
 import com.example.dp.domain.review.entity.Review;
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
