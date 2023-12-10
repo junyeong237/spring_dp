@@ -1,4 +1,4 @@
-package com.example.dp.domain.authemail.exception;
+package com.example.dp.domain.user.authemail.exception;
 
 import com.example.dp.global.exception.code.ErrorCode;
 import lombok.Getter;

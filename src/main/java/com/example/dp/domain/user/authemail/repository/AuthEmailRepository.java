@@ -1,6 +1,6 @@
-package com.example.dp.domain.authemail.repository;
+package com.example.dp.domain.user.authemail.repository;
 
-import com.example.dp.domain.authemail.entity.AuthEmail;
+import com.example.dp.domain.user.authemail.entity.AuthEmail;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

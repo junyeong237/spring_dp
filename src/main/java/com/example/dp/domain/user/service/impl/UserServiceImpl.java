@@ -6,7 +6,7 @@ import static com.example.dp.domain.user.constant.UserConstant.SUBJECT;
 import static com.example.dp.domain.user.constant.UserConstant.SUCCESS_CHECK_CODE_MESSAGE;
 import static com.example.dp.domain.user.exception.UserErrorCode.PASSWORD_MISMATCH;
 
-import com.example.dp.domain.authemail.service.impl.AuthEmailServiceImpl;
+import com.example.dp.domain.user.authemail.service.impl.AuthEmailServiceImpl;
 import com.example.dp.domain.user.entity.UserRole;
 import com.example.dp.domain.user.entity.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
@@ -23,15 +23,19 @@ import com.example.dp.domain.user.dto.response.UsernameUpdateResponseDto;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.exception.ExistsUserEmailException;
 import com.example.dp.domain.user.exception.NotFoundUserException;
+import com.example.dp.domain.user.exception.PasswordRestrictionException;
 import com.example.dp.domain.user.exception.UnauthorizedEmailException;
 import com.example.dp.domain.user.exception.UserErrorCode;
 import com.example.dp.domain.user.exception.VerifyPasswordException;
+import com.example.dp.domain.user.password.dto.response.PasswordHistoryResponseDto;
+import com.example.dp.domain.user.password.service.PasswordHistoryService;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.example.dp.domain.user.service.UserService;
 import com.example.dp.global.infra.mail.service.impl.MailServiceImpl;
 import com.example.dp.global.s3.AwsS3Util;
 import com.example.dp.global.s3.AwsS3Util.ImagePath;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,6 +52,7 @@ public class UserServiceImpl implements UserService {
     private final AuthEmailServiceImpl authEmailService;
     private final PasswordEncoder passwordEncoder;
     private final AwsS3Util awsS3Util;
+    private final PasswordHistoryService passwordHistoryService;
 
     @Override
     public UserResponseDto getProfile(Long userId) {
@@ -80,6 +85,7 @@ public class UserServiceImpl implements UserService {
             .build();
 
         userRepository.save(user);
+        passwordHistoryService.addPasswordHistory(encryptionPassword, user);
     }
 
     @Override
@@ -133,7 +139,19 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
             throw new VerifyPasswordException(PASSWORD_MISMATCH);
         }
+        List<PasswordHistoryResponseDto> passwordHistories = passwordHistoryService.getPasswordHistory(
+            findUser.getId());
+
+        for (PasswordHistoryResponseDto history : passwordHistories) {
+            if (passwordEncoder.matches(requestDto.getNewPassword(), history.getPassword())) {
+                throw new PasswordRestrictionException(UserErrorCode.PASSWORD_RESTRICTION);
+            }
+        }
+        if (passwordHistories.size() == 3) {
+            passwordHistoryService.deletePasswordHistory(findUser.getId());
+        }
         String encodePassword = passwordEncoder.encode(requestDto.getNewPassword());
+        passwordHistoryService.addPasswordHistory(encodePassword, findUser);
         findUser.updatePassword(encodePassword);
     }
 
@@ -159,7 +177,7 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new VerifyPasswordException(PASSWORD_MISMATCH);
         }
-
+        //TODO: 연관 관계 모두 삭제 처리 해야함 ex) review, menu, cart, passwordHistory 등등
         userRepository.delete(user);
     }
 
