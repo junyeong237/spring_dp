@@ -27,6 +27,7 @@ import com.example.dp.domain.user.exception.UnauthorizedEmailException;
 import com.example.dp.domain.user.exception.UserErrorCode;
 import com.example.dp.domain.user.exception.VerifyPasswordException;
 import com.example.dp.domain.user.dto.response.PasswordHistoryResponseDto;
+import com.example.dp.domain.user.repository.AuthEmailRepository;
 import com.example.dp.domain.user.service.PasswordHistoryService;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.example.dp.domain.user.service.UserService;
@@ -52,6 +53,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AwsS3Util awsS3Util;
     private final PasswordHistoryService passwordHistoryService;
+    private final AuthEmailRepository authEmailRepository;
 
     @Override
     public UserResponseDto getProfile(Long userId) {
@@ -176,7 +178,8 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new VerifyPasswordException(PASSWORD_MISMATCH);
         }
-        //TODO: 연관 관계 모두 삭제 처리 해야함 ex) review, menu, cart, passwordHistory 등등
+        
+        authEmailRepository.findByEmail(user.getEmail());
         userRepository.delete(user);
     }
 

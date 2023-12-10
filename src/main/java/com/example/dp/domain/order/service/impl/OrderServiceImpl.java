@@ -3,6 +3,10 @@ package com.example.dp.domain.order.service.impl;
 import com.example.dp.domain.cart.entity.Cart;
 import com.example.dp.domain.cart.repository.CartRepository;
 import com.example.dp.domain.cart.service.impl.CartServiceImpl;
+import com.example.dp.domain.menu.entity.Menu;
+import com.example.dp.domain.menu.exception.MenuErrorCode;
+import com.example.dp.domain.menu.exception.NotFoundMenuException;
+import com.example.dp.domain.menu.repository.MenuRepository;
 import com.example.dp.domain.order.dto.response.OrderResponseDto;
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
@@ -32,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
     private final OrderMenuRepository orderMenuRepository;
     private final CartServiceImpl cartService;
+    private final MenuRepository menuRepository;
 
     @Override
     @Transactional
@@ -46,7 +51,6 @@ public class OrderServiceImpl implements OrderService {
             .user(user)
             .state(OrderState.PENDING)
             .build();
-
 
         List<OrderMenu> orderMenuList = cartList.stream()
             .map(cart -> {
@@ -93,6 +97,16 @@ public class OrderServiceImpl implements OrderService {
 
         if (order.getState().equals(OrderState.PENDING)) {
             order.updateState(OrderState.CANCELLED);
+            List<OrderMenu> orderMenus = order.getOrderMenuList().stream()
+                .filter(orderMenu -> orderMenu.getOrder().getId().equals(orderId))
+                .toList();
+
+            orderMenus.forEach(orderMenu -> {
+                    Menu menu = menuRepository.findById(orderMenu.getOrder().getId())
+                        .orElseThrow(() -> new NotFoundMenuException(
+                            MenuErrorCode.NOT_FOUND_MENU));
+                    menu.addQuantity(orderMenu.getMenuCounts());
+                });
         }
 
         else{

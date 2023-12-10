@@ -22,6 +22,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Entity
@@ -35,12 +37,12 @@ public class Order extends TimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderState state;
-
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.REMOVE})
     private final List<OrderMenu> orderMenuList = new ArrayList<>();
