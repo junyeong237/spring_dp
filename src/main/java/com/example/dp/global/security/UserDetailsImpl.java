@@ -1,6 +1,6 @@
 package com.example.dp.global.security;
 
-import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.entity.UserRole;
 import com.example.dp.domain.user.entity.User;
 import java.util.ArrayList;
 import java.util.Collection;

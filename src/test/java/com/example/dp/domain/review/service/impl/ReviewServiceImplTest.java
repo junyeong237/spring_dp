@@ -2,7 +2,6 @@ package com.example.dp.domain.review.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.shouldHaveThrown;
 
 import com.example.dp.domain.order.entity.Order;
 import com.example.dp.domain.order.entity.OrderState;
@@ -16,15 +15,13 @@ import com.example.dp.domain.review.exception.NotFoundReviewException;
 import com.example.dp.domain.review.exception.ReviewAlreadyExistsException;
 import com.example.dp.domain.review.repository.ReviewRepository;
 import com.example.dp.domain.review.service.ReviewService;
-import com.example.dp.domain.user.UserRole;
+import com.example.dp.domain.user.entity.UserRole;
 import com.example.dp.domain.user.entity.User;
 import com.example.dp.domain.user.repository.UserRepository;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.FieldReflectionArbitraryIntrospector;
 import com.navercorp.fixturemonkey.jakarta.validation.plugin.JakartaValidationPlugin;
-import java.util.ArrayList;
 import java.util.List;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

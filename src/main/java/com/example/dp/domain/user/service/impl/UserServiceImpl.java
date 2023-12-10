@@ -7,8 +7,8 @@ import static com.example.dp.domain.user.constant.UserConstant.SUCCESS_CHECK_COD
 import static com.example.dp.domain.user.exception.UserErrorCode.PASSWORD_MISMATCH;
 
 import com.example.dp.domain.authemail.service.impl.AuthEmailServiceImpl;
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.UserStatus;
+import com.example.dp.domain.user.entity.UserRole;
+import com.example.dp.domain.user.entity.UserStatus;
 import com.example.dp.domain.user.dto.request.UserCheckCodeRequestDto;
 import com.example.dp.domain.user.dto.request.UserDeleteRequestDto;
 import com.example.dp.domain.user.dto.request.UserIntroduceMessageUpdateRequestDto;

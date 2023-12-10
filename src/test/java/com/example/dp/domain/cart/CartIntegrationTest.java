@@ -3,32 +3,10 @@ package com.example.dp.domain.cart;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.example.dp.domain.admin.service.impl.AdminMenuServiceImpl;
-import com.example.dp.domain.cart.dto.request.CartRequestMenuDto;
-import com.example.dp.domain.cart.dto.response.CartResponseDto;
-import com.example.dp.domain.cart.repository.CartRepository;
-import com.example.dp.domain.cart.service.impl.CartServiceImpl;
-import com.example.dp.domain.category.entity.Category;
-import com.example.dp.domain.category.repository.CategoryRepository;
-import com.example.dp.domain.menu.dto.request.MenuRequestDto;
-import com.example.dp.domain.menu.dto.response.MenuDetailResponseDto;
-import com.example.dp.domain.menu.entity.Menu;
-import com.example.dp.domain.menu.repository.MenuRepository;
-import com.example.dp.domain.user.UserRole;
-import com.example.dp.domain.user.entity.User;
-import com.example.dp.domain.user.repository.UserRepository;
-import java.util.Arrays;
-import java.util.List;
 
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
