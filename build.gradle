@@ -22,15 +22,59 @@ repositories {
 }
 
 dependencies {
+	// JWT
+	compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+	// JSON
+	implementation 'org.json:json:20230227'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//thymeleaf
+	implementation 'org.springframework:spring-context-support'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	//jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	//web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
+
+	//mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//jasypt
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+	//s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'com.h2database:h2:2.2.224'
+	testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.4'
+	testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-jakarta-validation:1.0.4'
+	testImplementation 'it.ozimov:embedded-redis:0.7.3'
 }
 
 tasks.named('test') {

@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    driver-class-name:
+    url: jdbc:h2:mem:testdp
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6370
+
+  mail:
+    host: test.test.test
+    port: 1234
+    username: test@test.test
+    password: test test test test
+    properties:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+
+jwt:
+  secret:
+    key: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
+
+cloud:
+  aws:
+    s3:
+      bucket: dp-image-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      access-key: testtesttesttesttesttesttesttesttesttest
+      secret-key: testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest

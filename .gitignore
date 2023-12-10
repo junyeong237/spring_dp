@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+/.jqwik-database
+/src/main/resources/application-dev.yml
+OrderIntegrationTest.java
