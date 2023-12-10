@@ -1,11 +1,11 @@
-package com.example.dp.domain.authemail.service.impl;
+package com.example.dp.domain.user.authemail.service.impl;
 
-import static com.example.dp.domain.authemail.exception.AuthEmailErrorCode.UNAUTHENTICATED_EMAIL;
+import static com.example.dp.domain.user.authemail.exception.AuthEmailErrorCode.UNAUTHENTICATED_EMAIL;
 
-import com.example.dp.domain.authemail.entity.AuthEmail;
-import com.example.dp.domain.authemail.exception.UnauthenticatedAuthEmailException;
-import com.example.dp.domain.authemail.repository.AuthEmailRepository;
-import com.example.dp.domain.authemail.service.AuthEmailService;
+import com.example.dp.domain.user.authemail.entity.AuthEmail;
+import com.example.dp.domain.user.authemail.exception.UnauthenticatedAuthEmailException;
+import com.example.dp.domain.user.authemail.repository.AuthEmailRepository;
+import com.example.dp.domain.user.authemail.service.AuthEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
