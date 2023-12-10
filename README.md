@@ -210,6 +210,7 @@ ex) `feat: 로그인 기능 구현`
 │  │              │  │  │      AdminOrderController.java
 │  │              │  │  │      AdminReviewController.java
 │  │              │  │  │      AdminUserController.java
+│  │              │  │  │      TempController.java
 │  │              │  │  │
 │  │              │  │  └─service
 │  │              │  │      │  AdminCategoryService.java
@@ -392,7 +393,6 @@ ex) `feat: 로그인 기능 구현`
 │  │              │  │  │      ForbiddenCreateReviewException.java
 │  │              │  │  │      NotFoundOrderException.java
 │  │              │  │  │      NotFoundReviewException.java
-│  │              │  │  │      NotFoundUserException.java
 │  │              │  │  │      ReviewAlreadyExistsException.java
 │  │              │  │  │      ReviewErrorCode.java
 │  │              │  │  │
@@ -406,38 +406,62 @@ ex) `feat: 로그인 기능 구현`
 │  │              │  │              ReviewServiceImpl.java
 │  │              │  │
 │  │              │  └─user
-│  │              │      │  UserRole.java
+│  │              │      ├─constant
+│  │              │      │      UserConstant.java
 │  │              │      │
 │  │              │      ├─controller
 │  │              │      │      UserController.java
 │  │              │      │
 │  │              │      ├─dto
-│  │              │      │  │  UserCheckCodeRequestDto.java
-│  │              │      │  │  UserSendMailRequestDto.java
-│  │              │      │  │
 │  │              │      │  ├─request
+│  │              │      │  │      UserCheckCodeRequestDto.java
+│  │              │      │  │      UserDeleteRequestDto.java
+│  │              │      │  │      UserIntroduceMessageUpdateRequestDto.java
 │  │              │      │  │      UserLoginRequestDto.java
+│  │              │      │  │      UsernameUpdateRequestDto.java
+│  │              │      │  │      UserPasswordUpdateRequestDto.java
+│  │              │      │  │      UserSendMailRequestDto.java
 │  │              │      │  │      UserSignupRequestDto.java
 │  │              │      │  │
 │  │              │      │  └─response
+│  │              │      │          PasswordHistoryResponseDto.java
+│  │              │      │          UserCheckCodeResponseDto.java
+│  │              │      │          UserIntroduceMessageUpdateResponseDto.java
+│  │              │      │          UsernameUpdateResponseDto.java
+│  │              │      │          UserPasswordUpdateResponseDto.java
 │  │              │      │          UserResponseDto.java
 │  │              │      │
 │  │              │      ├─entity
+│  │              │      │      AuthEmail.java
+│  │              │      │      PasswordHistory.java
 │  │              │      │      User.java
+│  │              │      │      UserRole.java
+│  │              │      │      UserStatus.java
 │  │              │      │
 │  │              │      ├─exception
+│  │              │      │      BlockedUserException.java
 │  │              │      │      ExistsUserEmailException.java
 │  │              │      │      ExistsUsernameException.java
 │  │              │      │      NotFoundUserException.java
+│  │              │      │      PasswordRestrictionException.java
+│  │              │      │      UnauthenticatedAuthEmailException.java
+│  │              │      │      UnauthorizedEmailException.java
 │  │              │      │      UserErrorCode.java
+│  │              │      │      VerifyPasswordException.java
 │  │              │      │
 │  │              │      ├─repository
+│  │              │      │      AuthEmailRepository.java
+│  │              │      │      PasswordHistoryRepository.java
 │  │              │      │      UserRepository.java
 │  │              │      │
 │  │              │      └─service
+│  │              │          │  AuthEmailService.java
+│  │              │          │  PasswordHistoryService.java
 │  │              │          │  UserService.java
 │  │              │          │
 │  │              │          └─impl
+│  │              │                  AuthEmailServiceImpl.java
+│  │              │                  PasswordHistoryServiceImpl.java
 │  │              │                  UserLogoutImpl.java
 │  │              │                  UserServiceImpl.java
 │  │              │
@@ -446,6 +470,8 @@ ex) `feat: 로그인 기능 구현`
 │  │                  │      AwsS3Config.java
 │  │                  │      JasyptConfig.java
 │  │                  │      JpaAuditingConfig.java
+│  │                  │      MailConfig.java
+│  │                  │      RedisConfig.java
 │  │                  │      WebSecurityConfig.java
 │  │                  │
 │  │                  ├─exception
@@ -463,7 +489,9 @@ ex) `feat: 로그인 기능 구현`
 │  │                  │
 │  │                  ├─infra
 │  │                  │  └─mail
-│  │                  │      │  MailConfig.java
+│  │                  │      ├─exception
+│  │                  │      │      ExpiredCodeException.java
+│  │                  │      │      MailErrorCode.java
 │  │                  │      │
 │  │                  │      └─service
 │  │                  │          │  MailService.java
@@ -475,7 +503,6 @@ ex) `feat: 로그인 기능 구현`
 │  │                  │      JwtUtil.java
 │  │                  │
 │  │                  ├─redis
-│  │                  │      RedisConfig.java
 │  │                  │      RedisUtil.java
 │  │                  │
 │  │                  ├─s3
@@ -483,6 +510,7 @@ ex) `feat: 로그인 기능 구현`
 │  │                  │  │
 │  │                  │  └─exception
 │  │                  │          AwsS3ErrorCode.java
+│  │                  │          AwsS3InternalException.java
 │  │                  │          FileTypeNotAllowedException.java
 │  │                  │          NotFoundS3FileException.java
 │  │                  │
@@ -495,17 +523,27 @@ ex) `feat: 로그인 기능 구현`
 │  └─resources
 │      │  application-dev.yml
 │      │  application.yml
+│      │  data.sql
 │      │
 │      ├─static
+│      │  ├─css
+│      │  │      style.css
+│      │  │
+│      │  └─js
+│      │          basic.js
+│      │          basic1.js
+│      │
 │      └─templates
+│              index.html
+│              login.html
 │              mail.html
+│              signup.html
 │
 └─test
     ├─java
     │  └─com
     │      └─example
     │          └─dp
-    │              │  DpApplicationTests.java
     │              │  TestRedisConfiguration.java
     │              │
     │              ├─domain
@@ -545,6 +583,8 @@ ex) `feat: 로그인 기능 구현`
     └─resources
             application-test.properties
             application.yml
+            data.sql
+
 
 ```
 
